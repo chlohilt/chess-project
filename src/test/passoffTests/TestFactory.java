@@ -1,6 +1,7 @@
 package passoffTests;
 
 import chess.*;
+import chessImpl.ChessBoardImpl;
 
 /**
  * Used for testing your code
@@ -10,9 +11,8 @@ public class TestFactory {
 
     //Chess Functions
     //------------------------------------------------------------------------------------------------------------------
-    public static ChessBoard getNewBoard(){
-        // FIXME
-		return null;
+    public static ChessBoard getNewBoard() {
+		return new ChessBoardImpl();
     }
 
     public static ChessGame getNewGame(){
