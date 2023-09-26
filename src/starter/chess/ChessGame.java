@@ -1,5 +1,7 @@
 package chess;
 
+import chessImpl.InvalidMoveException;
+
 import java.util.Collection;
 
 /**

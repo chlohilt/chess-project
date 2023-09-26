@@ -23,8 +23,9 @@ public interface ChessBoard {
      * @return Either the piece at the position, or null if no piece is at that
      *         position
      */
-    public ChessPiece getPiece(ChessPosition position) {
+    default ChessPiece getPiece(ChessPosition position) {
 
+        return null;
     }
 
     /**

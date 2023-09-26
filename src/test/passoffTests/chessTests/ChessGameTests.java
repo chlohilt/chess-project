@@ -1,6 +1,7 @@
 package passoffTests.chessTests;
 
 import chess.*;
+import chessImpl.InvalidMoveException;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
