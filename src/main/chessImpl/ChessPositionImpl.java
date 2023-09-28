@@ -5,7 +5,13 @@ import chess.ChessPosition;
 public class ChessPositionImpl implements ChessPosition {
   private int row;
   private int col;
-  private ChessPieceImpl chessPieceAtPosition;
+  private ChessPieceImpl chessPieceAtPosition = null;
+
+  public ChessPositionImpl(Integer row, Integer col) {
+    this.row = row;
+    this.col = col;
+  }
+
   @Override
   public int getRow() { return row; }
 
@@ -16,7 +22,7 @@ public class ChessPositionImpl implements ChessPosition {
 
   public ChessPieceImpl getChessPieceAtPosition() { return chessPieceAtPosition; }
 
-  public void setChessPieceAtPosition(ChessPositionImpl chessPosition, ChessPieceImpl chessPiece) {
-    chessPosition.chessPieceAtPosition = chessPiece;
+  public void setChessPieceAtPosition(ChessPieceImpl chessPiece) {
+    this.chessPieceAtPosition = chessPiece;
   }
 }

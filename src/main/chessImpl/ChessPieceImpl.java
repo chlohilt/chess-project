@@ -20,6 +20,24 @@ public class ChessPieceImpl implements ChessPiece {
 
   @Override
   public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
+    PieceType myPieceType = null;
+    if (board.getPiece(myPosition) != null) {
+      myPieceType = board.getPiece(myPosition).getPieceType();
+      switch(myPieceType) {
+        case PAWN:
+          return null;
+        case ROOK:
+
+        case KNIGHT:
+          return null;
+        case BISHOP:
+          return null;
+        case KING:
+          return null;
+        case QUEEN:
+          return null;
+      }
+    }
     return null;
   }
 }
