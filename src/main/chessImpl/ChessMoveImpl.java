@@ -5,8 +5,13 @@ import chess.ChessPiece;
 import chess.ChessPosition;
 
 public class ChessMoveImpl implements ChessMove {
-  ChessPositionImpl startPosition;
-  ChessPositionImpl endPosition;
+  ChessPosition startPosition;
+  ChessPosition endPosition;
+
+  ChessMoveImpl(ChessPosition startPosition, ChessPosition endPosition) {
+    this.startPosition = startPosition;
+    this.endPosition = endPosition;
+  }
   @Override
   public ChessPosition getStartPosition() {
     return startPosition;
