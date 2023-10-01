@@ -6,11 +6,36 @@ import java.lang.reflect.Array;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 
 public class ChessPieceImpl implements ChessPiece {
   ChessGameImpl.TeamColor teamColor;
   PieceType pieceType;
   Collection<ChessMove> possiblePieceMoves;
+  public ChessPieceImpl() {}
+  public ChessPieceImpl(ChessGame.TeamColor teamColor, PieceType pieceType) {
+    this.teamColor = teamColor;
+    this.pieceType = pieceType;
+
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (obj == this) {
+      return true;
+    }
+    ChessPieceImpl c = (ChessPieceImpl) obj;
+    return c.getPieceType().equals(this.getPieceType()) && c.getTeamColor().equals(this.getTeamColor());
+  }
+
+  @Override
+  public int hashCode() {
+    int result = 7;
+    result = 31 * result + this.getTeamColor().hashCode();
+    result = 31 * result + this.getPieceType().hashCode();
+    return result;
+  }
+
   @Override
   public ChessGame.TeamColor getTeamColor() {
     return teamColor;
@@ -49,18 +74,21 @@ public class ChessPieceImpl implements ChessPiece {
     Integer col = myPosition.getColumn();
     Integer row =myPosition.getRow();
 
-    //TODO: make this more efficient, needs to be diagonal both ways
     for (int i = myPosition.getRow(); i > 0; --i) {
-        ChessPositionImpl checkPos = new ChessPositionImpl(i, col);
+      if (0 < row && row < 8 && 0 < col && col < 8) {
+        ChessPositionImpl checkPos=new ChessPositionImpl(i, col);
+        if (board.getPiece(checkPos).getPieceType() == null) {
+          possibleBishopMoves.add(new ChessMoveImpl(myPosition, checkPos));
+        }
+      }
+      col--;
+    }
+    for (int i = 0; i < myPosition.getColumn(); ++i) {
+      if (0 < row && row < 8 && 0 < col && col < 8) {
+        ChessPositionImpl checkPos = new ChessPositionImpl(i, row);
         if (board.getPiece(checkPos) == null) {
           possibleBishopMoves.add(new ChessMoveImpl(myPosition, checkPos));
         }
-        col--;
-    }
-    for (int i = 0; i < myPosition.getColumn(); ++i) {
-      ChessPositionImpl checkPos = new ChessPositionImpl(i, col);
-      if (board.getPiece(checkPos) == null) {
-        possibleBishopMoves.add(new ChessMoveImpl(myPosition, checkPos));
       }
       row++;
     }
@@ -70,11 +98,13 @@ public class ChessPieceImpl implements ChessPiece {
   public Collection<ChessMove> kingPieceMoves(ChessBoard board, ChessPosition myPosition) {
     Integer[] possibleRows = {
             myPosition.getRow() + 1,
-            myPosition.getRow() - 1
+            myPosition.getRow() - 1,
+            myPosition.getRow()
     };
     Integer[] possibleCols = {
             myPosition.getColumn() + 1,
-            myPosition.getColumn() - 1
+            myPosition.getColumn() - 1,
+            myPosition.getColumn()
     };
 
     return pieceMovesHelper(board, myPosition, possibleRows, possibleCols);
@@ -117,12 +147,13 @@ public class ChessPieceImpl implements ChessPiece {
   }
 
   public Collection<ChessMove> pieceMovesHelper(ChessBoard board, ChessPosition myPosition, Integer[] possibleRows, Integer[] possibleCols) {
-    Collection<ChessMove> possibleMoves = new ArrayList<>();
-    for (int j = 0; j < possibleCols.length; ++j) {
-      for (int i = 0; i < possibleRows.length; ++i){
-        ChessPositionImpl checkPos = new ChessPositionImpl(possibleRows[i], possibleCols[j]);
-        if (board.getPiece(checkPos) == null) {
-          ChessMoveImpl newPossibleMove = new ChessMoveImpl(myPosition, checkPos);
+    Collection<ChessMove> possibleMoves = new HashSet<ChessMove>();
+
+    for (Integer possibleRow : possibleRows) {
+      for (Integer possibleCol : possibleCols) {
+        ChessPositionImpl checkPos=new ChessPositionImpl(possibleRow, possibleCol);
+        if (board.getPiece(checkPos).getPieceType() == null) {
+          ChessMoveImpl newPossibleMove=new ChessMoveImpl(myPosition, checkPos, null);
           possibleMoves.add(newPossibleMove);
         }
       }

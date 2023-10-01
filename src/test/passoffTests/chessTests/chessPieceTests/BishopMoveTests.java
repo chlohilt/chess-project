@@ -67,7 +67,7 @@ public class BishopMoveTests {
 
         //check
         Set<ChessMove> pieceMoves = new HashSet<>(bishop.pieceMoves(board, position));
-        Assertions.assertEquals(validMoves, pieceMoves,
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                Assertions.assertEquals(validMoves, pieceMoves,
                 "ChessPiece pieceMoves did not return the correct moves");
     }
 

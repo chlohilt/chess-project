@@ -6,6 +6,9 @@ import chess.ChessPosition;
 
 public class ChessBoardImpl implements ChessBoard {
   ChessPositionImpl[][] board = new ChessPositionImpl[8][8];
+  public ChessBoardImpl() {
+    resetBoard();
+  }
   @Override
   public void addPiece(ChessPosition position, ChessPiece piece) {
     board[position.getRow()][position.getColumn()].setChessPieceAtPosition((ChessPieceImpl) piece);
@@ -15,7 +18,7 @@ public class ChessBoardImpl implements ChessBoard {
   public void resetBoard() {
     for (int i = 0; i < board.length; ++i) {
       for (int j = 0; j < board.length; ++j) {
-        board[i][j].setChessPieceAtPosition(null);
+        board[i][j] = new ChessPositionImpl(i, j);
       }
     }
   }
