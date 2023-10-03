@@ -170,7 +170,73 @@ public class ChessPieceImpl implements ChessPiece {
    */
   public Collection<ChessMove> bishopPieceMoves(ChessBoard board, ChessPosition myPosition) {
     Collection<ChessMove> possibleBishopMoves = new HashSet<>();
+    int row =myPosition.getRow() + 1;
+    int col =myPosition.getColumn() + 1;
 
+    while (row <= 8 && col <= 8) {
+      ChessPositionImpl checkPos = new ChessPositionImpl(row, col);
+      if (board.getPiece(checkPos) == null) {
+        possibleBishopMoves.add(new ChessMoveImpl(myPosition, checkPos, null));
+      } else if (board.getPiece(checkPos).getTeamColor() != board.getPiece(myPosition).getTeamColor()) {
+        possibleBishopMoves.add(new ChessMoveImpl(myPosition, checkPos, null));
+        break;
+      } else if (board.getPiece(checkPos).getTeamColor() == board.getPiece(myPosition).getTeamColor()) {
+        break;
+      }
+      row++;
+      col++;
+    }
+
+    row =myPosition.getRow() - 1;
+    col =myPosition.getColumn() - 1;
+
+    while (row > 0 && col > 0) {
+      ChessPositionImpl checkPos = new ChessPositionImpl(row, col);
+      if (board.getPiece(checkPos) == null) {
+        possibleBishopMoves.add(new ChessMoveImpl(myPosition, checkPos, null));
+      } else if (board.getPiece(checkPos).getTeamColor() != board.getPiece(myPosition).getTeamColor()) {
+        possibleBishopMoves.add(new ChessMoveImpl(myPosition, checkPos, null));
+        break;
+      } else if (board.getPiece(checkPos).getTeamColor() == board.getPiece(myPosition).getTeamColor()) {
+        break;
+      }
+      row--;
+      col--;
+    }
+
+    row =myPosition.getRow() + 1;
+    col =myPosition.getColumn() - 1;
+
+    while (row <= 8 && col > 0) {
+      ChessPositionImpl checkPos = new ChessPositionImpl(row, col);
+      if (board.getPiece(checkPos) == null) {
+        possibleBishopMoves.add(new ChessMoveImpl(myPosition, checkPos, null));
+      } else if (board.getPiece(checkPos).getTeamColor() != board.getPiece(myPosition).getTeamColor()) {
+        possibleBishopMoves.add(new ChessMoveImpl(myPosition, checkPos, null));
+        break;
+      } else if (board.getPiece(checkPos).getTeamColor() == board.getPiece(myPosition).getTeamColor()) {
+        break;
+      }
+      row++;
+      col--;
+    }
+
+    row =myPosition.getRow() - 1;
+    col =myPosition.getColumn() + 1;
+
+    while (row > 0 && col <= 8) {
+      ChessPositionImpl checkPos = new ChessPositionImpl(row, col);
+      if (board.getPiece(checkPos) == null) {
+        possibleBishopMoves.add(new ChessMoveImpl(myPosition, checkPos, null));
+      } else if (board.getPiece(checkPos).getTeamColor() != board.getPiece(myPosition).getTeamColor()) {
+        possibleBishopMoves.add(new ChessMoveImpl(myPosition, checkPos, null));
+        break;
+      } else if (board.getPiece(checkPos).getTeamColor() == board.getPiece(myPosition).getTeamColor()) {
+        break;
+      }
+      row--;
+      col++;
+    }
 
     return possibleBishopMoves;
   }
