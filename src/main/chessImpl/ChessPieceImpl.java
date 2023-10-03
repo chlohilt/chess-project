@@ -52,7 +52,7 @@ public class ChessPieceImpl implements ChessPiece {
 
 @Override
   public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
-    PieceType myPieceType = null;
+    PieceType myPieceType;
     if (board.getPiece(myPosition) != null) {
       myPieceType = board.getPiece(myPosition).getPieceType();
       switch(myPieceType) {
@@ -67,7 +67,10 @@ public class ChessPieceImpl implements ChessPiece {
         case KING:
           return kingPieceMoves(board, myPosition);
         case QUEEN:
-          return null;
+          Collection<ChessMove> queenMoves = new HashSet<>();
+          queenMoves.addAll(rookPieceMoves(board, myPosition));
+          queenMoves.addAll(bishopPieceMoves(board, myPosition));
+          return queenMoves;
       }
     }
     return null;
