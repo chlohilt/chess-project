@@ -2,10 +2,11 @@ package chessImpl;
 
 import chess.ChessPosition;
 
+import java.util.Objects;
+
 public class ChessPositionImpl implements ChessPosition {
   private int row;
   private int col;
-  private ChessPieceImpl chessPieceAtPosition = new ChessPieceImpl();
 
   public ChessPositionImpl(Integer row, Integer col) {
     this.row = row;
@@ -13,25 +14,18 @@ public class ChessPositionImpl implements ChessPosition {
   }
 
   @Override
-  public int hashCode() {
-    int result = 7;
-    result = 31 * result + row;
-    result = 31 * result + col;
-    return result;
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    ChessPositionImpl that=(ChessPositionImpl) o;
+    return row == that.row && col == that.col;
   }
 
   @Override
-  public boolean equals(Object o) {
-    if (o == this) {
-      return true;
-    }
-    if (o == null || o.getClass() != this.getClass()) {
-      return false;
-    }
-
-    ChessPositionImpl c = (ChessPositionImpl) o;
-    return c.getColumn() == this.getColumn() && c.getRow() == this.getRow() && c.getChessPieceAtPosition().equals(this.getChessPieceAtPosition());
+  public int hashCode() {
+    return Objects.hash(row, col);
   }
+
   @Override
   public int getRow() { return row; }
 
@@ -40,9 +34,4 @@ public class ChessPositionImpl implements ChessPosition {
     return col;
   }
 
-  public ChessPieceImpl getChessPieceAtPosition() { return chessPieceAtPosition; }
-
-  public void setChessPieceAtPosition(ChessPieceImpl chessPiece) {
-    this.chessPieceAtPosition = chessPiece;
-  }
 }
