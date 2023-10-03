@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 
+import static java.lang.Math.abs;
+
 public class ChessPieceImpl implements ChessPiece {
   ChessGameImpl.TeamColor teamColor;
   PieceType pieceType;
@@ -132,22 +134,22 @@ public class ChessPieceImpl implements ChessPiece {
     if (checkForEnemy1 != null && myColor == ChessGame.TeamColor.WHITE) {
       possibleCols = new Integer[] {
               myPosition.getColumn(),
-              myPosition.getColumn() + 1
+              myPosition.getColumn() - 1
       };
     } else if (checkForEnemy2 != null && myColor == ChessGame.TeamColor.WHITE) {
       possibleCols = new Integer[] {
               myPosition.getColumn(),
-              myPosition.getColumn() - 1
+              myPosition.getColumn() + 1
       };
     } else if (checkForEnemy2 != null && myColor == ChessGame.TeamColor.BLACK) {
       possibleCols = new Integer[] {
               myPosition.getColumn(),
-              myPosition.getColumn() + 1
+              myPosition.getColumn() - 1
       };
     }else if (checkForEnemy1 != null && myColor == ChessGame.TeamColor.BLACK) {
       possibleCols = new Integer[] {
               myPosition.getColumn(),
-              myPosition.getColumn() - 1
+              myPosition.getColumn() + 1
       };
     } else {
       possibleCols = new Integer[] {
@@ -155,7 +157,7 @@ public class ChessPieceImpl implements ChessPiece {
       };
     }
 
-    if (myPosition.getRow() == 2 || myPosition.getRow() == 7) { // first turn for the pawn
+    if ((myPosition.getRow() == 2 &&  myColor == ChessGame.TeamColor.WHITE) || (myPosition.getRow() == 7 && myColor == ChessGame.TeamColor.BLACK)) { // first turn for the pawn
       if (myColor == ChessGame.TeamColor.BLACK) {
         possibleRows=new Integer[]{
                 myPosition.getRow() - 1,
@@ -167,8 +169,6 @@ public class ChessPieceImpl implements ChessPiece {
                 myPosition.getRow() + 2
         };
       }
-    } else if () {
-
     } else {
       if (myColor == ChessGame.TeamColor.BLACK) {
         possibleRows=new Integer[]{
@@ -189,11 +189,46 @@ public class ChessPieceImpl implements ChessPiece {
 
     for (Integer possibleRow : possibleRows) {
       for (Integer possibleCol : possibleCols) {
+        Boolean pawnCheck;
         ChessPositionImpl checkPos=new ChessPositionImpl(possibleRow, possibleCol);
-        if (board.getPiece(checkPos) == null) {
+        if (board.getPiece(myPosition).getPieceType() == PieceType.PAWN) {
+          Boolean inBetweenCheck = true;
+          // pawn check
+          ChessPositionImpl checkWhiteCapture = new ChessPositionImpl(myPosition.getRow() + 1, myPosition.getColumn() - 1);
+          ChessPositionImpl checkWhiteCapture2 = new ChessPositionImpl(myPosition.getRow() + 1, myPosition.getColumn() + 1);
+          ChessPositionImpl checkBlackCapture = new ChessPositionImpl(myPosition.getRow() - 1, myPosition.getColumn() - 1);
+          ChessPositionImpl checkBlackCapture2 = new ChessPositionImpl(myPosition.getRow() - 1, myPosition.getColumn() + 1);
+          if (board.getPiece(checkPos) == null ||
+                  (board.getPiece(checkPos).getTeamColor() != board.getPiece(myPosition).getTeamColor() &&
+                          (checkPos.equals(checkWhiteCapture) ||
+                                  checkPos.equals(checkWhiteCapture2) ||
+                                  checkPos.equals(checkBlackCapture) ||
+                                  checkPos.equals(checkBlackCapture2)))) {
+            if (abs(checkPos.getRow() - myPosition.getRow()) > 1 && checkPos.getColumn() == myPosition.getColumn()) {
+              if (board.getPiece(myPosition).getTeamColor() == ChessGame.TeamColor.WHITE) {
+                ChessPositionImpl checkInBetween = new ChessPositionImpl(myPosition.getRow() + 1, myPosition.getColumn());
+                if (board.getPiece(checkInBetween) != null) {
+                  inBetweenCheck = false;
+                }
+              } else if (board.getPiece(myPosition).getTeamColor() == ChessGame.TeamColor.BLACK) {
+                ChessPositionImpl checkInBetween = new ChessPositionImpl(myPosition.getRow() - 1, myPosition.getColumn());
+                if (board.getPiece(checkInBetween) != null) {
+                  inBetweenCheck = false;
+                }
+              }
+            }
+            if (inBetweenCheck) {
+              ChessMoveImpl newPossibleMove=new ChessMoveImpl(myPosition, checkPos, null);
+              possibleMoves.add(newPossibleMove);
+            }
+          }
+        } else { // any other piece
+          if (board.getPiece(checkPos) == null) {
             ChessMoveImpl newPossibleMove=new ChessMoveImpl(myPosition, checkPos, null);
             possibleMoves.add(newPossibleMove);
           }
+        }
+
       }
     }
     return possibleMoves;
