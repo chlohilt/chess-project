@@ -61,7 +61,7 @@ public class ChessPieceImpl implements ChessPiece {
         case ROOK:
           return rookPieceMoves(board, myPosition);
         case KNIGHT:
-          return null;
+          return knightPieceMoves(board, myPosition);
         case BISHOP:
           return bishopPieceMoves(board, myPosition);
         case KING:
@@ -73,6 +73,24 @@ public class ChessPieceImpl implements ChessPiece {
     return null;
   }
 
+  public Collection<ChessMove> knightPieceMoves(ChessBoard board, ChessPosition myPosition) {
+    Collection<ChessMove> possibleKnightMoves = new HashSet<>();
+
+    Integer[] possibleRows = {
+            myPosition.getRow() + 2,
+            myPosition.getRow() - 2,
+            myPosition.getRow() + 1,
+            myPosition.getRow() - 1
+    };
+    Integer[] possibleCols = {
+            myPosition.getColumn() + 2,
+            myPosition.getColumn() - 2,
+            myPosition.getColumn() + 1,
+            myPosition.getColumn() - 1
+    };
+
+    return pieceMovesHelper(board, myPosition, possibleRows, possibleCols);
+  }
   public Collection<ChessMove> rookPieceMoves(ChessBoard board, ChessPosition myPosition) {
     Collection<ChessMove> possibleRookMoves = new HashSet<>();
     // FIXME: add some functions for less repeated code
@@ -151,9 +169,7 @@ public class ChessPieceImpl implements ChessPiece {
 
    */
   public Collection<ChessMove> bishopPieceMoves(ChessBoard board, ChessPosition myPosition) {
-    Collection<ChessMove> possibleBishopMoves = new ArrayList<>();
-    int col = myPosition.getColumn();
-    int row =myPosition.getRow();
+    Collection<ChessMove> possibleBishopMoves = new HashSet<>();
 
 
     return possibleBishopMoves;
@@ -248,7 +264,7 @@ public class ChessPieceImpl implements ChessPiece {
     for (Integer possibleRow : possibleRows) {
       for (Integer possibleCol : possibleCols) {
 
-        if (possibleCol <= 8 && possibleRow <= 8 && possibleCol >= 0 && possibleRow >= 0) {
+        if (possibleCol <= 8 && possibleRow <= 8 && possibleCol > 0 && possibleRow > 0) {
         ChessPositionImpl checkPos=new ChessPositionImpl(possibleRow, possibleCol);
 
         if (board.getPiece(myPosition).getPieceType() == PieceType.PAWN) {
@@ -290,6 +306,15 @@ public class ChessPieceImpl implements ChessPiece {
           if (board.getPiece(checkPos) == null || board.getPiece(checkPos).getTeamColor() != board.getPiece(myPosition).getTeamColor()) {
             ChessMoveImpl newPossibleMove=new ChessMoveImpl(myPosition, checkPos, null);
             possibleMoves.add(newPossibleMove);
+          }
+        } else if (board.getPiece(myPosition).getPieceType() == PieceType.KNIGHT){ // KNIGHT
+          // check that it is two vs one
+          if ((abs(checkPos.getRow() - myPosition.getRow()) > 1 && abs(checkPos.getColumn() - myPosition.getColumn()) == 1) ||
+                  (abs(checkPos.getRow() - myPosition.getRow()) == 1 && abs(checkPos.getColumn() - myPosition.getColumn()) > 1)) {
+            if (board.getPiece(checkPos) == null || board.getPiece(checkPos).getTeamColor() != board.getPiece(myPosition).getTeamColor()) {
+              ChessMoveImpl newPossibleMove=new ChessMoveImpl(myPosition, checkPos, null);
+              possibleMoves.add(newPossibleMove);
+            }
           }
         }
 
