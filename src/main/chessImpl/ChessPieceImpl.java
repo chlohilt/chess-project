@@ -367,8 +367,20 @@ public class ChessPieceImpl implements ChessPiece {
             }
 
             if (inBetweenCheck) {
-              ChessMoveImpl newPossibleMove=new ChessMoveImpl(myPosition, checkPos, null);
-              possibleMoves.add(newPossibleMove);
+              if (checkPos.getRow() == 8 && board.getPiece(myPosition).getTeamColor() == ChessGame.TeamColor.WHITE) {
+                possibleMoves.add(new ChessMoveImpl(myPosition, checkPos, PieceType.ROOK));
+                possibleMoves.add(new ChessMoveImpl(myPosition, checkPos, PieceType.KNIGHT));
+                possibleMoves.add(new ChessMoveImpl(myPosition, checkPos, PieceType.BISHOP));
+                possibleMoves.add(new ChessMoveImpl(myPosition, checkPos, PieceType.QUEEN));
+              } else if (checkPos.getRow() == 1 && board.getPiece(myPosition).getTeamColor() == ChessGame.TeamColor.BLACK) {
+                possibleMoves.add(new ChessMoveImpl(myPosition, checkPos, PieceType.ROOK));
+                possibleMoves.add(new ChessMoveImpl(myPosition, checkPos, PieceType.KNIGHT));
+                possibleMoves.add(new ChessMoveImpl(myPosition, checkPos, PieceType.BISHOP));
+                possibleMoves.add(new ChessMoveImpl(myPosition, checkPos, PieceType.QUEEN));
+              } else {
+                ChessMoveImpl newPossibleMove=new ChessMoveImpl(myPosition, checkPos, null);
+                possibleMoves.add(newPossibleMove);
+              }
             }
           }
         } else if (board.getPiece(myPosition).getPieceType() == PieceType.KING){ // KING
