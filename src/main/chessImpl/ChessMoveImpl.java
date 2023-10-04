@@ -30,11 +30,6 @@ public class ChessMoveImpl implements ChessMove {
     return Objects.hash(startPosition, endPosition, pieceType);
   }
 
-  public ChessMoveImpl(ChessPosition startPosition, ChessPosition endPosition) {
-    this.startPosition = startPosition;
-    this.endPosition = endPosition;
-  }
-
   @Override
   public ChessPosition getStartPosition() {
     return startPosition;

@@ -3,9 +3,11 @@ package chessImpl;
 import chess.*;
 
 import java.util.Collection;
+import java.util.Iterator;
 
 public class ChessGameImpl implements ChessGame {
   TeamColor teamTurn;
+  ChessBoardImpl chessBoard;
   @Override
   public TeamColor getTeamTurn() {
     return teamTurn;
@@ -18,11 +20,37 @@ public class ChessGameImpl implements ChessGame {
 
   @Override
   public Collection<ChessMove> validMoves(ChessPosition startPosition) {
-    return null;
+    if (chessBoard.getPiece(startPosition) == null) {
+      return null;
+    } else {
+      return chessBoard.getPiece(startPosition).pieceMoves(chessBoard, startPosition);
+    }
   }
 
   @Override
   public void makeMove(ChessMove move) throws InvalidMoveException {
+    try {
+      if (chessBoard.getPiece(move.getStartPosition()).getTeamColor() != teamTurn) {
+        throw new InvalidMoveException();
+      }
+      Collection<ChessMove> possibleMoves = this.validMoves(move.getStartPosition());
+      boolean found = false;
+
+      for (ChessMove moveCheck : possibleMoves) {
+        if (moveCheck.getEndPosition().equals(move.getEndPosition())) {
+          found = true;
+          break;
+        }
+      }
+
+      if (found) {
+        chessBoard.makeMove(move);
+      } else {
+        throw new InvalidMoveException();
+      }
+    } catch (InvalidMoveException invalidMoveException) {
+      throw new InvalidMoveException();
+    }
 
   }
 
@@ -43,11 +71,11 @@ public class ChessGameImpl implements ChessGame {
 
   @Override
   public void setBoard(ChessBoard board) {
-
+    this.chessBoard =(ChessBoardImpl) board;
   }
 
   @Override
   public ChessBoard getBoard() {
-    return null;
+    return this.chessBoard;
   }
 }

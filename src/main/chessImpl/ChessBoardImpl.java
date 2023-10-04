@@ -1,15 +1,16 @@
 package chessImpl;
 
-import chess.ChessBoard;
-import chess.ChessGame;
-import chess.ChessPiece;
-import chess.ChessPosition;
+import chess.*;
 
 public class ChessBoardImpl implements ChessBoard {
   ChessPiece[][] board = new ChessPiece[8][8];
   @Override
   public void addPiece(ChessPosition position, ChessPiece piece) {
     board[position.getRow() - 1][position.getColumn() - 1] = piece;
+  }
+
+  public void removePiece(ChessPosition position) {
+    board[position.getRow() - 1][position.getColumn() - 1] = null;
   }
 
   @Override
@@ -36,6 +37,12 @@ public class ChessBoardImpl implements ChessBoard {
   @Override
   public ChessPiece getPiece(ChessPosition position) {
     return board[position.getRow() - 1][position.getColumn() - 1];
+  }
+
+  public void makeMove(ChessMove move) {
+    ChessPiece piece = this.getPiece(move.getStartPosition());
+    this.removePiece(move.getStartPosition());
+    this.addPiece(move.getEndPosition(), piece);
   }
 
 }

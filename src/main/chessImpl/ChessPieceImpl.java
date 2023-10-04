@@ -264,15 +264,21 @@ public class ChessPieceImpl implements ChessPiece {
     ChessGame.TeamColor myColor = board.getPiece(myPosition).getTeamColor();
 
     // check for enemies left diagonal and right diagonal
-    ChessPiece checkForEnemy1;
-    ChessPiece checkForEnemy2;
+    ChessPiece checkForEnemy1=null;
+    ChessPiece checkForEnemy2=null;
     if (myColor == ChessGame.TeamColor.BLACK) {
-      checkForEnemy1 = board.getPiece(new ChessPositionImpl(myPosition.getRow() - 1, myPosition.getColumn() + 1));
-      checkForEnemy2 = board.getPiece(new ChessPositionImpl(myPosition.getRow() - 1, myPosition.getColumn() - 1));
+      if (myPosition.getRow() - 1 > 0 && myPosition.getColumn() + 1 <= 8) {
+        checkForEnemy1=board.getPiece(new ChessPositionImpl(myPosition.getRow() - 1, myPosition.getColumn() + 1));
+      } else if (myPosition.getRow() - 1 > 0 && myPosition.getColumn() - 1 > 0) {
+        checkForEnemy2 = board.getPiece(new ChessPositionImpl(myPosition.getRow() - 1, myPosition.getColumn() - 1));
+      }
     }
     else {
-      checkForEnemy1 = board.getPiece(new ChessPositionImpl(myPosition.getRow() + 1, myPosition.getColumn() + 1));
-      checkForEnemy2 = board.getPiece(new ChessPositionImpl(myPosition.getRow() + 1, myPosition.getColumn() - 1));
+      if (myPosition.getRow() + 1 <= 8 && myPosition.getColumn() + 1 <= 8) {
+        checkForEnemy1 = board.getPiece(new ChessPositionImpl(myPosition.getRow() + 1, myPosition.getColumn() + 1));
+      } else if (myPosition.getRow() + 1 <= 8 && myPosition.getColumn() - 1 > 0) {
+        checkForEnemy2 = board.getPiece(new ChessPositionImpl(myPosition.getRow() + 1, myPosition.getColumn() - 1));
+      }
     }
 
     if (checkForEnemy1 != null && myColor == ChessGame.TeamColor.WHITE) {
