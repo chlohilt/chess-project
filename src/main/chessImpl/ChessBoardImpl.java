@@ -40,9 +40,15 @@ public class ChessBoardImpl implements ChessBoard {
   }
 
   public void makeMove(ChessMove move) {
-    ChessPiece piece = this.getPiece(move.getStartPosition());
+    ChessPiece piece;
+    if (move.getPromotionPiece() != null) {
+      piece = new ChessPieceImpl(getPiece(move.getStartPosition()).getTeamColor(), move.getPromotionPiece());
+    } else {
+      piece = this.getPiece(move.getStartPosition());
+    }
     this.removePiece(move.getStartPosition());
     this.addPiece(move.getEndPosition(), piece);
+
   }
 
 }
