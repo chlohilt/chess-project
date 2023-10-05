@@ -29,12 +29,7 @@ public class ChessGameImpl implements ChessGame {
       TeamColor teamColor = chessBoard.getPiece(startPosition).getTeamColor();
       ChessPiece.PieceType pieceType = chessBoard.getPiece(startPosition).getPieceType();
       ChessPiece originalPiece = chessBoard.getPiece(startPosition);
-      TeamColor opposingColor=null;
-      if (teamColor == TeamColor.WHITE) {
-        opposingColor = TeamColor.BLACK;
-      } else if (teamColor == TeamColor.BLACK) {
-        opposingColor = TeamColor.WHITE;
-      }
+      TeamColor opposingColor=opposingTeamColor(teamColor);
 
       chessBoard.removePiece(startPosition);
       for (ChessMove checkMove: movesBeforeInCheck) {
@@ -103,14 +98,18 @@ public class ChessGameImpl implements ChessGame {
 
   }
 
+  public TeamColor opposingTeamColor(TeamColor currTeamColor) {
+    if (currTeamColor == TeamColor.WHITE) {
+      return TeamColor.BLACK;
+    } else if (currTeamColor == TeamColor.BLACK) {
+      return TeamColor.WHITE;
+    }
+    return null;
+  }
+
   @Override
   public boolean isInCheck(TeamColor teamColor) {
-    TeamColor opposingColor=null;
-    if (teamColor == TeamColor.WHITE) {
-      opposingColor = TeamColor.BLACK;
-    } else if (teamColor == TeamColor.BLACK) {
-      opposingColor = TeamColor.WHITE;
-    }
+    TeamColor opposingColor=opposingTeamColor(teamColor);
 
     Collection<ChessMove> movesThatCouldCheck= getCheckMoves(opposingColor);
 
@@ -152,12 +151,7 @@ public class ChessGameImpl implements ChessGame {
   @Override
   public boolean isInCheckmate(TeamColor teamColor) {
     Collection<ChessMove> movesThatCouldCheckMate= new HashSet<>();
-    TeamColor opposingColor=null;
-    if (teamColor == TeamColor.WHITE) {
-      opposingColor = TeamColor.BLACK;
-    } else if (teamColor == TeamColor.BLACK) {
-      opposingColor = TeamColor.WHITE;
-    }
+    TeamColor opposingColor=opposingTeamColor(teamColor);
 
     ChessPosition kingPos = getKingPos(teamColor);
     Collection<ChessMove> kingMoves = chessBoard.getPiece(kingPos).pieceMoves(chessBoard, kingPos);
@@ -169,7 +163,6 @@ public class ChessGameImpl implements ChessGame {
     for (ChessMove kingMove: kingMoves) {
       ChessPieceImpl kingPiece=new ChessPieceImpl(teamColor, ChessPiece.PieceType.KING);
       chessBoard.addPiece(kingMove.getEndPosition(), kingPiece);
-      //FIXME
       for (int i=1; i <= chessBoard.board.length; ++i) {
         for (int j=1; j <= chessBoard.board.length; ++j) {
           ChessPositionImpl checkPos=new ChessPositionImpl(i, j);
@@ -190,7 +183,7 @@ public class ChessGameImpl implements ChessGame {
 
   @Override
   public boolean isInStalemate(TeamColor teamColor) {
-    return false;
+    return !isInCheck(teamColor) && isInCheckmate(teamColor);
   }
 
   @Override
