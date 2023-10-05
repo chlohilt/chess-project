@@ -2,7 +2,7 @@ package chessImpl;
 
 import chess.*;
 
-import java.lang.reflect.Array;
+import java.sql.Array;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -77,20 +77,17 @@ public class ChessPieceImpl implements ChessPiece {
   }
 
   public Collection<ChessMove> knightPieceMoves(ChessBoard board, ChessPosition myPosition) {
-    Collection<ChessMove> possibleKnightMoves = new HashSet<>();
+    ArrayList<Integer> possibleRows=new ArrayList<>();
+    ArrayList<Integer> possibleCols=new ArrayList<>();
 
-    Integer[] possibleRows = {
-            myPosition.getRow() + 2,
-            myPosition.getRow() - 2,
-            myPosition.getRow() + 1,
-            myPosition.getRow() - 1
-    };
-    Integer[] possibleCols = {
-            myPosition.getColumn() + 2,
-            myPosition.getColumn() - 2,
-            myPosition.getColumn() + 1,
-            myPosition.getColumn() - 1
-    };
+    possibleRows.add(myPosition.getRow() + 2);
+    possibleRows.add(myPosition.getRow() - 2);
+    possibleRows.add(myPosition.getRow() + 1);
+    possibleRows.add(myPosition.getRow() - 1);
+    possibleCols.add(myPosition.getColumn() + 2);
+    possibleCols.add(myPosition.getColumn() - 2);
+    possibleCols.add(myPosition.getColumn() + 1);
+    possibleCols.add(myPosition.getColumn() - 1);
 
     return pieceMovesHelper(board, myPosition, possibleRows, possibleCols);
   }
@@ -244,23 +241,22 @@ public class ChessPieceImpl implements ChessPiece {
     return possibleBishopMoves;
   }
   public Collection<ChessMove> kingPieceMoves(ChessBoard board, ChessPosition myPosition) {
-    Integer[] possibleRows = {
-            myPosition.getRow() + 1,
-            myPosition.getRow() - 1,
-            myPosition.getRow()
-    };
-    Integer[] possibleCols = {
-            myPosition.getColumn() + 1,
-            myPosition.getColumn() - 1,
-            myPosition.getColumn()
-    };
+    ArrayList<Integer> possibleRows=new ArrayList<>();
+    ArrayList<Integer> possibleCols=new ArrayList<>();
+
+    possibleRows.add(myPosition.getRow());
+    possibleRows.add(myPosition.getRow() + 1);
+    possibleRows.add(myPosition.getRow() - 1);
+    possibleCols.add(myPosition.getColumn());
+    possibleCols.add(myPosition.getColumn() + 1);
+    possibleCols.add(myPosition.getColumn() - 1);
 
     return pieceMovesHelper(board, myPosition, possibleRows, possibleCols);
   }
 
   public Collection<ChessMove> pawnPieceMoves(ChessBoard board, ChessPosition myPosition) {
-    Integer[] possibleRows;
-    Integer[] possibleCols;
+    ArrayList<Integer> possibleRows = new ArrayList<>();
+    ArrayList<Integer> possibleCols = new ArrayList<>();
     ChessGame.TeamColor myColor = board.getPiece(myPosition).getTeamColor();
 
     // check for enemies left diagonal and right diagonal
@@ -282,59 +278,48 @@ public class ChessPieceImpl implements ChessPiece {
     }
 
     if (checkForEnemy1 != null && myColor == ChessGame.TeamColor.WHITE) {
-      possibleCols = new Integer[] {
-              myPosition.getColumn(),
-              myPosition.getColumn() + 1
-      };
+      possibleCols.add(myPosition.getColumn());
+      possibleCols.add(myPosition.getColumn() + 1);
+      if (checkForEnemy2 != null) {
+        possibleCols.add(myPosition.getColumn() - 1);
+      }
     } else if (checkForEnemy2 != null && myColor == ChessGame.TeamColor.WHITE) {
-      possibleCols = new Integer[] {
-              myPosition.getColumn(),
-              myPosition.getColumn() - 1
-      };
-    } else if (checkForEnemy2 != null && myColor == ChessGame.TeamColor.BLACK) {
-      possibleCols = new Integer[] {
-              myPosition.getColumn(),
-              myPosition.getColumn() - 1
-      };
-    }else if (checkForEnemy1 != null && myColor == ChessGame.TeamColor.BLACK) {
-      possibleCols = new Integer[] {
-              myPosition.getColumn(),
-              myPosition.getColumn() + 1
-      };
+      possibleCols.add(myPosition.getColumn());
+      possibleCols.add(myPosition.getColumn() - 1);
+    }
+    if (checkForEnemy2 != null && myColor == ChessGame.TeamColor.BLACK) {
+      possibleCols.add(myPosition.getColumn());
+      possibleCols.add(myPosition.getColumn() - 1);
+      if (checkForEnemy1 != null) {
+        possibleCols.add(myPosition.getColumn() + 1);
+      }
+    } else if (checkForEnemy1 != null && myColor == ChessGame.TeamColor.BLACK) {
+      possibleCols.add(myPosition.getColumn());
+      possibleCols.add(myPosition.getColumn() + 1);
     } else {
-      possibleCols = new Integer[] {
-              myPosition.getColumn()
-      };
+      possibleCols.add(myPosition.getColumn());
     }
 
     if ((myPosition.getRow() == 2 &&  myColor == ChessGame.TeamColor.WHITE) || (myPosition.getRow() == 7 && myColor == ChessGame.TeamColor.BLACK)) { // first turn for the pawn
       if (myColor == ChessGame.TeamColor.BLACK) {
-        possibleRows=new Integer[]{
-                myPosition.getRow() - 1,
-                myPosition.getRow() - 2
-        };
+        possibleRows.add(myPosition.getRow() - 1);
+        possibleRows.add(myPosition.getRow() - 2);
       } else {
-        possibleRows=new Integer[]{
-                myPosition.getRow() + 1,
-                myPosition.getRow() + 2
-        };
+        possibleRows.add(myPosition.getRow() + 1);
+        possibleRows.add(myPosition.getRow() + 2);
       }
     } else {
       if (myColor == ChessGame.TeamColor.BLACK) {
-        possibleRows=new Integer[]{
-                myPosition.getRow() - 1
-        };
+        possibleRows.add(myPosition.getRow() - 1);
       } else {
-        possibleRows=new Integer[]{
-                myPosition.getRow() + 1
-        };
+        possibleRows.add(myPosition.getRow() + 1);
       }
     }
 
     return pieceMovesHelper(board, myPosition, possibleRows, possibleCols);
   }
 
-  public Collection<ChessMove> pieceMovesHelper(ChessBoard board, ChessPosition myPosition, Integer[] possibleRows, Integer[] possibleCols) {
+  public Collection<ChessMove> pieceMovesHelper(ChessBoard board, ChessPosition myPosition, ArrayList<Integer> possibleRows, ArrayList<Integer> possibleCols) {
     Collection<ChessMove> possibleMoves = new HashSet<>();
     for (Integer possibleRow : possibleRows) {
       for (Integer possibleCol : possibleCols) {
