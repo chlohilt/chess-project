@@ -162,6 +162,9 @@ public class ChessGameImpl implements ChessGame {
     ChessPosition kingPos = getKingPos(teamColor);
     Collection<ChessMove> kingMoves = chessBoard.getPiece(kingPos).pieceMoves(chessBoard, kingPos);
 
+    if (kingMoves.isEmpty()) {
+      return false;
+    }
     chessBoard.removePiece(kingPos);
     for (ChessMove kingMove: kingMoves) {
       ChessPieceImpl kingPiece=new ChessPieceImpl(teamColor, ChessPiece.PieceType.KING);
