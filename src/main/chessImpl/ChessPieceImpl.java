@@ -269,14 +269,14 @@ public class ChessPieceImpl implements ChessPiece {
     if (myColor == ChessGame.TeamColor.BLACK) {
       if (myPosition.getRow() - 1 > 0 && myPosition.getColumn() + 1 <= 8) {
         checkForEnemy1=board.getPiece(new ChessPositionImpl(myPosition.getRow() - 1, myPosition.getColumn() + 1));
-      } else if (myPosition.getRow() - 1 > 0 && myPosition.getColumn() - 1 > 0) {
+      } if (myPosition.getRow() - 1 > 0 && myPosition.getColumn() - 1 > 0) {
         checkForEnemy2 = board.getPiece(new ChessPositionImpl(myPosition.getRow() - 1, myPosition.getColumn() - 1));
       }
     }
     else {
       if (myPosition.getRow() + 1 <= 8 && myPosition.getColumn() + 1 <= 8) {
         checkForEnemy1 = board.getPiece(new ChessPositionImpl(myPosition.getRow() + 1, myPosition.getColumn() + 1));
-      } else if (myPosition.getRow() + 1 <= 8 && myPosition.getColumn() - 1 > 0) {
+      } if (myPosition.getRow() + 1 <= 8 && myPosition.getColumn() - 1 > 0) {
         checkForEnemy2 = board.getPiece(new ChessPositionImpl(myPosition.getRow() + 1, myPosition.getColumn() - 1));
       }
     }
@@ -284,12 +284,12 @@ public class ChessPieceImpl implements ChessPiece {
     if (checkForEnemy1 != null && myColor == ChessGame.TeamColor.WHITE) {
       possibleCols = new Integer[] {
               myPosition.getColumn(),
-              myPosition.getColumn() - 1
+              myPosition.getColumn() + 1
       };
     } else if (checkForEnemy2 != null && myColor == ChessGame.TeamColor.WHITE) {
       possibleCols = new Integer[] {
               myPosition.getColumn(),
-              myPosition.getColumn() + 1
+              myPosition.getColumn() - 1
       };
     } else if (checkForEnemy2 != null && myColor == ChessGame.TeamColor.BLACK) {
       possibleCols = new Integer[] {
