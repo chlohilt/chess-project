@@ -1,20 +1,11 @@
 package requests;
 
 public class RegisterRequest {
-  private String message;
   private String username;
   private String password;
   private String email;
 
   public RegisterRequest() {}
-
-  public String getMessage() {
-    return message;
-  }
-
-  public void setMessage(String message) {
-    this.message=message;
-  }
 
   public String getUsername() {
     return username;

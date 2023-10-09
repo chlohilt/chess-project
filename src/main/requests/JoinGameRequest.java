@@ -6,8 +6,6 @@ public class JoinGameRequest {
   private ChessGame.TeamColor teamColor;
   private String gameID;
 
-  private String message;
-
   public JoinGameRequest() {}
 
   public ChessGame.TeamColor getTeamColor() {
@@ -26,11 +24,4 @@ public class JoinGameRequest {
     this.gameID=gameID;
   }
 
-  public String getMessage() {
-    return message;
-  }
-
-  public void setMessage(String message) {
-    this.message=message;
-  }
 }
