@@ -1,12 +1,12 @@
 package responses;
 
-import models.AuthTokenModel;
+import models.AuthToken;
 
 public class RegisterResponse {
   private String message;
   private String username;
 
-  private AuthTokenModel authToken;
+  private AuthToken authToken;
 
   public RegisterResponse() {}
 
@@ -26,11 +26,11 @@ public class RegisterResponse {
     this.username=username;
   }
 
-  public AuthTokenModel getAuthToken() {
+  public AuthToken getAuthToken() {
     return authToken;
   }
 
-  public void setAuthToken(AuthTokenModel authToken) {
+  public void setAuthToken(AuthToken authToken) {
     this.authToken=authToken;
   }
 }

@@ -1,15 +1,15 @@
 package dataAccess;
 
-import models.UserModel;
+import models.User;
 
 public class UserDAO {
-  void createUser(UserModel u) throws DataAccessException {}
+  public void createUser(User u) throws DataAccessException {}
 
-  UserModel returnUser(String username) throws DataAccessException {
+  public User returnUser(String username) throws DataAccessException {
     return null;
   }
 
-  void updateUser(String username, UserModel u) throws DataAccessException {}
+  public void updateUser(String username, User u) throws DataAccessException {}
 
-  void deleteUser(UserModel u) throws DataAccessException {}
+  public void deleteUser(User u) throws DataAccessException {}
 }

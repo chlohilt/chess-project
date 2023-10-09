@@ -1,6 +1,6 @@
 package models;
 
-public class UserModel {
+public class User {
 
   private String username;
 
@@ -8,7 +8,7 @@ public class UserModel {
 
   private String email;
 
-  public UserModel() {}
+  public User() {}
 
   public String getUsername() {
     return username;

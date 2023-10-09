@@ -1,6 +1,6 @@
 package models;
 
-public class AuthTokenModel {
+public class AuthToken {
   private String authToken;
   private String username;
 

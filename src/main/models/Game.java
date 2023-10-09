@@ -2,7 +2,7 @@ package models;
 
 import chess.ChessGame;
 
-public class GameModel {
+public class Game {
   private int gameID;
 
   private String whiteUsername;
@@ -10,7 +10,7 @@ public class GameModel {
   private String gameName;
   private ChessGame game;
 
-  public GameModel() {}
+  public Game() {}
 
   public ChessGame getGame() {
     return game;
