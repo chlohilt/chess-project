@@ -1,13 +1,27 @@
 package models;
 
+/**
+ * this class holds the information of a user
+ */
 public class User {
-
+  /**
+   * this field holds the user's username
+   */
   private String username;
 
+  /**
+   * this field holds the user's username
+   */
   private String password;
 
+  /**
+   * this field holds the user's email
+   */
   private String email;
 
+  /**
+   * this is the constructor for a user
+   */
   public User() {}
 
   public String getUsername() {

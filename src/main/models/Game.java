@@ -2,14 +2,38 @@ package models;
 
 import chess.ChessGame;
 
+/**
+ * this class holds data about each game
+ */
 public class Game {
+  /**
+   * this field holds the game's unique ID
+   */
   private int gameID;
 
+  /**
+   * this field hold's the game's white username
+   */
   private String whiteUsername;
+
+  /**
+   * this field holds the game's black username
+   */
   private String blackUsername;
+
+  /**
+   * this field holds the game's name
+   */
   private String gameName;
+
+  /**
+   * this field holds the actual game object used for game play
+   */
   private ChessGame game;
 
+  /**
+   * this is the constructor for a game
+   */
   public Game() {}
 
   public ChessGame getGame() {

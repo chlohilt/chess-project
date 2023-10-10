@@ -1,10 +1,25 @@
 package responses;
 
+/**
+ * this class holds the information for a login response
+ */
 public class LoginResponse {
+  /**
+   * this field holds the message outputted based on the success/failure
+   */
   private String message;
+  /**
+   * this field holds the authToken used to log in
+   */
   private String authToken;
-
+  /**
+   * this field holds the username that was used to login
+   */
   private String username;
+
+  /**
+   * this is the login response constructor
+   */
   public LoginResponse() {}
 
   public String getMessage() {

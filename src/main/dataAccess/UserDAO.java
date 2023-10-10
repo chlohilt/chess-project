@@ -31,5 +31,10 @@ public class UserDAO {
    */
   public void updateUser(String username, User u) throws DataAccessException {}
 
+  /**
+   * this function deletes a user from the database
+   * @param u - user to be deleted
+   * @throws DataAccessException when the user cannot be found
+   */
   public void deleteUser(User u) throws DataAccessException {}
 }
