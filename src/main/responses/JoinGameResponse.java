@@ -3,7 +3,7 @@ package responses;
 /**
  * this class holds the information for a join game response
  */
-public class JoinGameResponse {
+public class JoinGameResponse implements ResponseInterface {
   /**
    * this field holds the message given after success/failure
    */
@@ -14,11 +14,13 @@ public class JoinGameResponse {
    */
   public JoinGameResponse() {}
 
+  @Override
   public String getMessage() {
-    return message;
+    return null;
   }
 
+  @Override
   public void setMessage(String message) {
-    this.message=message;
+
   }
 }

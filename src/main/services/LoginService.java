@@ -8,6 +8,10 @@ import responses.LoginResponse;
  */
 public class LoginService {
   /**
+   * this is the constructor for a service to login
+   */
+  public LoginService() {}
+  /**
    * this function logs a user in
    * @param r - a request to login a user
    * @return a login response to see if login was successful

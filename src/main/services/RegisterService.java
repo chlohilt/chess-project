@@ -8,6 +8,10 @@ import responses.RegisterResponse;
  */
 public class RegisterService {
   /**
+   * this is the constructor for a service to register a new user
+   */
+  public RegisterService() {}
+  /**
    * this function registers a new user
    * @param r - a request to register a new user
    * @return a register response to see if registering the user was successful

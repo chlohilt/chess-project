@@ -8,6 +8,10 @@ import responses.JoinGameResponse;
  */
 public class JoinGameService {
   /**
+   * this is the constructor for a service to join a game
+   */
+  public JoinGameService() {}
+  /**
    * this function joins a game given a request
    * @param r - a request to join a game
    * @return JoinGameResponse to see if the game was successfully joined
