@@ -2,6 +2,8 @@ package services;
 
 import requests.RegisterRequest;
 import responses.RegisterResponse;
+import spark.Route;
+import spark.Spark;
 
 /**
  * this class holds the service to register a new user
@@ -17,7 +19,9 @@ public class RegisterService {
    * @return a register response to see if registering the user was successful
    */
   public RegisterResponse register(RegisterRequest r) {
+    Spark.post("/user", new Route() {
 
+    })
     return null;
   }
 }

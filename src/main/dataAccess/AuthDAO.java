@@ -30,7 +30,7 @@ public class AuthDAO {
    * @param username - username of the user
    * @return auth token for a specific user
    */
-  public AuthToken getAuthToken(String username) throws DataAccessException {
+  public AuthToken returnAuthToken(String username) throws DataAccessException {
     try {
       return authTokenMap.get(username);
     } catch (Exception e) {
