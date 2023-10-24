@@ -19,6 +19,8 @@ public class User {
    */
   private String email;
 
+  private boolean loggedIn = false;
+
   /**
    * this is the constructor for a user
    */
@@ -50,5 +52,13 @@ public class User {
 
   public void setEmail(String email) {
     this.email=email;
+  }
+
+  public boolean isLoggedIn() {
+    return loggedIn;
+  }
+
+  public void setLoggedIn(boolean loggedIn) {
+    this.loggedIn=loggedIn;
   }
 }
