@@ -3,45 +3,34 @@ package handlers;
 import com.google.gson.Gson;
 import requests.RegisterRequest;
 import responses.RegisterResponse;
+import services.RegisterService;
 import spark.Request;
 import spark.Response;
-import spark.Spark;
-
-import java.util.Map;
 
 public class RegisterHandler {
-  RegisterHandler() {}
+  Gson gson = new Gson();
+  RegisterService service = new RegisterService();
 
-  private void run() {
-    Spark.port(8080);
-    Spark.post("/user", this::echoBody);
-  }
+  public RegisterHandler() {}
 
-  private Object echoBody(Request req, Response res) {
-    var bodyObj = getBody(req, Map.class);
-
-    res.type("application/json");
-    return new Gson().toJson(bodyObj);
-  }
-
-  private static <T> T getBody(Request request, Class<T> clazz) {
-    var body = new Gson().fromJson(request.body(), clazz);
-    if (body == null) {
-      throw new RuntimeException("missing required body");
+  public String handleRequest(Request registerRequest, Response registerResponse){
+    // deserialize JSON to Request obj
+    RegisterRequest request = (RegisterRequest) gson.fromJson(registerRequest.body(), RegisterRequest.class);
+    // call service
+    RegisterResponse result = service.register(request);
+    String jsonResult = gson.toJson(result);
+    if (result.getMessage() == "Error: bad request") {
+      registerResponse.status(400);
+    } else if (result.getMessage() == "Error: already taken") {
+      registerResponse.status(403);
+    } else if (result.getMessage() == "Error: database error") {
+      registerResponse.status(500);
+    } else {
+      registerResponse.status(200);
     }
-    return body;
-  }
-  public void newHandler() {
-    // Must be done before mapping routes
-    Spark.staticFiles.location("/public");
-    RegisterRequest registerRequest = (RegisterRequest)gson.fromJson(reqData, RegisterRequest.class);
+
+    registerResponse.body(jsonResult);
+    return jsonResult;
   }
 
-  public void handleRequest(RegisterRequest registerRequest, RegisterResponse registerResponse){
-
-  }
-
-  public RegisterHandler getInstance() {
-    return this;
-  }
 }

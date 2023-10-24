@@ -19,7 +19,14 @@ public class RegisterResponse implements ResponseInterface {
   /**
    * this is the constructor for a register response
    */
-  public RegisterResponse() {}
+  public RegisterResponse(String username, AuthToken authToken) {
+    this.username = username;
+    this.authToken = authToken;
+  }
+
+  public RegisterResponse() {
+
+  }
 
   public String getUsername() {
     return username;

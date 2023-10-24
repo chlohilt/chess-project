@@ -2,13 +2,14 @@ package dataAccess;
 
 import models.User;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
  * this class holds user data and functions to create, update, read, and delete users
  */
 public class UserDAO {
-  private Map<String, User> userMap;
+  private Map<String, User> userMap = new HashMap<>();
 
   /**
    * this function creates a user

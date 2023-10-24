@@ -9,7 +9,7 @@ import java.util.Set;
  * this class holds game data in the database
  */
 public class GameDAO {
-  private Map<int, Game> gameMap;
+  private Map<Integer, Game> gameMap;
   /**
    * this function inserts a game into the database
    * @param game - game to insert into database
@@ -40,7 +40,7 @@ public class GameDAO {
    *
    * @return all games in the database
    */
-  public Set<int> findAll() throws DataAccessException {
+  public Set<Integer> findAll() throws DataAccessException {
     try {
       return gameMap.keySet();
     } catch (Exception e) {

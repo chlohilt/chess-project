@@ -1,6 +1,8 @@
 package dataAccess;
 
 import models.AuthToken;
+
+import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
@@ -8,7 +10,7 @@ import java.util.UUID;
  * this class stores data for the authorization tokens and their corresponding users
  */
 public class AuthDAO {
-  private Map<String, AuthToken> authTokenMap;
+  private Map<String, AuthToken> authTokenMap = new HashMap<>();
 
   /**
    * this function creates a new auth token for a specific user
