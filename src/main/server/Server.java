@@ -1,10 +1,7 @@
 package server;
 
 import dataAccess.CommonDataAccess;
-import handlers.ClearHandler;
-import handlers.LoginHandler;
-import handlers.LogoutHandler;
-import handlers.RegisterHandler;
+import handlers.*;
 import spark.Spark;
 
 import static spark.Spark.before;
@@ -15,7 +12,9 @@ public class Server {
   static LoginHandler loginHandler = new LoginHandler();
   static LogoutHandler logoutHandler = new LogoutHandler();
   static ClearHandler clearHandler = new ClearHandler();
-  CommonDataAccess commonDataAccess = new CommonDataAccess();
+  static ListGamesHandler listGamesHandler = new ListGamesHandler();
+  static CreateGameHandler createGameHandler = new CreateGameHandler();
+  static JoinGameHandler joinGameHandler = new JoinGameHandler();
 
   public static void main(String[] args) {
     new Server().run();
@@ -48,10 +47,16 @@ public class Server {
                     res)
     );
 
+    Spark.get("/game", (req, res) ->
+            (getListGamesHandlerInstance()).handleRequest(req,
+                    res)
+    );
+
   }
 
   private static RegisterHandler getRegisterHandlerInstance() { return registerHandler; }
   private static LoginHandler getLoginHandlerInstance() { return loginHandler; }
   private static LogoutHandler getLogoutHandlerInstance() { return logoutHandler; }
   private static ClearHandler getClearHandlerInstance() { return clearHandler; }
+  private static ListGamesHandler getListGamesHandlerInstance() { return listGamesHandler; }
 }
