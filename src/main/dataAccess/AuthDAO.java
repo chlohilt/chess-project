@@ -2,26 +2,25 @@ package dataAccess;
 
 import models.AuthToken;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * this class stores data for the authorization tokens and their corresponding users
  */
 public class AuthDAO {
-  private Map<String, AuthToken> authTokenMap = new HashMap<>();
+  private Set<AuthToken> authTokenSet = new HashSet<>();
 
   /**
    * this function creates a new auth token for a specific user
    * @param username - username to create an auth token for
    */
-  public void createAuthToken(String username) throws DataAccessException {
+  public String createAuthToken(String username) throws DataAccessException {
     try {
       AuthToken newAuthToken = new AuthToken();
       newAuthToken.setAuthToken(UUID.randomUUID().toString());
       newAuthToken.setUsername(username);
-      authTokenMap.put(username, newAuthToken);
+      authTokenSet.add(newAuthToken);
+      return newAuthToken.getAuthToken();
     } catch (Exception e) {
       throw new DataAccessException("Failed to create auth token for that user.");
     }
@@ -34,7 +33,29 @@ public class AuthDAO {
    */
   public String returnAuthToken(String username) throws DataAccessException {
     try {
-      return authTokenMap.get(username).getAuthToken();
+      Iterator<AuthToken> authTokenIterator = authTokenSet.iterator();
+      while (authTokenIterator.hasNext()) {
+        AuthToken checkAuthToken = authTokenIterator.next();
+        if (checkAuthToken.getUsername().equals(username)) {
+          return checkAuthToken.getAuthToken();
+        }
+      }
+      return null;
+    } catch (Exception e) {
+      throw new DataAccessException("Failed to get auth token for that user.");
+    }
+  }
+
+  public String returnUsername(String authToken) throws DataAccessException {
+    try {
+      Iterator<AuthToken> authTokenIterator = authTokenSet.iterator();
+      while (authTokenIterator.hasNext()) {
+        AuthToken checkAuthToken = authTokenIterator.next();
+        if (checkAuthToken.getAuthToken().equals(authToken)) {
+          return checkAuthToken.getUsername();
+        }
+      }
+      return null;
     } catch (Exception e) {
       throw new DataAccessException("Failed to get auth token for that user.");
     }
@@ -46,17 +67,17 @@ public class AuthDAO {
    */
   public void deleteAuthToken(String username) throws DataAccessException {
     try {
-      authTokenMap.remove(username);
+      authTokenSet.remove(returnAuthToken(username));
     } catch (Exception e) {
       throw new DataAccessException("Failed to delete that auth token.");
     }
   }
 
   public void clearAuthTokens() {
-    authTokenMap.clear();
+    authTokenSet.clear();
   }
 
-  public Map<String, AuthToken> getAuthTokenMap() {
-    return authTokenMap;
+  public Set<AuthToken> getAuthTokenSet() {
+    return authTokenSet;
   }
 }

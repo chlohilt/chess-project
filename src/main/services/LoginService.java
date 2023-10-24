@@ -27,7 +27,8 @@ public class LoginService extends BaseService {
       User u = getUserDataAccess().returnUser(r.getUsername());
       if (u != null) {
         if (Objects.equals(u.getPassword(), r.getPassword())) {
-          return new LoginResponse(r.getUsername(), getAuthDataAccess().returnAuthToken(r.getUsername()));
+          String authToken = getAuthDataAccess().createAuthToken(r.getUsername());
+          return new LoginResponse(r.getUsername(), authToken);
         }
       }
       return new LoginResponse("Error: unauthorized");

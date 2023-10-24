@@ -7,6 +7,8 @@ import services.RegisterService;
 import spark.Request;
 import spark.Response;
 
+import java.util.Objects;
+
 public class RegisterHandler {
   Gson gson = new Gson();
   RegisterService service = new RegisterService();
@@ -19,11 +21,11 @@ public class RegisterHandler {
     // call service
     RegisterResponse result = service.register(request);
     String jsonResult = gson.toJson(result);
-    if (result.getMessage() == "Error: bad request") {
+    if (Objects.equals(result.getMessage(), "Error: bad request")) {
       registerResponse.status(400);
-    } else if (result.getMessage() == "Error: already taken") {
+    } else if (Objects.equals(result.getMessage(), "Error: already taken")) {
       registerResponse.status(403);
-    } else if (result.getMessage() == "Error: database error") {
+    } else if (Objects.equals(result.getMessage(), "Error: database error")) {
       registerResponse.status(500);
     } else {
       registerResponse.status(200);

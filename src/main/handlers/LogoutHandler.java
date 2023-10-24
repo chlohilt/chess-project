@@ -1,8 +1,8 @@
 package handlers;
 
 import com.google.gson.Gson;
-import requests.LogoutRequest;
 import responses.LogoutResponse;
+import responses.ResponseClass;
 import services.LogoutService;
 import spark.Request;
 import spark.Response;
@@ -13,11 +13,12 @@ public class LogoutHandler {
   Gson gson = new Gson();
   LogoutService logoutService = new LogoutService();
   public String handleRequest(Request logoutRequest, Response logoutResponse){
-    LogoutRequest request = gson.fromJson(logoutRequest.body(), LogoutRequest.class);
-    LogoutResponse result = logoutService.logout(request);
+    ResponseClass result = logoutService.logout(logoutRequest);
     String jsonResult = gson.toJson(result);
     if (Objects.equals(result.getMessage(), "Error: database error")) {
       logoutResponse.status(500);
+    } else if (Objects.equals(result.getMessage(), "Error: unauthorized")) {
+      logoutResponse.status(401);
     } else {
       logoutResponse.status(200);
     }

@@ -15,6 +15,7 @@ public class Server {
   static LoginHandler loginHandler = new LoginHandler();
   static LogoutHandler logoutHandler = new LogoutHandler();
   static ClearHandler clearHandler = new ClearHandler();
+  CommonDataAccess commonDataAccess = new CommonDataAccess();
 
   public static void main(String[] args) {
     new Server().run();
@@ -42,21 +43,10 @@ public class Server {
                     res)
     );
 
-    /*
-    before((request, response) -> {
-      boolean authenticated=false;
-      request.headers();
-      if (!authenticated) {
-        halt(401, "You are not welcome here");
-      } else {
-        Spark.delete("/user", (req, res) ->
-                (getLogoutHandlerInstance()).handleRequest(req,
-                        res)
-        );
-      }
-    });
-     */
-
+    Spark.delete("/session", (req, res) ->
+            (getLogoutHandlerInstance()).handleRequest(req,
+                    res)
+    );
 
   }
 
