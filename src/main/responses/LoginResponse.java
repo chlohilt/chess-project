@@ -3,7 +3,7 @@ package responses;
 /**
  * this class holds the information for a login response
  */
-public class LoginResponse implements ResponseInterface {
+public class LoginResponse extends ResponseInterface {
   /**
    * this field holds the authToken used to log in
    */
@@ -17,14 +17,6 @@ public class LoginResponse implements ResponseInterface {
    * this is the login response constructor
    */
   public LoginResponse() {}
-
-  public String getMessage() {
-    return message;
-  }
-
-  public void setMessage(String message) {
-
-  }
 
   public String getAuthToken() {
     return authToken;

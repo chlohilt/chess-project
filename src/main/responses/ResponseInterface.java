@@ -1,14 +1,18 @@
 package responses;
 
 /**
- * This interface is to have the message in every respone
+ * This interface is to have the message in every response
  */
-public interface ResponseInterface {
+public class ResponseInterface {
   /**
    * this field holds the message given after success/failure
    */
-  String message="";
-  String getMessage();
+  private String message="";
+  public String getMessage() {
+    return this.message;
+  }
 
-  void setMessage(String message);
+  public void setMessage(String message) {
+    this.message = message;
+  }
 }

@@ -5,7 +5,7 @@ import models.AuthToken;
 /**
  * this class holds the information for a register response
  */
-public class RegisterResponse implements ResponseInterface {
+public class RegisterResponse extends ResponseInterface {
   /**
    * this field holds the username that was passed in as part of a request
    */
@@ -14,19 +14,22 @@ public class RegisterResponse implements ResponseInterface {
   /**
    * this field holds the new authToken given to the user
    */
-  private AuthToken authToken;
+  private String authToken;
 
   /**
    * this is the constructor for a register response
    */
-  public RegisterResponse(String username, AuthToken authToken) {
+  public RegisterResponse(String username, String authToken) {
     this.username = username;
     this.authToken = authToken;
+    this.setMessage(null);
   }
 
-  public RegisterResponse() {
-
+  public RegisterResponse(String message) {
+    this.setMessage(message);
   }
+
+  public RegisterResponse() {}
 
   public String getUsername() {
     return username;
@@ -36,21 +39,12 @@ public class RegisterResponse implements ResponseInterface {
     this.username=username;
   }
 
-  public AuthToken getAuthToken() {
+  public String getAuthToken() {
     return authToken;
   }
 
-  public void setAuthToken(AuthToken authToken) {
+  public void setAuthToken(String authToken) {
     this.authToken=authToken;
   }
 
-  @Override
-  public String getMessage() {
-    return null;
-  }
-
-  @Override
-  public void setMessage(String message) {
-
-  }
 }

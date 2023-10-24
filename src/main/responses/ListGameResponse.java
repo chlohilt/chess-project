@@ -6,7 +6,7 @@ import java.util.Map;
 /**
  * this class holds the list game response
  */
-public class ListGameResponse implements ResponseInterface{
+public class ListGameResponse extends ResponseInterface{
   /**
    * this array holds a game list
    */
@@ -16,13 +16,4 @@ public class ListGameResponse implements ResponseInterface{
    */
   public ListGameResponse() {}
 
-  @Override
-  public String getMessage() {
-    return null;
-  }
-
-  @Override
-  public void setMessage(String message) {
-
-  }
 }

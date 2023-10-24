@@ -32,9 +32,9 @@ public class AuthDAO {
    * @param username - username of the user
    * @return auth token for a specific user
    */
-  public AuthToken returnAuthToken(String username) throws DataAccessException {
+  public String returnAuthToken(String username) throws DataAccessException {
     try {
-      return authTokenMap.get(username);
+      return authTokenMap.get(username).getAuthToken();
     } catch (Exception e) {
       throw new DataAccessException("Failed to get auth token for that user.");
     }
