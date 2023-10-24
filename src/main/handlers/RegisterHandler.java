@@ -15,7 +15,7 @@ public class RegisterHandler {
 
   public String handleRequest(Request registerRequest, Response registerResponse){
     // deserialize JSON to Request obj
-    RegisterRequest request = (RegisterRequest) gson.fromJson(registerRequest.body(), RegisterRequest.class);
+    RegisterRequest request =gson.fromJson(registerRequest.body(), RegisterRequest.class);
     // call service
     RegisterResponse result = service.register(request);
     String jsonResult = gson.toJson(result);

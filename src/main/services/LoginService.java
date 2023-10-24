@@ -1,19 +1,18 @@
 package services;
 
+import dataAccess.CommonDataAccess;
+import dataAccess.DataAccessException;
+import models.User;
+import org.glassfish.grizzly.compression.lzma.impl.Base;
 import requests.LoginRequest;
 import responses.LoginResponse;
-import spark.Request;
-import spark.Response;
-import spark.Route;
-import spark.Spark;
 
-import static spark.Spark.before;
-import static spark.Spark.halt;
+import java.util.Objects;
 
 /**
  * this class holds the service to login
  */
-public class LoginService {
+public class LoginService extends BaseService {
   /**
    * this is the constructor for a service to login
    */
@@ -24,23 +23,16 @@ public class LoginService {
    * @return a login response to see if login was successful
    */
   public LoginResponse login(LoginRequest r) {
-    before((request, response) -> {
-      boolean authenticated=false;
-
-      // ... check if authenticated
-
-      if (!authenticated) {
-        halt(401, "You need an authorization token to login");
+    try {
+      User u = getUserDataAccess().returnUser(r.getUsername());
+      if (u != null) {
+        if (Objects.equals(u.getPassword(), r.getPassword())) {
+          return new LoginResponse(r.getUsername(), getAuthDataAccess().returnAuthToken(r.getUsername()));
+        }
       }
-    });
-
-    Spark.post("/session", new Route() {
-
-      @Override
-      public Object handle(Request request, Response response) throws Exception {
-        return null;
-      }
-    });
-    return null;
+      return new LoginResponse("Error: unauthorized");
+    } catch (DataAccessException e) {
+      return new LoginResponse("Error: database error");
+    }
   }
 }

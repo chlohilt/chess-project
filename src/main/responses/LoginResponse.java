@@ -16,7 +16,15 @@ public class LoginResponse extends ResponseInterface {
   /**
    * this is the login response constructor
    */
-  public LoginResponse() {}
+  public LoginResponse(String username, String authToken) {
+    this.username = username;
+    this.authToken = authToken;
+    this.setMessage(null);
+  }
+
+  public LoginResponse(String message) {
+    this.setMessage(message);
+  }
 
   public String getAuthToken() {
     return authToken;

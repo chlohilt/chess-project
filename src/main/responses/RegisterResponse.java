@@ -1,7 +1,5 @@
 package responses;
 
-import models.AuthToken;
-
 /**
  * this class holds the information for a register response
  */
