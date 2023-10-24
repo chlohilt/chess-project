@@ -76,7 +76,11 @@ public class GameDAO {
   /**
    * this function clears the database
    */
-  public void clear(){
+  public void clearGames(){
     gameMap.clear();
+  }
+
+  public Map<Integer, Game> getGameMap() {
+    return gameMap;
   }
 }

@@ -51,4 +51,12 @@ public class AuthDAO {
       throw new DataAccessException("Failed to delete that auth token.");
     }
   }
+
+  public void clearAuthTokens() {
+    authTokenMap.clear();
+  }
+
+  public Map<String, AuthToken> getAuthTokenMap() {
+    return authTokenMap;
+  }
 }

@@ -3,7 +3,7 @@ package responses;
 /**
  * this class holds the information for a join game response
  */
-public class JoinGameResponse extends ResponseInterface {
+public class JoinGameResponse extends ResponseClass {
   /**
    * this field holds the message given after success/failure
    */

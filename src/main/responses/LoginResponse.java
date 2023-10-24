@@ -3,13 +3,13 @@ package responses;
 /**
  * this class holds the information for a login response
  */
-public class LoginResponse extends ResponseInterface {
+public class LoginResponse extends ResponseClass {
   /**
    * this field holds the authToken used to log in
    */
   private String authToken;
   /**
-   * this field holds the username that was used to login
+   * this field holds the username that was used to log in
    */
   private String username;
 

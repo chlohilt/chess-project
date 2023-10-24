@@ -65,4 +65,12 @@ public class UserDAO {
       throw new DataAccessException("That user does not exist in the database. Please try again with an existing user.");
     }
   }
+
+  public void clearUsers() {
+    userMap.clear();
+  }
+
+  public Map<String, User> getUserMap() {
+    return userMap;
+  }
 }

@@ -3,7 +3,7 @@ package responses;
 /**
  * this class holds the information for a register response
  */
-public class RegisterResponse extends ResponseInterface {
+public class RegisterResponse extends ResponseClass {
   /**
    * this field holds the username that was passed in as part of a request
    */

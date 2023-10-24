@@ -7,6 +7,8 @@ import services.LoginService;
 import spark.Request;
 import spark.Response;
 
+import java.util.Objects;
+
 public class LoginHandler {
   Gson gson = new Gson();
   LoginService loginService = new LoginService();
@@ -14,9 +16,9 @@ public class LoginHandler {
     LoginRequest request = gson.fromJson(loginRequest.body(), LoginRequest.class);
     LoginResponse result = loginService.login(request);
     String jsonResult = gson.toJson(result);
-    if (result.getMessage() == "Error: unauthorized") {
+    if (Objects.equals(result.getMessage(), "Error: unauthorized")) {
       loginResponse.status(401);
-    } else if (result.getMessage() == "Error: database error") {
+    } else if (Objects.equals(result.getMessage(), "Error: database error")) {
       loginResponse.status(500);
     } else {
       loginResponse.status(200);

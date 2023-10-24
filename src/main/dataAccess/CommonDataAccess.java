@@ -1,11 +1,11 @@
 package dataAccess;
 
 public class CommonDataAccess {
-  private AuthDAO commonAuthDAO = new AuthDAO();
+  private static AuthDAO commonAuthDAO = new AuthDAO();
 
-  private UserDAO commonUserDAO = new UserDAO();
+  private static UserDAO commonUserDAO = new UserDAO();
 
-  private GameDAO commonGameDAO = new GameDAO();
+  private static GameDAO commonGameDAO = new GameDAO();
 
   public CommonDataAccess(){}
 

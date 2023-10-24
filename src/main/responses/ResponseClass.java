@@ -3,7 +3,14 @@ package responses;
 /**
  * This interface is to have the message in every response
  */
-public class ResponseInterface {
+public class ResponseClass {
+  public ResponseClass(String message) {
+    this.message = message;
+  }
+
+  public ResponseClass() {
+    this.message = null;
+  }
   /**
    * this field holds the message given after success/failure
    */

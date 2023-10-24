@@ -6,7 +6,7 @@ import java.util.Map;
 /**
  * this class holds the list game response
  */
-public class ListGameResponse extends ResponseInterface{
+public class ListGameResponse extends ResponseClass {
   /**
    * this array holds a game list
    */
