@@ -9,7 +9,7 @@ import spark.Request;
 
 public class BaseService {
   CommonDataAccess commonDataAccess;
-  BaseService() {
+  public BaseService() {
     commonDataAccess = new CommonDataAccess();
   }
 

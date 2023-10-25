@@ -11,7 +11,7 @@ import java.util.Objects;
 
 public class RegisterHandler {
   Gson gson = new Gson();
-  RegisterService service = new RegisterService();
+  RegisterService registerService= new RegisterService();
 
   public RegisterHandler() {}
 
@@ -19,7 +19,7 @@ public class RegisterHandler {
     // deserialize JSON to Request obj
     RegisterRequest request =gson.fromJson(registerRequest.body(), RegisterRequest.class);
     // call service
-    RegisterResponse result = service.register(request);
+    RegisterResponse result = registerService.register(request);
     String jsonResult = gson.toJson(result);
     if (Objects.equals(result.getMessage(), "Error: bad request")) {
       registerResponse.status(400);
