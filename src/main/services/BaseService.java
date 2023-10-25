@@ -6,7 +6,6 @@ import dataAccess.GameDAO;
 import dataAccess.UserDAO;
 import responses.ResponseClass;
 import spark.Request;
-import spark.Response;
 
 public class BaseService {
   CommonDataAccess commonDataAccess;
@@ -20,7 +19,7 @@ public class BaseService {
       if (authToken == null) {
         return new ResponseClass("Error: unauthorized");
       }
-      if (getAuthDataAccess().returnUsername(authToken) != null) {
+      if (getAuthDataAccess().returnUsername(authToken) != null && getUserDataAccess().returnUser(getAuthDataAccess().returnUsername(authToken)).getLoggedIn()) {
         return new ResponseClass();
       } else {
         return new ResponseClass("Error: unauthorized");

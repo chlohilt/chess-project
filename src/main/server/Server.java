@@ -4,9 +4,6 @@ import dataAccess.CommonDataAccess;
 import handlers.*;
 import spark.Spark;
 
-import static spark.Spark.before;
-import static spark.Spark.halt;
-
 public class Server {
   static RegisterHandler registerHandler = new RegisterHandler();
   static LoginHandler loginHandler = new LoginHandler();
