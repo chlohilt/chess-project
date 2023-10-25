@@ -2,8 +2,6 @@ package chessImpl;
 
 import chess.*;
 
-import java.sql.Array;
-import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -55,22 +53,28 @@ public class ChessPieceImpl implements ChessPiece {
     PieceType myPieceType;
     if (board.getPiece(myPosition) != null) {
       myPieceType = board.getPiece(myPosition).getPieceType();
-      switch(myPieceType) {
-        case PAWN:
+      switch (myPieceType) {
+        case PAWN -> {
           return pawnPieceMoves(board, myPosition);
-        case ROOK:
+        }
+        case ROOK -> {
           return rookPieceMoves(board, myPosition);
-        case KNIGHT:
+        }
+        case KNIGHT -> {
           return knightPieceMoves(board, myPosition);
-        case BISHOP:
+        }
+        case BISHOP -> {
           return bishopPieceMoves(board, myPosition);
-        case KING:
+        }
+        case KING -> {
           return kingPieceMoves(board, myPosition);
-        case QUEEN:
-          Collection<ChessMove> queenMoves = new HashSet<>();
+        }
+        case QUEEN -> {
+          Collection<ChessMove> queenMoves=new HashSet<>();
           queenMoves.addAll(rookPieceMoves(board, myPosition));
           queenMoves.addAll(bishopPieceMoves(board, myPosition));
           return queenMoves;
+        }
       }
     }
     return null;
@@ -328,7 +332,7 @@ public class ChessPieceImpl implements ChessPiece {
         ChessPositionImpl checkPos=new ChessPositionImpl(possibleRow, possibleCol);
 
         if (board.getPiece(myPosition).getPieceType() == PieceType.PAWN) {
-          Boolean inBetweenCheck = true;
+          boolean inBetweenCheck = true;
           ChessPositionImpl checkWhiteCapture = new ChessPositionImpl(myPosition.getRow() + 1, myPosition.getColumn() - 1);
           ChessPositionImpl checkWhiteCapture2 = new ChessPositionImpl(myPosition.getRow() + 1, myPosition.getColumn() + 1);
           ChessPositionImpl checkBlackCapture = new ChessPositionImpl(myPosition.getRow() - 1, myPosition.getColumn() - 1);

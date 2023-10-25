@@ -8,7 +8,7 @@ import java.util.*;
  * this class stores data for the authorization tokens and their corresponding users
  */
 public class AuthDAO {
-  private Set<AuthToken> authTokenSet = new HashSet<>();
+  private Set<AuthToken> authTokenSet = new HashSet<AuthToken>();
 
   /**
    * this function creates a new auth token for a specific user
@@ -33,9 +33,7 @@ public class AuthDAO {
    */
   public String returnAuthToken(String username) throws DataAccessException {
     try {
-      Iterator<AuthToken> authTokenIterator = authTokenSet.iterator();
-      while (authTokenIterator.hasNext()) {
-        AuthToken checkAuthToken = authTokenIterator.next();
+      for (AuthToken checkAuthToken : authTokenSet) {
         if (checkAuthToken.getUsername().equals(username)) {
           return checkAuthToken.getAuthToken();
         }
@@ -48,9 +46,7 @@ public class AuthDAO {
 
   public String returnUsername(String authToken) throws DataAccessException {
     try {
-      Iterator<AuthToken> authTokenIterator = authTokenSet.iterator();
-      while (authTokenIterator.hasNext()) {
-        AuthToken checkAuthToken = authTokenIterator.next();
+      for (AuthToken checkAuthToken : authTokenSet) {
         if (checkAuthToken.getAuthToken().equals(authToken)) {
           return checkAuthToken.getUsername();
         }

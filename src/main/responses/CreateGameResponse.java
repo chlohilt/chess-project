@@ -4,7 +4,7 @@ public class CreateGameResponse extends ResponseClass {
 
   private String gameId;
   /**
-   * this is the constructor for a create game response
+   * this is the constructor for a creation game response
    */
   public CreateGameResponse(Integer gameID) {
     this.setGameId(String.valueOf(gameID));

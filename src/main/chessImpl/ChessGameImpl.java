@@ -4,7 +4,6 @@ import chess.*;
 
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Iterator;
 
 public class ChessGameImpl implements ChessGame {
   TeamColor teamTurn = TeamColor.WHITE;
@@ -174,11 +173,9 @@ public class ChessGameImpl implements ChessGame {
       chessBoard.removePiece(kingMove.getEndPosition());
     }
 
-    boolean result = kingMoves.stream()
+    return kingMoves.stream()
             .allMatch(kingMove -> movesThatCouldCheckMate.stream()
                     .anyMatch(checkMateMove -> kingMove.getEndPosition().equals(checkMateMove.getEndPosition())));
-
-    return result;
   }
 
   @Override

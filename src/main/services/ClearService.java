@@ -13,7 +13,6 @@ public class ClearService extends BaseService {
   /**
    * this function clears the database--removes all users, games, and authTokens
    *
-   * @return
    */
   public ResponseClass clear() {
     try {

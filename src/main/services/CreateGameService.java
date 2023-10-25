@@ -3,8 +3,6 @@ package services;
 import com.google.gson.Gson;
 import requests.CreateGameRequest;
 import responses.CreateGameResponse;
-import responses.ResponseClass;
-import spark.Request;
 
 import java.util.Random;
 
@@ -30,7 +28,7 @@ public class CreateGameService extends BaseService {
       Random random = new Random();
       int randomNumber = random.nextInt(9000 + 1) + 1000;
 
-      getGameDataAccess().getGameMap().put(randomNumber, c.getGameName());
+      //getGameDataAccess().getGameMap().put(randomNumber, c.getGameName());
       return new CreateGameResponse();
     } catch (Exception e) {
       return new CreateGameResponse("Error: database error");

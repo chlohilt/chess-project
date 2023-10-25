@@ -14,7 +14,7 @@ public class ResponseClass {
   /**
    * this field holds the message given after success/failure
    */
-  private String message="";
+  private String message;
   public String getMessage() {
     return this.message;
   }

@@ -19,7 +19,6 @@ public class ClearHandler {
     }
     response.status(200);
 
-    String jsonResult = gson.toJson(clearResponse);
-    return jsonResult;
+    return gson.toJson(clearResponse);
   }
 }

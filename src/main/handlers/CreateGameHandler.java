@@ -14,10 +14,7 @@ public class CreateGameHandler extends BaseService {
   Gson gson = new Gson();
   CreateGameService createGameService = new CreateGameService();
   public String handleRequest(Request req, Response res) {
-    boolean authenticated = false;
-    if (authorizationCheck(req).getMessage() == null) {
-      authenticated = true;
-    }
+    boolean authenticated =authorizationCheck(req).getMessage() == null;
     if (!authenticated) {
 
     }

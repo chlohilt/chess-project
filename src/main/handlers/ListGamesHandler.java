@@ -20,7 +20,7 @@ public class ListGamesHandler {
   Gson gson = new Gson();
   public String handleRequest(Request req, Response res) {
     ResponseClass result = listGamesService.listGames(req);
-    String objectJson = new String();
+    String objectJson ="";
     if (Objects.equals(result.getMessage(), "Error: database error")) {
       res.status(500);
     } else if (Objects.equals(result.getMessage(), "Error: unauthorized")) {
@@ -30,7 +30,7 @@ public class ListGamesHandler {
         var jsonBody = Map.of (
                 "games", List.of(commonDataAccess.getCommonGameDAO().getGameMap().toString())
         );
-        objectJson = gson.toJson((Reader) jsonBody, Map.class);
+        objectJson = gson.toJson(jsonBody, Map.class);
         res.body(objectJson);
       } else {
         objectJson =String.valueOf(new JsonObject());
