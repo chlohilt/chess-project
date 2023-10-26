@@ -28,10 +28,9 @@ public class ListGamesHandler {
     } else {
       if (commonDataAccess.getCommonGameDAO().getGameMap().size() != 0) {
         var jsonBody = Map.of (
-                "games", List.of(commonDataAccess.getCommonGameDAO().getGameMap().toString())
+                "games", commonDataAccess.getCommonGameDAO().toList()
         );
-        objectJson = gson.toJson(jsonBody, Map.class);
-        res.body(objectJson);
+        objectJson =String.valueOf(gson.toJsonTree(jsonBody));
       } else {
         objectJson =String.valueOf(new JsonObject());
       }

@@ -25,10 +25,10 @@ public class JoinGameService extends BaseClass {
       if (r.getGameID() == null || getGameDataAccess().findGame(r.getGameID()) == null) {
         return new ResponseClass("Error: bad request");
       }
-      Game gameToJoin = getGameDataAccess().findGame(r.getGameID());
       ChessGame.TeamColor teamColor = r.getTeamColor();
-      if (gameToJoin.getBlackUsername() != null && teamColor == ChessGame.TeamColor.BLACK
-      || gameToJoin.getWhiteUsername() != null && teamColor == ChessGame.TeamColor.WHITE) {
+      Game gameToJoin = getGameDataAccess().findGame(r.getGameID());
+      if ((gameToJoin.getBlackUsername() != null && teamColor == ChessGame.TeamColor.BLACK)
+      || (gameToJoin.getWhiteUsername() != null && teamColor == ChessGame.TeamColor.WHITE)) {
         return new ResponseClass("Error: already taken");
       }
 

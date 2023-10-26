@@ -1,5 +1,6 @@
 package dataAccess;
 
+import com.google.gson.Gson;
 import models.Game;
 
 import java.util.*;
@@ -8,6 +9,7 @@ import java.util.*;
  * this class holds game data in the database
  */
 public class GameDAO {
+  Gson gson = new Gson();
   private Map<Integer, Game> gameMap = new HashMap<>();
   /**
    * this function inserts a game into the database
@@ -83,12 +85,24 @@ public class GameDAO {
     return gameMap;
   }
 
-  @Override
-  public String toString() {
+  public List<Object> toList() {
     List<Object> gameList = new ArrayList<>();
     for (Map.Entry<Integer, Game> game: gameMap.entrySet()) {
+      String whiteUsername = game.getValue().getWhiteUsername();
+      String blackUsername = game.getValue().getBlackUsername();
+      Map<String, Object> obj = new HashMap<>();
 
+      obj.put("gameID", game.getKey());
+      if (whiteUsername != null) {
+        obj.put("whiteUsername", whiteUsername);
+      }
+      if (blackUsername != null) {
+        obj.put("blackUsername", blackUsername);
+      }
+      obj.put("gameName", game.getValue().getGameName());
+
+      gameList.add(obj);
     }
-    return null;
+    return gameList;
   }
 }
