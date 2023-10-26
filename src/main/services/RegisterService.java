@@ -31,7 +31,7 @@ public class RegisterService extends BaseClass {
       User newUser = new User(registerRequest.getUsername(), registerRequest.getPassword(), registerRequest.getEmail());
       getUserDataAccess().createUser(newUser);
       getAuthDataAccess().createAuthToken(newUser.getUsername());
-      String userAuthToken = getAuthDataAccess().returnAuthToken(registerRequest.getUsername());
+      String userAuthToken = getAuthDataAccess().returnAuthTokenString(registerRequest.getUsername());
       return new RegisterResponse(registerRequest.getUsername(), userAuthToken);
 
     } catch (DataAccessException e) {

@@ -1,7 +1,9 @@
 package services;
 
 import dataAccess.DataAccessException;
+import models.AuthToken;
 import models.BaseClass;
+import models.User;
 import responses.ResponseClass;
 import spark.Request;
 
@@ -20,10 +22,14 @@ public class LogoutService extends BaseClass {
   public ResponseClass logout(Request logoutRequest) {
     String authToken = logoutRequest.headers("Authorization");
     try {
-      if (getAuthDataAccess().returnUsername(authToken) != null) {
-        getUserDataAccess().returnUser(getAuthDataAccess().returnUsername(authToken)).setLoggedIn(false);
+      String username = getAuthDataAccess().returnUsername(authToken);
+      if (authorizationCheck(logoutRequest).getMessage() == null) {
+        if (username != null) {
+          getAuthDataAccess().deleteAuthToken(username);
+          return new ResponseClass("");
+        }
       }
-      return authorizationCheck(logoutRequest);
+      return new ResponseClass("Error: unauthorized");
     } catch (DataAccessException e) {
       return new ResponseClass("Error: database error");
     }

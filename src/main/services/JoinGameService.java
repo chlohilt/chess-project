@@ -37,9 +37,9 @@ public class JoinGameService extends BaseClass {
       } else if (teamColor == ChessGame.TeamColor.WHITE) {
         gameToJoin.setWhiteUsername(r.getUsername());
       }
+      // watcher logic would be here
 
-
-      return null;
+      return new ResponseClass("");
     } catch (Exception e) {
       return new ResponseClass("Error: database error");
     }

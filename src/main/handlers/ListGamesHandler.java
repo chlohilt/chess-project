@@ -26,7 +26,7 @@ public class ListGamesHandler {
     } else if (Objects.equals(result.getMessage(), "Error: unauthorized")) {
       res.status(401);
     } else {
-      if (commonDataAccess.getCommonGameDAO().getGameMap() != null) {
+      if (commonDataAccess.getCommonGameDAO().getGameMap().size() != 0) {
         var jsonBody = Map.of (
                 "games", List.of(commonDataAccess.getCommonGameDAO().getGameMap().toString())
         );

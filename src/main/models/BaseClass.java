@@ -19,7 +19,7 @@ public class BaseClass {
       if (authToken == null) {
         return new ResponseClass("Error: unauthorized");
       }
-      if (getAuthDataAccess().returnUsername(authToken) != null && getUserDataAccess().returnUser(getAuthDataAccess().returnUsername(authToken)).getLoggedIn()) {
+      if (getAuthDataAccess().returnUsername(authToken) != null) {
         return new ResponseClass();
       } else {
         return new ResponseClass("Error: unauthorized");

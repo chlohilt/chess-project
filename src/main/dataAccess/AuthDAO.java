@@ -31,11 +31,24 @@ public class AuthDAO {
    * @param username - username of the user
    * @return auth token for a specific user
    */
-  public String returnAuthToken(String username) throws DataAccessException {
+  public String returnAuthTokenString(String username) throws DataAccessException {
     try {
       for (AuthToken checkAuthToken : authTokenSet) {
         if (checkAuthToken.getUsername().equals(username)) {
           return checkAuthToken.getAuthToken();
+        }
+      }
+      return null;
+    } catch (Exception e) {
+      throw new DataAccessException("Failed to get auth token for that user.");
+    }
+  }
+
+  public AuthToken returnAuthToken(String username) throws DataAccessException {
+    try {
+      for (AuthToken checkAuthToken : authTokenSet) {
+        if (checkAuthToken.getUsername().equals(username)) {
+          return checkAuthToken;
         }
       }
       return null;

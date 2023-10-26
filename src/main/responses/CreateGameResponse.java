@@ -2,12 +2,12 @@ package responses;
 
 public class CreateGameResponse extends ResponseClass {
 
-  private String gameId;
+  private Integer gameID;
   /**
    * this is the constructor for a creation game response
    */
   public CreateGameResponse(Integer gameID) {
-    this.setGameId(String.valueOf(gameID));
+    this.gameID = gameID;
   }
 
   public CreateGameResponse(String message) {
@@ -16,11 +16,11 @@ public class CreateGameResponse extends ResponseClass {
 
   public CreateGameResponse() {}
 
-  public String getGameId() {
-    return gameId;
+  public Integer getGameId() {
+    return gameID;
   }
 
-  public void setGameId(String gameId) {
-    this.gameId=gameId;
+  public void setGameId(Integer gameId) {
+    this.gameID=gameId;
   }
 }

@@ -2,9 +2,7 @@ package dataAccess;
 
 import models.Game;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * this class holds game data in the database
@@ -83,5 +81,14 @@ public class GameDAO {
 
   public Map<Integer, Game> getGameMap() {
     return gameMap;
+  }
+
+  @Override
+  public String toString() {
+    List<Object> gameList = new ArrayList<>();
+    for (Map.Entry<Integer, Game> game: gameMap.entrySet()) {
+
+    }
+    return null;
   }
 }

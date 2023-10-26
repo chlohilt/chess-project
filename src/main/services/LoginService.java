@@ -26,7 +26,6 @@ public class LoginService extends BaseClass {
       User u = getUserDataAccess().returnUser(r.getUsername());
       if (u != null) {
         if (Objects.equals(u.getPassword(), r.getPassword())) {
-          u.setLoggedIn(true);
           String authToken = getAuthDataAccess().createAuthToken(r.getUsername());
           return new LoginResponse(r.getUsername(), authToken);
         }

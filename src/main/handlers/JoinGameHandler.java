@@ -31,8 +31,7 @@ public class JoinGameHandler extends BaseClass {
       res.status(400);
     } else if (Objects.equals(joinGameResponse.getMessage(), "Error: already taken")) {
       res.status(403);
-    }
-    else if (Objects.equals(joinGameResponse.getMessage(), "Error: database error")) {
+    } else if (Objects.equals(joinGameResponse.getMessage(), "Error: database error")) {
       res.status(500);
     } else {
       res.status(200);
