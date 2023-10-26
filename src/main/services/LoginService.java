@@ -1,6 +1,7 @@
 package services;
 
 import dataAccess.DataAccessException;
+import models.BaseClass;
 import models.User;
 import requests.LoginRequest;
 import responses.LoginResponse;
@@ -10,7 +11,7 @@ import java.util.Objects;
 /**
  * this class holds the service to login
  */
-public class LoginService extends BaseService {
+public class LoginService extends BaseClass {
   /**
    * this is the constructor for a service to login
    */

@@ -1,11 +1,12 @@
 package services;
 
+import models.BaseClass;
 import responses.ResponseClass;
 
 /**
  * this service clears the database
  */
-public class ClearService extends BaseService {
+public class ClearService extends BaseClass {
   /**
    * this is the constructor for the service to clear a database
    */

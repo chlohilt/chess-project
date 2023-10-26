@@ -36,6 +36,11 @@ public class Game {
    */
   public Game() {}
 
+  public Game(String gameName, int gameId) {
+    this.gameName = gameName;
+    this.gameID = gameId;
+  }
+
   public ChessGame getGame() {
     return game;
   }
@@ -74,4 +79,5 @@ public class Game {
   public void setWhiteUsername(String whiteUsername) {
     this.whiteUsername=whiteUsername;
   }
+
 }

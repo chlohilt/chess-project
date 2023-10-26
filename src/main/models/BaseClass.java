@@ -1,4 +1,4 @@
-package services;
+package models;
 
 import dataAccess.AuthDAO;
 import dataAccess.CommonDataAccess;
@@ -7,9 +7,9 @@ import dataAccess.UserDAO;
 import responses.ResponseClass;
 import spark.Request;
 
-public class BaseService {
+public class BaseClass {
   CommonDataAccess commonDataAccess;
-  public BaseService() {
+  public BaseClass() {
     commonDataAccess = new CommonDataAccess();
   }
 
@@ -26,6 +26,15 @@ public class BaseService {
       }
     } catch (Exception e) {
       return new ResponseClass("Error: database error");
+    }
+  }
+
+  public String returnUsernameFromAuthToken(Request request) {
+    try {
+      String authToken = request.headers("Authorization");
+      return getAuthDataAccess().returnUsername(authToken);
+    } catch (Exception e) {
+      return "";
     }
   }
 

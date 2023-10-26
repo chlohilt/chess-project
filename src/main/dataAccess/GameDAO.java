@@ -2,6 +2,7 @@ package dataAccess;
 
 import models.Game;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -9,7 +10,7 @@ import java.util.Set;
  * this class holds game data in the database
  */
 public class GameDAO {
-  private Map<Integer, Game> gameMap;
+  private Map<Integer, Game> gameMap = new HashMap<>();
   /**
    * this function inserts a game into the database
    * @param game - game to insert into database
@@ -58,7 +59,7 @@ public class GameDAO {
    * this function updates a specific game
    * @param gameID - ID used to update a specific game
    */
-  public void updateGame(int gameID){
+  public void updateGame(int gameID, String gameString){
   }
 
   /**

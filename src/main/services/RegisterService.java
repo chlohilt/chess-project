@@ -1,6 +1,7 @@
 package services;
 
 import dataAccess.DataAccessException;
+import models.BaseClass;
 import models.User;
 import requests.RegisterRequest;
 import responses.RegisterResponse;
@@ -8,7 +9,7 @@ import responses.RegisterResponse;
 /**
  * this class holds the service to register a new user
  */
-public class RegisterService extends BaseService{
+public class RegisterService extends BaseClass {
 
   /**
    * this is the constructor for a service to register a new user

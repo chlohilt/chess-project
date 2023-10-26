@@ -1,13 +1,14 @@
 package services;
 
 import com.google.gson.Gson;
+import models.BaseClass;
 import responses.ResponseClass;
 import spark.Request;
 
 /**
  * this class gives a list of all the games
  */
-public class ListGamesService extends BaseService {
+public class ListGamesService extends BaseClass {
   Gson gson = new Gson();
   /**
    * this is the constructor for a service to list all games

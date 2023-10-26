@@ -1,13 +1,14 @@
 package services;
 
 import dataAccess.DataAccessException;
+import models.BaseClass;
 import responses.ResponseClass;
 import spark.Request;
 
 /**
  * this service logs a user out
  */
-public class LogoutService extends BaseService {
+public class LogoutService extends BaseClass {
   /**
    * this is the constructor for a service to logout
    */

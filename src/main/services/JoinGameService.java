@@ -1,12 +1,16 @@
 package services;
 
+import chess.ChessGame;
+import dataAccess.DataAccessException;
+import models.BaseClass;
+import models.Game;
 import requests.JoinGameRequest;
-import responses.JoinGameResponse;
+import responses.ResponseClass;
 
 /**
  * this class holds the service to join a game
  */
-public class JoinGameService {
+public class JoinGameService extends BaseClass {
   /**
    * this is the constructor for a service to join a game
    */
@@ -16,8 +20,29 @@ public class JoinGameService {
    * @param r - a request to join a game
    * @return JoinGameResponse to see if the game was successfully joined
    */
-  public JoinGameResponse joinGame(JoinGameRequest r) {
+  public ResponseClass joinGame(JoinGameRequest r) {
+    try {
+      if (r.getGameID() == null || getGameDataAccess().findGame(r.getGameID()) == null) {
+        return new ResponseClass("Error: bad request");
+      }
+      Game gameToJoin = getGameDataAccess().findGame(r.getGameID());
+      ChessGame.TeamColor teamColor = r.getTeamColor();
+      if (gameToJoin.getBlackUsername() != null && teamColor == ChessGame.TeamColor.BLACK
+      || gameToJoin.getWhiteUsername() != null && teamColor == ChessGame.TeamColor.WHITE) {
+        return new ResponseClass("Error: already taken");
+      }
 
-    return null;
+      if (teamColor == ChessGame.TeamColor.BLACK) {
+        gameToJoin.setBlackUsername(r.getUsername());
+      } else if (teamColor == ChessGame.TeamColor.WHITE) {
+        gameToJoin.setWhiteUsername(r.getUsername());
+      }
+
+
+      return null;
+    } catch (Exception e) {
+      return new ResponseClass("Error: database error");
+    }
+
   }
 }

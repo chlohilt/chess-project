@@ -1,6 +1,7 @@
 package services;
 
-import com.google.gson.Gson;
+import models.BaseClass;
+import models.Game;
 import requests.CreateGameRequest;
 import responses.CreateGameResponse;
 
@@ -9,8 +10,7 @@ import java.util.Random;
 /**
  * this class holds a service to create a game
  */
-public class CreateGameService extends BaseService {
-  Gson gson = new Gson();
+public class CreateGameService extends BaseClass {
   /**
    * this is the constructor for a service to create a game
    */
@@ -27,9 +27,9 @@ public class CreateGameService extends BaseService {
       }
       Random random = new Random();
       int randomNumber = random.nextInt(9000 + 1) + 1000;
-
-      //getGameDataAccess().getGameMap().put(randomNumber, c.getGameName());
-      return new CreateGameResponse();
+      Game newGame = new Game(c.getGameName(), randomNumber);
+      getGameDataAccess().getGameMap().put(randomNumber, newGame);
+      return new CreateGameResponse(randomNumber);
     } catch (Exception e) {
       return new CreateGameResponse("Error: database error");
     }

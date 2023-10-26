@@ -54,6 +54,11 @@ public class Server {
                     res)
     );
 
+    Spark.put("/game", (req, res) ->
+            (getJoinGameHandlerInstance()).handleRequest(req,
+                    res)
+    );
+
   }
 
   private static RegisterHandler getRegisterHandlerInstance() { return registerHandler; }
@@ -62,4 +67,5 @@ public class Server {
   private static ClearHandler getClearHandlerInstance() { return clearHandler; }
   private static ListGamesHandler getListGamesHandlerInstance() { return listGamesHandler; }
   private static CreateGameHandler getCreateGameHandlerInstance() { return createGameHandler; }
+  private static JoinGameHandler getJoinGameHandlerInstance() { return joinGameHandler; }
 }

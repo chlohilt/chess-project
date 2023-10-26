@@ -13,7 +13,9 @@ public class JoinGameRequest {
   /**
    * this field holds the game ID that the user wants to join
    */
-  private String gameID;
+  private Integer gameID;
+
+  private String username;
 
   /**
    * this is the constructor for a join game request
@@ -28,12 +30,20 @@ public class JoinGameRequest {
     this.teamColor=teamColor;
   }
 
-  public String getGameID() {
+  public Integer getGameID() {
     return gameID;
   }
 
-  public void setGameID(String gameID) {
+  public void setGameID(Integer gameID) {
     this.gameID=gameID;
+  }
+
+  public String getUsername() {
+    return username;
+  }
+
+  public void setUsername(String username) {
+    this.username=username;
   }
 
 }
