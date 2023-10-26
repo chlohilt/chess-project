@@ -25,15 +25,14 @@ public class ListGamesHandler {
       res.status(500);
     } else if (Objects.equals(result.getMessage(), "Error: unauthorized")) {
       res.status(401);
+      objectJson =String.valueOf(new JsonObject());
+      res.body(objectJson);
+      return objectJson;
     } else {
-      if (commonDataAccess.getCommonGameDAO().getGameMap().size() != 0) {
-        var jsonBody = Map.of (
-                "games", commonDataAccess.getCommonGameDAO().toList()
-        );
-        objectJson =String.valueOf(gson.toJsonTree(jsonBody));
-      } else {
-        objectJson =String.valueOf(new JsonObject());
-      }
+      var jsonBody = Map.of (
+              "games", commonDataAccess.getCommonGameDAO().toList()
+      );
+      objectJson =String.valueOf(gson.toJsonTree(jsonBody));
       res.status(200);
     }
 
