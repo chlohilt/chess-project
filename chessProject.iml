@@ -34,5 +34,6 @@
         <SOURCES />
       </library>
     </orderEntry>
+    <orderEntry type="library" name="bluecatcode.mockito.1.10.19.extended" level="project" />
   </component>
 </module>
