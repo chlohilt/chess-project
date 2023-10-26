@@ -1,53 +1,37 @@
 package passoffTests.serverTests;
 
+import dataAccess.DataAccessException;
+import models.User;
 import org.junit.jupiter.api.*;
-import passoffTests.TestFactory;
-import passoffTests.obfuscatedTestClasses.TestServerFacade;
-import passoffTests.testClasses.TestModels;
+import requests.RegisterRequest;
+import services.RegisterService;
 
 public class RegisterServiceTests {
-    private static final int HTTP_OK = 200;
-    private static final int HTTP_BAD_REQUEST = 400;
-    private static final int HTTP_UNAUTHORIZED = 401;
-    private static final int HTTP_FORBIDDEN = 403;
+  private static RegisterService registerService = new RegisterService();
 
-    private static TestModels.TestUser existingUser;
-    private static TestModels.TestUser newUser;
-    private static TestModels.TestCreateRequest createRequest;
-    private static TestServerFacade serverFacade;
-    private String existingAuth;
+  @Test
+  public void registerSuccess() throws DataAccessException {
+    try {
+      User u = new User("user", "pass", "email@byu.edu");
+      RegisterRequest request = new RegisterRequest(u.getUsername(), u.getPassword(), u.getEmail());
 
+      registerService.register(request);
 
-    @BeforeAll
-    public static void init() {
-        existingUser = new TestModels.TestUser();
-        existingUser.username = "Joseph";
-        existingUser.password = "Smith";
-        existingUser.email = "urim@thummim.net";
-
-        newUser = new TestModels.TestUser();
-        newUser.username = "testUsername";
-        newUser.password = "testPassword";
-        newUser.email = "testEmail";
-
-        createRequest = new TestModels.TestCreateRequest();
-        createRequest.gameName = "testGame";
-
-        serverFacade = new TestServerFacade("localhost", TestFactory.getServerPort());
+      Assertions.assertEquals(registerService.getUserDataAccess().returnUser(u.getUsername()).getUsername(), u.getUsername());
+      Assertions.assertEquals(registerService.getUserDataAccess().returnUser(u.getUsername()).getPassword(), u.getPassword());
+      Assertions.assertEquals(registerService.getUserDataAccess().returnUser(u.getUsername()).getEmail(), u.getEmail());
+    } catch (Exception e) {
+      throw new DataAccessException("Register service failed to access the database");
     }
+  }
 
+  @Test
+  public void registerFailure() {
+    Integer originalUserDataSize = registerService.getUserDataAccess().getUserMap().size();
+    RegisterRequest request = new RegisterRequest();
 
-    @BeforeEach
-    public void setup() {
-        serverFacade.clear();
+    registerService.register(request);
 
-        TestModels.TestRegisterRequest registerRequest = new TestModels.TestRegisterRequest();
-        registerRequest.username = existingUser.username;
-        registerRequest.password = existingUser.password;
-        registerRequest.email = existingUser.email;
-
-        //one user already logged in
-        TestModels.TestLoginRegisterResult regResult = serverFacade.register(registerRequest);
-        existingAuth = regResult.authToken;
-    }
+    Assertions.assertNotEquals(registerService.getUserDataAccess().getUserMap().size(), originalUserDataSize+1);
+  }
 }
