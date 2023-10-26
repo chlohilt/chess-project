@@ -1,7 +1,6 @@
 package services;
 
 import chess.ChessGame;
-import dataAccess.DataAccessException;
 import models.BaseClass;
 import models.Game;
 import requests.JoinGameRequest;

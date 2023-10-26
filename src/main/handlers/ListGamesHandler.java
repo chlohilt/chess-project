@@ -1,21 +1,17 @@
 package handlers;
 
-import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import dataAccess.CommonDataAccess;
 import models.BaseClass;
 import responses.ResponseClass;
 import services.ListGamesService;
 import spark.Request;
 import spark.Response;
 
-import java.util.Map;
 import java.util.Objects;
 
 public class ListGamesHandler extends BaseClass {
   ListGamesService listGamesService = new ListGamesService();
   public ListGamesHandler() {}
-  Gson gson = new Gson();
   public String handleRequest(Request req, Response res) {
     ResponseClass result = authorizationCheck(req);
     String objectJson ="";

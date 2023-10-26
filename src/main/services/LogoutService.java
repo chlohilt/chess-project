@@ -1,12 +1,9 @@
 package services;
 
 import dataAccess.DataAccessException;
-import models.AuthToken;
 import models.BaseClass;
-import models.User;
 import requests.LogoutRequest;
 import responses.ResponseClass;
-import spark.Request;
 
 /**
  * this service logs a user out

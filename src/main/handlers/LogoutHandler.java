@@ -3,7 +3,6 @@ package handlers;
 import com.google.gson.Gson;
 import dataAccess.DataAccessException;
 import models.BaseClass;
-import org.glassfish.grizzly.compression.lzma.impl.Base;
 import requests.LogoutRequest;
 import responses.ResponseClass;
 import services.LogoutService;
