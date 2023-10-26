@@ -9,26 +9,27 @@ public class JoinGameRequest {
   /**
    * this field holds the color that the user prefers to be put as
    */
-  private ChessGame.TeamColor teamColor;
+  private ChessGame.TeamColor playerColor;
+
   /**
    * this field holds the game ID that the user wants to join
    */
   private Integer gameID;
-
   private String username;
+
+  public ChessGame.TeamColor getPlayerColor() {
+    return playerColor;
+  }
+
+  public void setPlayerColor(ChessGame.TeamColor playerColor) {
+    this.playerColor=playerColor;
+  }
 
   /**
    * this is the constructor for a join game request
    */
   public JoinGameRequest() {}
 
-  public ChessGame.TeamColor getTeamColor() {
-    return teamColor;
-  }
-
-  public void setTeamColor(ChessGame.TeamColor teamColor) {
-    this.teamColor=teamColor;
-  }
 
   public Integer getGameID() {
     return gameID;

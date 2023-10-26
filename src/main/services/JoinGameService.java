@@ -25,7 +25,7 @@ public class JoinGameService extends BaseClass {
       if (r.getGameID() == null || getGameDataAccess().findGame(r.getGameID()) == null) {
         return new ResponseClass("Error: bad request");
       }
-      ChessGame.TeamColor teamColor = r.getTeamColor();
+      ChessGame.TeamColor teamColor = r.getPlayerColor();
       Game gameToJoin = getGameDataAccess().findGame(r.getGameID());
       if ((gameToJoin.getBlackUsername() != null && teamColor == ChessGame.TeamColor.BLACK)
       || (gameToJoin.getWhiteUsername() != null && teamColor == ChessGame.TeamColor.WHITE)) {
