@@ -1,4 +1,4 @@
-package passoffTests.serverTests;
+package passoffTests.myServerTests;
 
 import models.Game;
 import org.junit.jupiter.api.AfterAll;
@@ -8,10 +8,8 @@ import org.junit.jupiter.api.Test;
 import services.ClearService;
 import services.ListGamesService;
 
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 public class ListGamesTests {
   static ListGamesService listGamesService = new ListGamesService();

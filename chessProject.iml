@@ -35,5 +35,6 @@
       </library>
     </orderEntry>
     <orderEntry type="library" name="bluecatcode.mockito.1.10.19.extended" level="project" />
+    <orderEntry type="library" name="mysql.connector.j" level="project" />
   </component>
 </module>

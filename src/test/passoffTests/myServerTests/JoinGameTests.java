@@ -1,4 +1,4 @@
-package passoffTests.serverTests;
+package passoffTests.myServerTests;
 
 import chess.ChessGame;
 import models.Game;
@@ -8,7 +8,6 @@ import org.junit.jupiter.api.Test;
 import requests.JoinGameRequest;
 import responses.ResponseClass;
 import services.ClearService;
-import services.CreateGameService;
 import services.JoinGameService;
 
 public class JoinGameTests {

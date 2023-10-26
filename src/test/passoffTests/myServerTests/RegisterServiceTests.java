@@ -1,4 +1,4 @@
-package passoffTests.serverTests;
+package passoffTests.myServerTests;
 
 import dataAccess.DataAccessException;
 import models.User;

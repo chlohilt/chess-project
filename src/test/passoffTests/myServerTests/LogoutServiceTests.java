@@ -1,4 +1,4 @@
-package passoffTests.serverTests;
+package passoffTests.myServerTests;
 
 import dataAccess.DataAccessException;
 import models.User;
@@ -12,7 +12,6 @@ import responses.ResponseClass;
 import services.LoginService;
 import services.LogoutService;
 import services.RegisterService;
-import spark.Request;
 
 public class LogoutServiceTests {
   static LogoutService logoutService = new LogoutService();

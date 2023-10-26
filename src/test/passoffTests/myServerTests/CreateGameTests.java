@@ -1,4 +1,4 @@
-package passoffTests.serverTests;
+package passoffTests.myServerTests;
 
 import models.Game;
 import org.junit.jupiter.api.Assertions;

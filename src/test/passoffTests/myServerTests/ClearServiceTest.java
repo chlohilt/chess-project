@@ -1,11 +1,10 @@
-package passoffTests.serverTests;
+package passoffTests.myServerTests;
 
 import models.Game;
 import models.User;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import services.ClearService;
-import services.RegisterService;
 import org.junit.jupiter.api.*;
 
 public class ClearServiceTest {
