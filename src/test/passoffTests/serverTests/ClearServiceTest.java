@@ -13,6 +13,7 @@ public class ClearServiceTest {
   @BeforeAll
   public static void init() {
     try {
+      clearService.clear();
       clearService.getAuthDataAccess().createAuthToken("fake");
       clearService.getUserDataAccess().createUser(new User("user", "pass", "email@byu.edu"));
       clearService.getGameDataAccess().insertGame(new Game());

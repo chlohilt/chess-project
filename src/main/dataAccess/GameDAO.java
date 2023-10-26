@@ -85,6 +85,10 @@ public class GameDAO {
     return gameMap;
   }
 
+  public void setGameMap(Map<Integer, Game> gameMap) { // this function is solely for testing purposes
+    this.gameMap = gameMap;
+  }
+
   public List<Object> toList() {
     List<Object> gameList = new ArrayList<>();
     for (Map.Entry<Integer, Game> game: gameMap.entrySet()) {

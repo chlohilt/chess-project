@@ -2,8 +2,8 @@ package services;
 
 import com.google.gson.Gson;
 import models.BaseClass;
-import responses.ResponseClass;
-import spark.Request;
+
+import java.util.Map;
 
 /**
  * this class gives a list of all the games
@@ -17,10 +17,12 @@ public class ListGamesService extends BaseClass {
 
   /**
    * this function lists all the games
-   * @param listGamesRequest - list game request
    * @return list game response
    */
-  public ResponseClass listGames(Request listGamesRequest) {
-    return authorizationCheck(listGamesRequest);
+  public String listGames() {
+    var jsonBody = Map.of (
+            "games", getGameDataAccess().toList()
+    );
+    return String.valueOf(gson.toJsonTree(jsonBody));
   }
 }
