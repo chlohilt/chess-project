@@ -3,7 +3,15 @@ package dataAccess;
 public class CommonDataAccess {
   private static AuthDAO commonAuthDAO = new AuthDAO();
 
-  private static UserDAO commonUserDAO = new UserDAO();
+  private static UserDAO commonUserDAO;
+
+  static {
+    try {
+      commonUserDAO=new UserDAO();
+    } catch (DataAccessException e) {
+      throw new RuntimeException(e);
+    }
+  }
 
   private static GameDAO commonGameDAO = new GameDAO();
 

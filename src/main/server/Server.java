@@ -19,7 +19,6 @@ public class Server {
 
   private void run() {
     Spark.port(8080);
-    CommonDataAccess commonDataAccess = new CommonDataAccess();
 
     // Register a directory for hosting static files
     Spark.externalStaticFileLocation("web");

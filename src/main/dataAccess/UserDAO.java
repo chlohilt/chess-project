@@ -2,25 +2,40 @@ package dataAccess;
 
 import models.User;
 
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
+
+import static java.sql.Statement.RETURN_GENERATED_KEYS;
 
 /**
  * this class holds user data and functions to create, update, read, and delete users
  */
 public class UserDAO {
-  private Map<String, User> userMap = new HashMap<>();
+  Database database = new Database();
+  Connection connection;
+
+  UserDAO() throws DataAccessException {
+    Connection conn = this.database.getDatabaseInstance().getConnection();
+    this.connection = conn;
+  }
 
   /**
    * this function creates a user
    * @param u - user to be created
    * @throws DataAccessException - throws if it cannot create a user
    */
-  public void createUser(User u) throws DataAccessException {
-    try {
-      userMap.put(u.getUsername(), u);
-    } catch (Exception e) {
-      throw new DataAccessException("Failure adding user to database.");
+  public void createUser (User u) throws DataAccessException {
+    try (var preparedStatement = connection.prepareStatement("INSERT INTO user_data (username, password, email) VALUES(?, ?, ?)", RETURN_GENERATED_KEYS)) {
+      preparedStatement.setString(1, u.getUsername());
+      preparedStatement.setString(2, u.getPassword());
+      preparedStatement.setString(3, u.getEmail());
+
+      preparedStatement.executeUpdate();
+
+    } catch (SQLException e) {
+      throw new DataAccessException(e.toString());
     }
   }
 
@@ -31,26 +46,19 @@ public class UserDAO {
    * @throws DataAccessException when the user isn't found
    */
   public User returnUser(String username) throws DataAccessException {
-    try {
-      return userMap.get(username);
-    }  catch (Exception e) {
-      throw new DataAccessException("That user does not exist in the database. Please try again with an existing user.");
+    try (var preparedStatement = connection.prepareStatement("SELECT username, password, email FROM user_data WHERE username=?")) {
+      preparedStatement.setString(1, username);
+      try (var rs = preparedStatement.executeQuery()) {
+        while (rs.next()) {
+          var password=rs.getString("password");
+          var email=rs.getString("email");
+          return new User(username, password, email);
+        }
+      }
+    }  catch (SQLException e) {
+      throw new DataAccessException(e.toString());
     }
-
-  }
-
-  /**
-   * this function updates a given user with a new object
-   * @param username - username to be changed
-   * @param u - new user object that it is updated to
-   * @throws DataAccessException when the user object is invalid or the username cannot find a user
-   */
-  public void updateUser(String username, User u) throws DataAccessException {
-    try {
-      userMap.put(username, u);
-    }  catch (Exception e) {
-      throw new DataAccessException("That user does not exist in the database. Please try again with an existing user.");
-    }
+    return null;
   }
 
   /**
@@ -59,18 +67,33 @@ public class UserDAO {
    * @throws DataAccessException when the user cannot be found
    */
   public void deleteUser(User u) throws DataAccessException {
-    try {
-      userMap.remove(u.getUsername());
-    } catch (Exception e) {
-      throw new DataAccessException("That user does not exist in the database. Please try again with an existing user.");
+    try (var preparedStatement = connection.prepareStatement("DELETE FROM user_data WHERE username=?")) {
+      preparedStatement.setString(1, u.getUsername());
+      preparedStatement.executeUpdate();
+    } catch (SQLException e) {
+      throw new DataAccessException(e.toString());
     }
   }
 
-  public void clearUsers() {
-    userMap.clear();
+  public void clearUsers() throws DataAccessException {
+    try (var preparedStatement = connection.prepareStatement("TRUNCATE user_data")) {
+      preparedStatement.executeUpdate();
+    } catch (SQLException e) {
+      throw new DataAccessException(e.toString());
+    }
   }
 
-  public Map<String, User> getUserMap() {
-    return userMap;
+  public Integer getUserSize() throws DataAccessException {
+    try (var preparedStatement = connection.prepareStatement("SELECT count(*) FROM user_data")) {
+      try (var rs = preparedStatement.executeQuery()) {
+        while (rs.next()) {
+          return rs.getInt(1);
+        }
+      }
+    } catch (SQLException e) {
+
+      throw new DataAccessException(e.toString());
+    }
+    return null;
   }
 }

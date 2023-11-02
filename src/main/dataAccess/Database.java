@@ -24,9 +24,11 @@ import java.util.LinkedList;
  * </pre>
  */
 public class Database {
+    static Database database = new Database();
     public static final String DB_NAME = "chess";
     private static final String DB_USERNAME = "root";
-    private static final String DB_PASSWORD = System.getenv().get("MYSQL_PASSWORD"); // environment variable for password
+    // private static final String DB_PASSWORD = System.getenv().get("MYSQL_PASSWORD"); // environment variable for password
+    private static final String DB_PASSWORD = "developerPass240!";
 
     private static final String CONNECTION_URL = "jdbc:mysql://localhost:3306";
 
@@ -63,6 +65,14 @@ public class Database {
         connections.add(connection);
     }
 
+    public static void main(String[] args) throws SQLException, DataAccessException {
+        database.configureUserDatabase();
+    }
+
+    public Database getDatabaseInstance() {
+        return database;
+    }
+
     void configureUserDatabase() throws DataAccessException, SQLException {
         try (var conn = getConnection()) {
             // DATABASE CREATION
@@ -70,7 +80,7 @@ public class Database {
             createDbStatement.executeUpdate();
 
             // USER TABLE CREATION
-            conn.setCatalog("user_data");
+            conn.setCatalog("chess");
 
             var createUserTable = """
             CREATE TABLE  IF NOT EXISTS user_data (
@@ -86,7 +96,7 @@ public class Database {
             }
 
             // GAME TABLE CREATION
-            conn.setCatalog("game_data");
+            conn.setCatalog("chess");
 
             var createGameTable = """
             CREATE TABLE  IF NOT EXISTS game_data (
@@ -95,7 +105,7 @@ public class Database {
                 whiteUsername VARCHAR(255),
                 blackUsername VARCHAR(255),
                 gameInfo longtext NOT NULL,
-                PRIMARY KEY (username)
+                PRIMARY KEY (gameID)
             )""";
 
 
@@ -104,7 +114,7 @@ public class Database {
             }
 
             // AUTH TABLE CREATION
-            conn.setCatalog("auth_data");
+            conn.setCatalog("chess");
 
             var createAuthTable = """
             CREATE TABLE  IF NOT EXISTS auth_data (

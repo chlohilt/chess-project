@@ -26,12 +26,12 @@ public class RegisterServiceTests {
   }
 
   @Test
-  public void registerFailure() {
-    Integer originalUserDataSize = registerService.getUserDataAccess().getUserMap().size();
+  public void registerFailure() throws DataAccessException {
+    Integer originalUserDataSize = registerService.getUserDataAccess().getUserSize();
     RegisterRequest request = new RegisterRequest();
 
     registerService.register(request);
 
-    Assertions.assertNotEquals(registerService.getUserDataAccess().getUserMap().size(), originalUserDataSize+1);
+    Assertions.assertNotEquals(registerService.getUserDataAccess().getUserSize(), originalUserDataSize+1);
   }
 }

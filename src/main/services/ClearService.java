@@ -23,7 +23,7 @@ public class ClearService extends BaseClass {
       if (this.getGameDataAccess().getGameMap() != null) {
         this.getGameDataAccess().clearGames();
       }
-      if (this.getUserDataAccess().getUserMap() != null) {
+      if (this.getUserDataAccess().getUserSize() != 0) {
         this.getUserDataAccess().clearUsers();
       }
       return new ResponseClass();
