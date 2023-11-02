@@ -17,7 +17,7 @@ public class ClearService extends BaseClass {
    */
   public ResponseClass clear() {
     try {
-      if (this.getAuthDataAccess().getAuthTokenSet() != null) {
+      if (this.getAuthDataAccess().getAuthTokenSize() != 0) {
         this.getAuthDataAccess().clearAuthTokens();
       }
       if (this.getGameDataAccess().getGameMap() != null) {

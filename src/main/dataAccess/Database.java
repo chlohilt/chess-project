@@ -118,9 +118,10 @@ public class Database {
 
             var createAuthTable = """
             CREATE TABLE  IF NOT EXISTS auth_data (
-                authToken VARCHAR(225) NOT NULL,
-                username VARCHAR(255) NOT NULL,
-                PRIMARY KEY (authToken)
+                authToken longtext NOT NULL,
+                authTokenString VARCHAR(225) NOT NULL,
+                username VARCHAR(225) NOT NULL,
+                PRIMARY KEY (authTokenString)
             )""";
 
 

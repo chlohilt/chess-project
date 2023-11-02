@@ -24,13 +24,13 @@ public class ClearServiceTest {
 
   @Test
   public void clearData() throws DataAccessException {
-    Assertions.assertFalse(clearService.getAuthDataAccess().getAuthTokenSet().isEmpty(), "DAO addition didn't work for auth");
+    Assertions.assertNotEquals(0, clearService.getAuthDataAccess().getAuthTokenSize(), "DAO addition didn't work for auth");
     Assertions.assertNotEquals(0, clearService.getUserDataAccess().getUserSize(), "DAO addition didn't work for users");
     Assertions.assertFalse(clearService.getGameDataAccess().getGameMap().isEmpty(), "DAO addition didn't work for games");
 
     clearService.clear();
 
-    Assertions.assertTrue(clearService.getAuthDataAccess().getAuthTokenSet().isEmpty(), "Clear service didn't work for auth");
+    Assertions.assertEquals(0, clearService.getAuthDataAccess().getAuthTokenSize(), "Clear service didn't work for auth");
     Assertions.assertEquals(0, clearService.getUserDataAccess().getUserSize(), "Clear service didn't work for users");
     Assertions.assertTrue(clearService.getGameDataAccess().getGameMap().isEmpty(), "Clear service didn't work for games");
   }

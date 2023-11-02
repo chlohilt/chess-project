@@ -1,7 +1,15 @@
 package dataAccess;
 
 public class CommonDataAccess {
-  private static AuthDAO commonAuthDAO = new AuthDAO();
+  private static AuthDAO commonAuthDAO;
+
+  static {
+    try {
+      commonAuthDAO=new AuthDAO();
+    } catch (DataAccessException e) {
+      throw new RuntimeException(e);
+    }
+  }
 
   private static UserDAO commonUserDAO;
 

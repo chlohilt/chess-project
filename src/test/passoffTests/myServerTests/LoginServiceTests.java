@@ -1,5 +1,6 @@
 package passoffTests.myServerTests;
 
+import dataAccess.DataAccessException;
 import models.User;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -26,20 +27,20 @@ public class LoginServiceTests {
   }
 
   @Test
-  public void loginSuccess() {
-    int originalAuthDataSize = loginService.getAuthDataAccess().getAuthTokenSet().size();
+  public void loginSuccess() throws DataAccessException {
+    int originalAuthDataSize = loginService.getAuthDataAccess().getAuthTokenSize();
     LoginRequest loginRequest = new LoginRequest("user", "pass");
     loginService.login(loginRequest);
 
-    Assertions.assertEquals(loginService.getAuthDataAccess().getAuthTokenSet().size(), originalAuthDataSize+1, "User data was added");
+    Assertions.assertEquals(loginService.getAuthDataAccess().getAuthTokenSize(), originalAuthDataSize+1, "User data was added");
   }
 
   @Test
-  public void loginFailure() {
-    int originalAuthDataSize = loginService.getAuthDataAccess().getAuthTokenSet().size();
+  public void loginFailure() throws DataAccessException {
+    int originalAuthDataSize = loginService.getAuthDataAccess().getAuthTokenSize();
     LoginRequest loginRequest = new LoginRequest("user", "pass1");
     loginService.login(loginRequest);
 
-    Assertions.assertEquals(loginService.getAuthDataAccess().getAuthTokenSet().size(), originalAuthDataSize, "User data was not added");
+    Assertions.assertEquals(loginService.getAuthDataAccess().getAuthTokenSize(), originalAuthDataSize, "User data was not added");
   }
 }

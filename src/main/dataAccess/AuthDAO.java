@@ -1,28 +1,50 @@
 package dataAccess;
 
+import com.google.gson.Gson;
 import models.AuthToken;
 
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.*;
+
+import static java.sql.Statement.RETURN_GENERATED_KEYS;
 
 /**
  * this class stores data for the authorization tokens and their corresponding users
  */
 public class AuthDAO {
-  private Set<AuthToken> authTokenSet = new HashSet<AuthToken>();
+  Database database = new Database();
+  Connection connection;
+  AuthDAO() throws DataAccessException {
+    Connection conn = this.database.getDatabaseInstance().getConnection();
+    this.connection = conn;
+  }
 
   /**
    * this function creates a new auth token for a specific user
    * @param username - username to create an auth token for
    */
   public String createAuthToken(String username) throws DataAccessException {
-    try {
-      AuthToken newAuthToken = new AuthToken();
-      newAuthToken.setAuthToken(UUID.randomUUID().toString());
-      newAuthToken.setUsername(username);
-      authTokenSet.add(newAuthToken);
+    AuthToken newAuthToken = new AuthToken();
+    newAuthToken.setAuthToken(UUID.randomUUID().toString());
+    newAuthToken.setUsername(username);
+    try (var preparedStatement = connection.prepareStatement("INSERT INTO auth_data (authToken, authTokenString, username) VALUES(?, ?, ?)", RETURN_GENERATED_KEYS)) {
+      var json = new Gson().toJson(newAuthToken);
+      preparedStatement.setString(1, json);
+      preparedStatement.setString(2, newAuthToken.getAuthToken());
+      preparedStatement.setString(3, username);
+      preparedStatement.executeQuery();
+      var preparedStatement2 = connection.prepareStatement("SELECT authTokenString FROM auth_data WHERE username=?", RETURN_GENERATED_KEYS);
+      preparedStatement2.setString(1, username);
+      try (var rs = preparedStatement2.executeQuery()) {
+        while (rs.next()) {
+          return rs.getString("authTokenString");
+        }
+      }
       return newAuthToken.getAuthToken();
-    } catch (Exception e) {
-      throw new DataAccessException("Failed to create auth token for that user.");
+
+    } catch (SQLException e) {
+      throw new DataAccessException(e.toString());
     }
   }
 
@@ -32,42 +54,46 @@ public class AuthDAO {
    * @return auth token for a specific user
    */
   public String returnAuthTokenString(String username) throws DataAccessException {
-    try {
-      for (AuthToken checkAuthToken : authTokenSet) {
-        if (checkAuthToken.getUsername().equals(username)) {
-          return checkAuthToken.getAuthToken();
+    try (var preparedStatement = connection.prepareStatement("SELECT authTokenString FROM auth_data WHERE username=?")) {
+      preparedStatement.setString(1, username);
+      try (var rs = preparedStatement.executeQuery()) {
+        while (rs.next()) {
+          return rs.getString("authToken");
         }
       }
-      return null;
-    } catch (Exception e) {
-      throw new DataAccessException("Failed to get auth token for that user.");
+    }  catch (SQLException e) {
+      throw new DataAccessException(e.toString());
     }
+    return null;
   }
 
   public AuthToken returnAuthToken(String username) throws DataAccessException {
-    try {
-      for (AuthToken checkAuthToken : authTokenSet) {
-        if (checkAuthToken.getUsername().equals(username)) {
-          return checkAuthToken;
+    try (var preparedStatement = connection.prepareStatement("SELECT authToken FROM auth_data WHERE username=?")) {
+      preparedStatement.setString(1, username);
+      try (var rs = preparedStatement.executeQuery()) {
+        while (rs.next()) {
+          var json = rs.getString("authToken");
+          return new Gson().fromJson(json, AuthToken.class);
         }
       }
-      return null;
-    } catch (Exception e) {
-      throw new DataAccessException("Failed to get auth token for that user.");
+    }  catch (SQLException e) {
+      throw new DataAccessException(e.toString());
     }
+    return null;
   }
 
-  public String returnUsername(String authToken) throws DataAccessException {
-    try {
-      for (AuthToken checkAuthToken : authTokenSet) {
-        if (checkAuthToken.getAuthToken().equals(authToken)) {
-          return checkAuthToken.getUsername();
+  public String returnUsername(String authTokenString) throws DataAccessException {
+    try (var preparedStatement = connection.prepareStatement("SELECT username FROM auth_data WHERE authTokenString=?")) {
+      preparedStatement.setString(1, authTokenString);
+      try (var rs = preparedStatement.executeQuery()) {
+        while (rs.next()) {
+          return rs.getString("username");
         }
       }
-      return null;
-    } catch (Exception e) {
-      throw new DataAccessException("Failed to get auth token for that user.");
+    }  catch (SQLException e) {
+      throw new DataAccessException(e.toString());
     }
+    return null;
   }
 
   /**
@@ -75,18 +101,32 @@ public class AuthDAO {
    * @param username - username of the user
    */
   public void deleteAuthToken(String username) throws DataAccessException {
-    try {
-      authTokenSet.remove(returnAuthToken(username));
-    } catch (Exception e) {
-      throw new DataAccessException("Failed to delete that auth token.");
+    try (var preparedStatement = connection.prepareStatement("DELETE FROM auth_data WHERE username=?")) {
+      preparedStatement.setString(1, username);
+      preparedStatement.executeQuery();
+    }  catch (SQLException e) {
+      throw new DataAccessException(e.toString());
     }
   }
 
-  public void clearAuthTokens() {
-    authTokenSet.clear();
+  public void clearAuthTokens() throws DataAccessException {
+    try (var preparedStatement = connection.prepareStatement("TRUNCATE auth_data")) {
+      preparedStatement.executeUpdate();
+    } catch (SQLException e) {
+      throw new DataAccessException(e.toString());
+    }
   }
 
-  public Set<AuthToken> getAuthTokenSet() {
-    return authTokenSet;
+  public Integer getAuthTokenSize() throws DataAccessException {
+    try (var preparedStatement = connection.prepareStatement("SELECT count(*) FROM auth_data")) {
+      try (var rs = preparedStatement.executeQuery()) {
+        while (rs.next()) {
+          return rs.getInt(1);
+        }
+      }
+    } catch (SQLException e) {
+      throw new DataAccessException(e.toString());
+    }
+    return null;
   }
 }
