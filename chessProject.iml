@@ -37,4 +37,7 @@
     <orderEntry type="library" name="bluecatcode.mockito.1.10.19.extended" level="project" />
     <orderEntry type="library" name="mysql.connector.j" level="project" />
   </component>
+  <component name="SonarLintModuleSettings">
+    <option name="uniqueId" value="ea93d06e-1795-4c5e-a23f-fa984d2ad54d" />
+  </component>
 </module>
