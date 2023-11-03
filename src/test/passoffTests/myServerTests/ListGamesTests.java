@@ -1,44 +1,63 @@
 package passoffTests.myServerTests;
 
-import dataAccess.DataAccessException;
+import database.DataAccessException;
+import database.Database;
 import models.Game;
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import services.ClearService;
 import services.ListGamesService;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.sql.SQLException;
 
 public class ListGamesTests {
   static ListGamesService listGamesService = new ListGamesService();
   static ClearService clearService = new ClearService();
+  static Database database = new Database();
 
   @BeforeAll
   public static void init() {
     try {
       clearService.clear();
       Game game = new Game(1234);
+      listGamesService.getGameDataAccess().insertGame(game);
       game.setWhiteUsername("Tester");
-      listGamesService.getGameDataAccess().insertGame(game);
-      listGamesService.getGameDataAccess().insertGame(game);
     } catch (Exception ignored) {}
   }
 
   @Test
-  public void listGamesSuccess() {
+  void listGamesSuccess() {
     String expectedGameList = "{\"games\":[{\"gameID\":1234,\"whiteUsername\":\"Tester\"}]}";
 
     Assertions.assertEquals(expectedGameList, listGamesService.listGames());
   }
 
   @Test
-  public void listGamesFailure() throws DataAccessException {
-    listGamesService.getGameDataAccess().clearGames();
+  void listGamesFailure() throws DataAccessException, SQLException {
+    try (var preparedStatement = database.getConnection().prepareStatement("DROP TABLE game_data")) {
+      preparedStatement.executeUpdate();
+    } catch (SQLException e) {
+      throw new DataAccessException(e.toString());
+    }
 
-    Assertions.assertThrows(NullPointerException.class, listGamesService::listGames);
+    Assertions.assertThrows(RuntimeException.class, listGamesService::listGames);
+
+    database.getConnection().setCatalog("chess");
+
+    var createGameTable = """
+            CREATE TABLE  IF NOT EXISTS game_data (
+                gameID INT NOT NULL,
+                gameName VARCHAR(255),
+                whiteUsername VARCHAR(255),
+                blackUsername VARCHAR(255),
+                gameInfo longtext NOT NULL,
+                PRIMARY KEY (gameID)
+            )""";
+
+    try (var createTableStatement = database.getConnection().prepareStatement(createGameTable)) {
+      createTableStatement.executeUpdate();
+    }
   }
 
 }

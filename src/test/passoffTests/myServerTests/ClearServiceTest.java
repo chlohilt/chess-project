@@ -1,7 +1,6 @@
 package passoffTests.myServerTests;
 
-import dataAccess.DataAccessException;
-import dataAccess.Database;
+import database.DataAccessException;
 import models.Game;
 import models.User;
 import org.junit.jupiter.api.BeforeAll;
@@ -10,7 +9,7 @@ import services.ClearService;
 import org.junit.jupiter.api.*;
 
 public class ClearServiceTest {
-  private static ClearService clearService = new ClearService();
+  private final static ClearService clearService = new ClearService();
   @BeforeAll
   public static void init() {
     try {
@@ -23,7 +22,7 @@ public class ClearServiceTest {
   }
 
   @Test
-  public void clearData() throws DataAccessException {
+  void clearData() throws DataAccessException {
     Assertions.assertNotEquals(0, clearService.getAuthDataAccess().getAuthTokenSize(), "DAO addition didn't work for auth");
     Assertions.assertNotEquals(0, clearService.getUserDataAccess().getUserSize(), "DAO addition didn't work for users");
     Assertions.assertNotEquals(0, clearService.getGameDataAccess().getGameSize(), "DAO addition didn't work for games");
@@ -32,6 +31,6 @@ public class ClearServiceTest {
 
     Assertions.assertEquals(0, clearService.getAuthDataAccess().getAuthTokenSize(), "Clear service didn't work for auth");
     Assertions.assertEquals(0, clearService.getUserDataAccess().getUserSize(), "Clear service didn't work for users");
-    Assertions.assertEquals(clearService.getGameDataAccess().getGameSize(), "Clear service didn't work for games");
+    Assertions.assertEquals(0, clearService.getGameDataAccess().getGameSize(), "Clear service didn't work for games");
   }
 }
