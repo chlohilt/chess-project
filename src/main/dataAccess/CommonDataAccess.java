@@ -21,7 +21,15 @@ public class CommonDataAccess {
     }
   }
 
-  private static GameDAO commonGameDAO = new GameDAO();
+  private static GameDAO commonGameDAO;
+
+  static {
+    try {
+      commonGameDAO=new GameDAO();
+    } catch (DataAccessException e) {
+      throw new RuntimeException(e);
+    }
+  }
 
   public CommonDataAccess(){}
 

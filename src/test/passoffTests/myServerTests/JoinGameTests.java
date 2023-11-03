@@ -18,8 +18,7 @@ public class JoinGameTests {
   public static void init() {
     try {
       clearService.clear();
-      Game game = new Game();
-      game.setGameID(1234);
+      Game game = new Game(1234);
       game.setWhiteUsername("Tester");
       joinGameService.getGameDataAccess().insertGame(game);
     } catch (Exception ignored) {}

@@ -101,7 +101,7 @@ public class Database {
             var createGameTable = """
             CREATE TABLE  IF NOT EXISTS game_data (
                 gameID INT NOT NULL,
-                gameName VARCHAR(255) NOT NULL,
+                gameName VARCHAR(255),
                 whiteUsername VARCHAR(255),
                 blackUsername VARCHAR(255),
                 gameInfo longtext NOT NULL,

@@ -28,7 +28,7 @@ public class CreateGameService extends BaseClass {
       Random random = new Random();
       int randomNumber = random.nextInt(9000 + 1) + 1000;
       Game newGame = new Game(c.getGameName(), randomNumber);
-      getGameDataAccess().getGameMap().put(randomNumber, newGame);
+      getGameDataAccess().insertGame(newGame);
       return new CreateGameResponse(randomNumber);
     } catch (Exception e) {
       return new CreateGameResponse("Error: database error");

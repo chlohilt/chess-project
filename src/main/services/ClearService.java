@@ -20,7 +20,7 @@ public class ClearService extends BaseClass {
       if (this.getAuthDataAccess().getAuthTokenSize() != 0) {
         this.getAuthDataAccess().clearAuthTokens();
       }
-      if (this.getGameDataAccess().getGameMap() != null) {
+      if (this.getGameDataAccess().getGameSize() != 0) {
         this.getGameDataAccess().clearGames();
       }
       if (this.getUserDataAccess().getUserSize() != 0) {

@@ -1,5 +1,6 @@
 package passoffTests.myServerTests;
 
+import dataAccess.DataAccessException;
 import models.Game;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -21,19 +22,12 @@ public class CreateGameTests {
     clearService.clear();
   }
   @Test
-  public void createGameSuccess() {
+  public void createGameSuccess() throws DataAccessException {
     CreateGameRequest createGameRequest = new CreateGameRequest();
     createGameRequest.setGameName("testGame");
     createGameService.createGame(createGameRequest);
 
-    boolean found = false;
-    for (Map.Entry<Integer, Game> gameEntry: createGameService.getGameDataAccess().getGameMap().entrySet()) {
-      if (Objects.equals(gameEntry.getValue().getGameName(), "testGame")) {
-        found = true;
-      }
-    }
-
-    Assertions.assertTrue(found, "New game should be found");
+    Assertions.assertNotNull(clearService.getGameDataAccess().findGameString("testGame"), "New game should be found");
   }
 
   @Test

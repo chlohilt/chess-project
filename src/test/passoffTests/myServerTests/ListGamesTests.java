@@ -1,5 +1,6 @@
 package passoffTests.myServerTests;
 
+import dataAccess.DataAccessException;
 import models.Game;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
@@ -19,8 +20,7 @@ public class ListGamesTests {
   public static void init() {
     try {
       clearService.clear();
-      Game game = new Game();
-      game.setGameID(1234);
+      Game game = new Game(1234);
       game.setWhiteUsername("Tester");
       listGamesService.getGameDataAccess().insertGame(game);
       listGamesService.getGameDataAccess().insertGame(game);
@@ -35,15 +35,10 @@ public class ListGamesTests {
   }
 
   @Test
-  public void listGamesFailure() {
-    listGamesService.getGameDataAccess().setGameMap(null);
+  public void listGamesFailure() throws DataAccessException {
+    listGamesService.getGameDataAccess().clearGames();
 
     Assertions.assertThrows(NullPointerException.class, listGamesService::listGames);
   }
 
-  @AfterAll
-  public static void after() {
-    Map<Integer, Game> gameMap = new HashMap<>();
-    listGamesService.getGameDataAccess().setGameMap(gameMap);
-  }
 }

@@ -1,11 +1,12 @@
 package models;
 
 import chess.ChessGame;
+import dataAccess.DataAccessException;
 
 /**
  * this class holds data about each game
  */
-public class Game {
+public class Game extends BaseClass {
   /**
    * this field holds the game's unique ID
    */
@@ -41,6 +42,10 @@ public class Game {
     this.gameID = gameId;
   }
 
+  public Game(int gameID) {
+    this.gameID = gameID;
+  }
+
   public ChessGame getGame() {
     return game;
   }
@@ -48,20 +53,13 @@ public class Game {
   public void setGame(ChessGame game) {
     this.game=game;
   }
-
-  public String getGameName() {
-    return gameName;
-  }
-
-  public void setGameName(String gameName) {
-    this.gameName=gameName;
-  }
   public String getBlackUsername() {
     return blackUsername;
   }
 
-  public void setBlackUsername(String blackUsername) {
+  public void setBlackUsername(String blackUsername) throws DataAccessException {
     this.blackUsername=blackUsername;
+    getGameDataAccess().setBlackUsername(this);
   }
 
   public int getGameID() {
@@ -76,8 +74,9 @@ public class Game {
     return whiteUsername;
   }
 
-  public void setWhiteUsername(String whiteUsername) {
+  public void setWhiteUsername(String whiteUsername) throws DataAccessException {
     this.whiteUsername=whiteUsername;
+    getGameDataAccess().setWhiteUsername(this);
   }
 
 }
