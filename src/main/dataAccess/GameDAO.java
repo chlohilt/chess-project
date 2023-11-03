@@ -68,7 +68,7 @@ public class GameDAO {
       preparedStatement.setString(1, gameJson);
       preparedStatement.setString(2, game.getWhiteUsername());
       preparedStatement.setInt(3, game.getGameID());
-      preparedStatement.executeQuery();
+      preparedStatement.executeUpdate();
     } catch (SQLException e) {
       throw new DataAccessException(e.toString());
     }
@@ -80,7 +80,7 @@ public class GameDAO {
       preparedStatement.setString(1, gameJson);
       preparedStatement.setString(2, game.getBlackUsername());
       preparedStatement.setInt(3, game.getGameID());
-      preparedStatement.executeQuery();
+      preparedStatement.executeUpdate();
     } catch (SQLException e) {
       throw new DataAccessException(e.toString());
     }
