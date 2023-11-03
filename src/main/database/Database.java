@@ -1,4 +1,4 @@
-package dataAccess;
+package database;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -41,7 +41,7 @@ public class Database {
      *
      * @return Connection
      */
-    synchronized public Connection getConnection() throws DataAccessException {
+    public synchronized Connection getConnection() throws database.DataAccessException {
         try {
             Connection connection;
             if (connections.isEmpty()) {
@@ -52,7 +52,7 @@ public class Database {
             }
             return connection;
         } catch (SQLException e) {
-            throw new DataAccessException(e.getMessage());
+            throw new database.DataAccessException(e.getMessage());
         }
     }
 
@@ -61,11 +61,11 @@ public class Database {
      *
      * @param connection previous obtained by calling {@link #getConnection() getConnection}.
      */
-    synchronized public void returnConnection(Connection connection) {
+    public synchronized void returnConnection(Connection connection) {
         connections.add(connection);
     }
 
-    public static void main(String[] args) throws SQLException, DataAccessException {
+    public static void main(String[] args) throws SQLException, database.DataAccessException {
         database.configureUserDatabase();
     }
 
@@ -73,7 +73,7 @@ public class Database {
         return database;
     }
 
-    void configureUserDatabase() throws DataAccessException, SQLException {
+    void configureUserDatabase() throws database.DataAccessException, SQLException {
         try (var conn = getConnection()) {
             // DATABASE CREATION
             var createDbStatement = conn.prepareStatement("CREATE DATABASE IF NOT EXISTS chess");
@@ -131,7 +131,7 @@ public class Database {
         }
     }
 
-    public boolean runStatement(String statement, Database db) throws DataAccessException{
+    public boolean runStatement(String statement, Database db) throws database.DataAccessException {
 
         var conn = db.getConnection();
 

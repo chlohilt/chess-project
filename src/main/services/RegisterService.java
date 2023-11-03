@@ -1,6 +1,6 @@
 package services;
 
-import dataAccess.DataAccessException;
+import database.DataAccessException;
 import models.BaseClass;
 import models.User;
 import requests.RegisterRequest;

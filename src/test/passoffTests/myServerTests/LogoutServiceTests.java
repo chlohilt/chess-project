@@ -1,6 +1,6 @@
 package passoffTests.myServerTests;
 
-import dataAccess.DataAccessException;
+import database.DataAccessException;
 import models.User;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -29,7 +29,7 @@ public class LogoutServiceTests {
   }
 
   @Test
-  public void logoutSuccess() throws DataAccessException {
+  void logoutSuccess() throws DataAccessException {
     try {
       String authToken = logoutService.getAuthDataAccess().returnAuthTokenString(u.getUsername());
       logoutService.logout(new LogoutRequest(u.getUsername()));
@@ -41,11 +41,11 @@ public class LogoutServiceTests {
   }
 
   @Test
-  public void logoutFailure() throws DataAccessException {
+  void logoutFailure() throws DataAccessException {
     try {
       ResponseClass response = logoutService.logout(new LogoutRequest("random"));
 
-      Assertions.assertEquals(response.getMessage(), "Error: database error");
+      Assertions.assertEquals("Error: database error", response.getMessage());
 
     } catch (Exception e) {
       throw new DataAccessException("Failure to access database");

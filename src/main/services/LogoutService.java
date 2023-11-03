@@ -1,6 +1,6 @@
 package services;
 
-import dataAccess.DataAccessException;
+import database.DataAccessException;
 import models.BaseClass;
 import requests.LogoutRequest;
 import responses.ResponseClass;
@@ -12,7 +12,7 @@ public class LogoutService extends BaseClass {
   /**
    * this is the constructor for a service to logout
    */
-  public LogoutService() {}
+  public LogoutService() { /* empty */ }
   /**
    * this function logs a user out
    * @return a logout response to see if logout was successful

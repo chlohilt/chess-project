@@ -1,7 +1,7 @@
 package handlers;
 
 import com.google.gson.Gson;
-import dataAccess.DataAccessException;
+import database.DataAccessException;
 import models.BaseClass;
 import requests.LogoutRequest;
 import responses.ResponseClass;

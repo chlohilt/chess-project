@@ -1,4 +1,4 @@
-package dataAccess;
+package database;
 
 public class CommonDataAccess {
   private static AuthDAO commonAuthDAO;
@@ -6,7 +6,7 @@ public class CommonDataAccess {
   static {
     try {
       commonAuthDAO=new AuthDAO();
-    } catch (DataAccessException e) {
+    } catch (database.DataAccessException e) {
       throw new RuntimeException(e);
     }
   }
@@ -16,7 +16,7 @@ public class CommonDataAccess {
   static {
     try {
       commonUserDAO=new UserDAO();
-    } catch (DataAccessException e) {
+    } catch (database.DataAccessException e) {
       throw new RuntimeException(e);
     }
   }
@@ -31,7 +31,7 @@ public class CommonDataAccess {
     }
   }
 
-  public CommonDataAccess(){}
+  public CommonDataAccess(){ /* empty */ }
 
   public AuthDAO getCommonAuthDAO() {
     return commonAuthDAO;

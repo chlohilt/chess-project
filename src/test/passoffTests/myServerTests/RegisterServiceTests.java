@@ -1,16 +1,16 @@
 package passoffTests.myServerTests;
 
-import dataAccess.DataAccessException;
+import database.DataAccessException;
 import models.User;
 import org.junit.jupiter.api.*;
 import requests.RegisterRequest;
 import services.RegisterService;
 
-public class RegisterServiceTests {
+class RegisterServiceTests {
   private static RegisterService registerService = new RegisterService();
 
   @Test
-  public void registerSuccess() throws DataAccessException {
+  void registerSuccess() throws DataAccessException {
     try {
       User u = new User("user", "pass", "email@byu.edu");
       RegisterRequest request = new RegisterRequest(u.getUsername(), u.getPassword(), u.getEmail());
@@ -26,7 +26,7 @@ public class RegisterServiceTests {
   }
 
   @Test
-  public void registerFailure() throws DataAccessException {
+  void registerFailure() throws DataAccessException {
     Integer originalUserDataSize = registerService.getUserDataAccess().getUserSize();
     RegisterRequest request = new RegisterRequest();
 

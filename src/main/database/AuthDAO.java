@@ -1,4 +1,4 @@
-package dataAccess;
+package database;
 
 import com.google.gson.Gson;
 import models.AuthToken;
@@ -34,13 +34,6 @@ public class AuthDAO {
       preparedStatement.setString(2, newAuthToken.getAuthToken());
       preparedStatement.setString(3, username);
       preparedStatement.executeUpdate();
-      var preparedStatement2 = connection.prepareStatement("SELECT authTokenString FROM auth_data WHERE username=?", RETURN_GENERATED_KEYS);
-      preparedStatement2.setString(1, username);
-      try (var rs = preparedStatement2.executeQuery()) {
-        while (rs.next()) {
-          return rs.getString("authTokenString");
-        }
-      }
       return newAuthToken.getAuthToken();
 
     } catch (SQLException e) {

@@ -1,7 +1,7 @@
 package models;
 
 import chess.ChessGame;
-import dataAccess.DataAccessException;
+import database.DataAccessException;
 
 /**
  * this class holds data about each game
@@ -30,7 +30,7 @@ public class Game extends BaseClass {
   /**
    * this field holds the actual game object used for game play
    */
-  private ChessGame game;
+  private ChessGame chessGame;
 
   /**
    * this is the constructor for a game
@@ -46,12 +46,12 @@ public class Game extends BaseClass {
     this.gameID = gameID;
   }
 
-  public ChessGame getGame() {
-    return game;
+  public ChessGame getChessGame() {
+    return chessGame;
   }
 
-  public void setGame(ChessGame game) {
-    this.game=game;
+  public void setChessGame(ChessGame chessGame) {
+    this.chessGame=chessGame;
   }
   public String getBlackUsername() {
     return blackUsername;

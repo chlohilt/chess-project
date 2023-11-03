@@ -1,6 +1,6 @@
 package passoffTests.myServerTests;
 
-import dataAccess.DataAccessException;
+import database.DataAccessException;
 import models.User;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -27,7 +27,7 @@ public class LoginServiceTests {
   }
 
   @Test
-  public void loginSuccess() throws DataAccessException {
+  void loginSuccess() throws DataAccessException {
     int originalAuthDataSize = loginService.getAuthDataAccess().getAuthTokenSize();
     LoginRequest loginRequest = new LoginRequest("user", "pass");
     loginService.login(loginRequest);
@@ -36,7 +36,7 @@ public class LoginServiceTests {
   }
 
   @Test
-  public void loginFailure() throws DataAccessException {
+  void loginFailure() throws DataAccessException {
     int originalAuthDataSize = loginService.getAuthDataAccess().getAuthTokenSize();
     LoginRequest loginRequest = new LoginRequest("user", "pass1");
     loginService.login(loginRequest);

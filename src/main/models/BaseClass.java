@@ -1,9 +1,9 @@
 package models;
 
-import dataAccess.AuthDAO;
-import dataAccess.CommonDataAccess;
-import dataAccess.GameDAO;
-import dataAccess.UserDAO;
+import database.AuthDAO;
+import database.CommonDataAccess;
+import database.GameDAO;
+import database.UserDAO;
 import responses.ResponseClass;
 import spark.Request;
 

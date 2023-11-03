@@ -1,6 +1,6 @@
 package services;
 
-import dataAccess.DataAccessException;
+import database.DataAccessException;
 import models.BaseClass;
 import models.User;
 import requests.LoginRequest;
@@ -15,7 +15,7 @@ public class LoginService extends BaseClass {
   /**
    * this is the constructor for a service to login
    */
-  public LoginService() {}
+  public LoginService() { /* empty */ }
   /**
    * this function logs a user in
    * @param r - a request to login a user
@@ -24,11 +24,10 @@ public class LoginService extends BaseClass {
   public LoginResponse login(LoginRequest r) {
     try {
       User u = getUserDataAccess().returnUser(r.getUsername());
-      if (u != null) {
-        if (Objects.equals(u.getPassword(), r.getPassword())) {
+      if (u != null && (Objects.equals(u.getPassword(), r.getPassword()))) {
           String authToken = getAuthDataAccess().createAuthToken(r.getUsername());
           return new LoginResponse(r.getUsername(), authToken);
-        }
+
       }
       return new LoginResponse("Error: unauthorized");
     } catch (DataAccessException e) {

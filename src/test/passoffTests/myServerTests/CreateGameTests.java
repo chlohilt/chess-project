@@ -1,7 +1,6 @@
 package passoffTests.myServerTests;
 
-import dataAccess.DataAccessException;
-import models.Game;
+import database.DataAccessException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -9,9 +8,6 @@ import requests.CreateGameRequest;
 import responses.CreateGameResponse;
 import services.ClearService;
 import services.CreateGameService;
-
-import java.util.Map;
-import java.util.Objects;
 
 public class CreateGameTests {
   static CreateGameService createGameService = new CreateGameService();
@@ -22,7 +18,7 @@ public class CreateGameTests {
     clearService.clear();
   }
   @Test
-  public void createGameSuccess() throws DataAccessException {
+  void createGameSuccess() throws DataAccessException {
     CreateGameRequest createGameRequest = new CreateGameRequest();
     createGameRequest.setGameName("testGame");
     createGameService.createGame(createGameRequest);
@@ -31,7 +27,7 @@ public class CreateGameTests {
   }
 
   @Test
-  public void createGameFailure() {
+  void createGameFailure() {
     CreateGameRequest createGameRequest = new CreateGameRequest();
     createGameRequest.setGameName(null);
     CreateGameResponse createGameResponse = createGameService.createGame(createGameRequest);

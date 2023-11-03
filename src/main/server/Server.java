@@ -1,6 +1,5 @@
 package server;
 
-import dataAccess.CommonDataAccess;
 import handlers.*;
 import spark.Spark;
 
