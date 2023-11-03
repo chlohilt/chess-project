@@ -33,7 +33,7 @@ public class AuthDAO {
       preparedStatement.setString(1, json);
       preparedStatement.setString(2, newAuthToken.getAuthToken());
       preparedStatement.setString(3, username);
-      preparedStatement.executeQuery();
+      preparedStatement.executeUpdate();
       var preparedStatement2 = connection.prepareStatement("SELECT authTokenString FROM auth_data WHERE username=?", RETURN_GENERATED_KEYS);
       preparedStatement2.setString(1, username);
       try (var rs = preparedStatement2.executeQuery()) {
@@ -58,7 +58,7 @@ public class AuthDAO {
       preparedStatement.setString(1, username);
       try (var rs = preparedStatement.executeQuery()) {
         while (rs.next()) {
-          return rs.getString("authToken");
+          return rs.getString("authTokenString");
         }
       }
     }  catch (SQLException e) {
@@ -103,7 +103,7 @@ public class AuthDAO {
   public void deleteAuthToken(String username) throws DataAccessException {
     try (var preparedStatement = connection.prepareStatement("DELETE FROM auth_data WHERE username=?")) {
       preparedStatement.setString(1, username);
-      preparedStatement.executeQuery();
+      preparedStatement.executeUpdate();
     }  catch (SQLException e) {
       throw new DataAccessException(e.toString());
     }
