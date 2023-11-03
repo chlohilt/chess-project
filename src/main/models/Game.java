@@ -56,6 +56,7 @@ public class Game extends BaseClass {
   public String getBlackUsername() {
     return blackUsername;
   }
+  public String getGameName() { return gameName; }
 
   public void setBlackUsername(String blackUsername) throws DataAccessException {
     this.blackUsername=blackUsername;

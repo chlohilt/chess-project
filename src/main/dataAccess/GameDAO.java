@@ -26,8 +26,9 @@ public class GameDAO {
    * @param game - game to insert into database
    */
   public void insertGame(Game game) throws DataAccessException {
-    try (var preparedStatement = connection.prepareStatement("INSERT INTO game_data (gameID, gameInfo) VALUES(?, ?)", RETURN_GENERATED_KEYS)) {
+    try (var preparedStatement = connection.prepareStatement("INSERT INTO game_data (gameID, gameInfo, gameName) VALUES(?, ?, ?)", RETURN_GENERATED_KEYS)) {
       preparedStatement.setInt(1, game.getGameID());
+      preparedStatement.setString(3, game.getGameName());
       var json = new Gson().toJson(game);
       preparedStatement.setString(2, json);
 
