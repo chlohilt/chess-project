@@ -1,6 +1,7 @@
 package services;
 
 import com.google.gson.Gson;
+import database.DataAccessException;
 import models.BaseClass;
 
 import java.util.Map;
@@ -19,7 +20,7 @@ public class ListGamesService extends BaseClass {
    * this function lists all the games
    * @return list game response
    */
-  public String listGames() {
+  public String listGames() throws DataAccessException {
     var jsonBody = Map.of (
             "games", getGameDataAccess().toList()
     );

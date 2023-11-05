@@ -14,7 +14,7 @@ public class UserDAO {
   Database database = new Database();
   Connection connection;
 
-  UserDAO() throws database.DataAccessException {
+  public UserDAO() throws DataAccessException {
     Connection conn = this.database.getDatabaseInstance().getConnection();
     this.connection = conn;
   }
@@ -24,7 +24,7 @@ public class UserDAO {
    * @param u - user to be created
    * @throws database.DataAccessException - throws if it cannot create a user
    */
-  public void createUser (User u) throws database.DataAccessException {
+  public void createUser (User u) throws DataAccessException {
     try (var preparedStatement = connection.prepareStatement("INSERT INTO user_data (username, password, email) VALUES(?, ?, ?)", RETURN_GENERATED_KEYS)) {
       preparedStatement.setString(1, u.getUsername());
       preparedStatement.setString(2, u.getPassword());
@@ -33,7 +33,7 @@ public class UserDAO {
       preparedStatement.executeUpdate();
 
     } catch (SQLException e) {
-      throw new database.DataAccessException(e.toString());
+      throw new DataAccessException(e.toString());
     }
   }
 
@@ -43,7 +43,7 @@ public class UserDAO {
    * @return User
    * @throws database.DataAccessException when the user isn't found
    */
-  public User returnUser(String username) throws database.DataAccessException {
+  public User returnUser(String username) throws DataAccessException {
     try (var preparedStatement = connection.prepareStatement("SELECT username, password, email FROM user_data WHERE username=?")) {
       preparedStatement.setString(1, username);
       try (var rs = preparedStatement.executeQuery()) {
@@ -54,9 +54,9 @@ public class UserDAO {
         }
       }
     }  catch (SQLException e) {
-      throw new database.DataAccessException(e.toString());
+      throw new DataAccessException(e.toString());
     }
-    return null;
+    throw new DataAccessException("User does not exist");
   }
 
   /**
@@ -64,24 +64,25 @@ public class UserDAO {
    * @param u - user to be deleted
    * @throws database.DataAccessException when the user cannot be found
    */
-  public void deleteUser(User u) throws database.DataAccessException {
+  public void deleteUser(User u) throws DataAccessException {
     try (var preparedStatement = connection.prepareStatement("DELETE FROM user_data WHERE username=?")) {
       preparedStatement.setString(1, u.getUsername());
       preparedStatement.executeUpdate();
     } catch (SQLException e) {
-      throw new database.DataAccessException(e.toString());
+      throw new DataAccessException(e.toString());
     }
+    throw new DataAccessException("User does not exist");
   }
 
-  public void clearUsers() throws database.DataAccessException {
+  public void clearUsers() throws DataAccessException {
     try (var preparedStatement = connection.prepareStatement("TRUNCATE user_data")) {
       preparedStatement.executeUpdate();
     } catch (SQLException e) {
-      throw new database.DataAccessException(e.toString());
+      throw new DataAccessException(e.toString());
     }
   }
 
-  public Integer getUserSize() throws database.DataAccessException {
+  public Integer getUserSize() throws DataAccessException {
     try (var preparedStatement = connection.prepareStatement("SELECT count(*) FROM user_data")) {
       try (var rs = preparedStatement.executeQuery()) {
         while (rs.next()) {

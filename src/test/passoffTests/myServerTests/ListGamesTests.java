@@ -27,7 +27,7 @@ public class ListGamesTests {
   }
 
   @Test
-  void listGamesSuccess() {
+  void listGamesSuccess() throws DataAccessException {
     String expectedGameList = "{\"games\":[{\"gameID\":1234,\"whiteUsername\":\"Tester\"}]}";
 
     Assertions.assertEquals(expectedGameList, listGamesService.listGames());
@@ -41,7 +41,7 @@ public class ListGamesTests {
       throw new DataAccessException(e.toString());
     }
 
-    Assertions.assertThrows(RuntimeException.class, listGamesService::listGames);
+    Assertions.assertThrows(DataAccessException.class, listGamesService::listGames);
 
     database.getConnection().setCatalog("chess");
 

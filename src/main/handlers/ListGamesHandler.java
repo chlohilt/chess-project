@@ -1,6 +1,7 @@
 package handlers;
 
 import com.google.gson.JsonObject;
+import database.DataAccessException;
 import models.BaseClass;
 import responses.ResponseClass;
 import services.ListGamesService;
@@ -23,8 +24,12 @@ public class ListGamesHandler extends BaseClass {
       res.body(objectJson);
       return objectJson;
     } else {
-      objectJson = listGamesService.listGames();
-      res.status(200);
+      try {
+        objectJson = listGamesService.listGames();
+        res.status(200);
+      } catch (DataAccessException e) {
+        res.status(500);
+      }
     }
 
     res.body(objectJson);
