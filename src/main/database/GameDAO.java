@@ -16,7 +16,7 @@ public class GameDAO {
   Database database = new Database();
   Gson gson = new Gson();
   Connection connection;
-  GameDAO() throws database.DataAccessException {
+  public GameDAO() throws database.DataAccessException {
     Connection conn = this.database.getDatabaseInstance().getConnection();
     this.connection = conn;
   }
