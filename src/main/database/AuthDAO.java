@@ -15,7 +15,7 @@ import static java.sql.Statement.RETURN_GENERATED_KEYS;
 public class AuthDAO {
   Database database = new Database();
   Connection connection;
-  AuthDAO() throws DataAccessException {
+  public AuthDAO() throws DataAccessException {
     Connection conn = this.database.getDatabaseInstance().getConnection();
     this.connection = conn;
   }
@@ -57,7 +57,7 @@ public class AuthDAO {
     }  catch (SQLException e) {
       throw new DataAccessException(e.toString());
     }
-    return null;
+    throw new DataAccessException("User does not exist");
   }
 
   public AuthToken returnAuthToken(String username) throws DataAccessException {
@@ -72,7 +72,7 @@ public class AuthDAO {
     }  catch (SQLException e) {
       throw new DataAccessException(e.toString());
     }
-    return null;
+    throw new DataAccessException("User does not exist");
   }
 
   public String returnUsername(String authTokenString) throws DataAccessException {

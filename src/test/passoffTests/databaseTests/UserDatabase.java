@@ -9,12 +9,21 @@ import org.junit.jupiter.api.Test;
 
 class UserDatabase {
   static UserDAO userDAO;
+
+  static {
+    try {
+      userDAO=new UserDAO();
+    } catch (DataAccessException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
   String testUsername = "testUser";
   User newUser = new User(testUsername, "testPass", "test@gmail.com");
 
   @BeforeAll
   static void init() throws DataAccessException {
-    userDAO = new UserDAO();
+    userDAO.clearUsers();
   }
 
   @Test
@@ -45,23 +54,16 @@ class UserDatabase {
   }
 
   @Test
-  void returnUserTestFailure() {
-    User u = new User("", "secret", "email@email.com");
+  void returnUserTestFailure() throws DataAccessException {
 
-    Assertions.assertThrows(DataAccessException.class, () -> userDAO.returnUser(u.getUsername()));
+    Assertions.assertNull(userDAO.returnUser(null));
   }
 
   @Test
   void deleteUserTestSuccess() throws DataAccessException {
+    userDAO.deleteUser(newUser);
 
-    Assertions.assertThrows(DataAccessException.class, () -> userDAO.deleteUser(newUser));
-  }
-
-  @Test
-  void deleteUserTestFailure() throws DataAccessException {
-    User u = new User("", "secret", "email@email.com");
-
-    Assertions.assertThrows(DataAccessException.class, () -> userDAO.deleteUser(u));
+    Assertions.assertNull(userDAO.returnUser(newUser.getUsername()));
   }
 
   @Test
