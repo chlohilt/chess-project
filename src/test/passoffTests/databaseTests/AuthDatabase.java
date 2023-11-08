@@ -2,7 +2,6 @@ package passoffTests.databaseTests;
 
 import database.AuthDAO;
 import database.DataAccessException;
-import models.AuthToken;
 import models.User;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;

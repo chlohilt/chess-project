@@ -1,0 +1,15 @@
+
+[
+java:S1192-"FDefine a constant instead of duplicating this literal "/game" 3 times.(ö‘!
+W
+java:S1612"<Replace this lambda with method reference '::handleRequest'.(·ÑŸáûÿÿÿÿ
+R
+java:S1612#"<Replace this lambda with method reference '::handleRequest'.(óú¼Õ
+W
+java:S1612("<Replace this lambda with method reference '::handleRequest'.(Ü×¾£ùÿÿÿÿ
+Q
+java:S1612-"<Replace this lambda with method reference '::handleRequest'.(ö‘!
+W
+java:S16122"<Replace this lambda with method reference '::handleRequest'.(ïø‹Íşÿÿÿÿ
+W
+java:S16127"<Replace this lambda with method reference '::handleRequest'.(Ç£¯äùÿÿÿÿ

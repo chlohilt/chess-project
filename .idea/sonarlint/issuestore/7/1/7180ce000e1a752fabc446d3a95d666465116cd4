@@ -1,0 +1,9 @@
+
+o
+java:S1192S"MUse already-defined constant 'DB_NAME' instead of duplicating its value here.(¨é£ùÿÿÿÿ8ÍÉ³¢¹1
+q
+java:S2095O"OUse try-with-resources or close this "PreparedStatement" in a "finally" clause.(Ö—»Éøÿÿÿÿ8èÉ³¢¹1
+j
+java:S20950"HUse try-with-resources or close this "Connection" in a "finally" clause.(´à†«úÿÿÿÿ8èÉ³¢¹1
+X
+java:S64370"6Revoke and change this password, as it is compromised.(´à†«úÿÿÿÿ8òÉ³¢¹1
