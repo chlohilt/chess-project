@@ -3,6 +3,9 @@ package server;
 import com.google.gson.Gson;
 import database.DataAccessException;
 import models.ModelSerializer;
+import requests.CreateGameRequest;
+import requests.LogoutRequest;
+import requests.RegisterRequest;
 import responses.CreateGameResponse;
 import responses.LoginResponse;
 import responses.RegisterResponse;
@@ -32,12 +35,12 @@ public class ServerFacade {
     return this.makeRequest("POST", path, request, LoginResponse.class);
   }
 
-  public RegisterResponse register(Request request) throws DataAccessException {
+  public RegisterResponse register(RegisterRequest request) throws DataAccessException {
     var path = "/user";
     return this.makeRequest("POST", path, request, RegisterResponse.class);
   }
 
-  public ResponseClass logout(Request request) throws DataAccessException {
+  public ResponseClass logout(LogoutRequest request) throws DataAccessException {
     var path = "/session";
     return this.makeRequest("DELETE", path, request, ResponseClass.class);
   }
@@ -46,7 +49,7 @@ public class ServerFacade {
       return this.makeRequest("GET", gamePath, request, String.class);
   }
 
-  public CreateGameResponse createGame(Request request) throws DataAccessException {
+  public CreateGameResponse createGame(CreateGameRequest request) throws DataAccessException {
       return this.makeRequest("POST", gamePath, request, null);
   }
 

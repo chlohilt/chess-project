@@ -10,6 +10,10 @@ public class CreateGameRequest {
    */
   public CreateGameRequest(){}
 
+  public CreateGameRequest(String gameName) {
+    this.gameName=gameName;
+  }
+
   public String getGameName() {
     return gameName;
   }

@@ -1,5 +1,12 @@
 package client;
 
+import requests.CreateGameRequest;
+import requests.JoinGameRequest;
+import requests.LogoutRequest;
+import requests.RegisterRequest;
+import responses.CreateGameResponse;
+import responses.RegisterResponse;
+import responses.ResponseClass;
 import spark.Request;
 import database.DataAccessException;
 import server.ServerFacade;
@@ -12,7 +19,7 @@ public class ChessClient {
   private final String serverUrl;
   private State state = State.SIGNEDOUT;
 
-  public ChessClient(String serverlUrl) {
+  public ChessClient(String serverUrl) {
     server = new ServerFacade(serverUrl);
     this.serverUrl = serverUrl;
   }
@@ -24,18 +31,34 @@ public class ChessClient {
       var params = Arrays.copyOfRange(tokens, 1, tokens.length);
       return switch (cmd) {
         case "login" -> signIn(params);
-        case "register" -> listPets();
-        case "logout" -> signOut();
-        case "create" -> adoptPet(params);
-        case "join" -> adoptAllPets();
+        case "register" -> register(params);
+        case "logout" -> logOut(params);
+        case "create" -> createGame(params);
+        case "join" -> joinGame(params);
         case "list" -> listGames();
-        case "observe " -> observe();
+        case "observe " -> joinGame(params);
         case "quit" -> "quit";
         default -> help();
       };
     } catch (DataAccessException ex) {
       return ex.getMessage();
     }
+  }
+
+  public ResponseClass joinGame(String... params) throws DataAccessException {
+    return server.joinGame(new JoinGameRequest(visitorName, (Integer) params[0], params[1]));
+  }
+
+  public CreateGameResponse createGame(String... params) throws DataAccessException {
+    return server.createGame(new CreateGameRequest(params[0]));
+  }
+
+  public ResponseClass logOut(String... params) throws DataAccessException {
+    return server.logout(new LogoutRequest(params[0]));
+  }
+
+  public RegisterResponse register(String... params) throws DataAccessException {
+    return server.register(new RegisterRequest(params[0], params[1], params[2]));
   }
 
   public String signIn(String... params) throws DataAccessException {

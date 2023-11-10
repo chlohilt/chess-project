@@ -30,6 +30,12 @@ public class JoinGameRequest {
    */
   public JoinGameRequest() {}
 
+  public JoinGameRequest(String username, Integer gameID, ChessGame.TeamColor playerColor) {
+    this.playerColor=playerColor;
+    this.gameID=gameID;
+    this.username=username;
+  }
+
 
   public Integer getGameID() {
     return gameID;
