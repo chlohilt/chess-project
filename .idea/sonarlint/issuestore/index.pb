@@ -33,16 +33,8 @@ g
 7src/test/passoffTests/myServerTests/ListGamesTests.java,7\5\7597ad828141be28a50333cd369b93da4c8d101f
 g
 7src/test/passoffTests/serverTests/StandardAPITests.java,0\8\082a25ddb41e4ff8ae54192db8e315a49141fd5e
-N
-src/main/database/AuthDAO.java,6\4\64c797c6ae2480d30a95d43beed6dd95301670fc
-W
-'src/main/database/CommonDataAccess.java,e\3\e3a666a5f999519f77d4c7104ae1c5353af9fbd4
 h
 8src/test/passoffTests/myServerTests/CreateGameTests.java,3\3\33b1f4b900476e5ea55985ca8ea852693c5a1652
-Z
-*src/main/database/DataAccessException.java,4\2\42c32aa2c583dd294f7cc06323b4f6f315fe782d
-N
-src/main/database/GameDAO.java,f\7\f7f7993c8f7be40266f456dcf896259f0b3e6bab
 S
 #src/main/services/LoginService.java,1\a\1ae329d44b3a0a4ed170551d2aacd04a5278b3b2
 j
@@ -59,12 +51,8 @@ m
 =src/test/passoffTests/myServerTests/RegisterServiceTests.java,2\9\297f7979fbda24092475acbbdcb53f9d77321621
 K
 src/main/server/Server.java,4\d\4df1f2a4b6e405ce1df3eb521013cadaab6a41b2
-N
-src/main/database/UserDAO.java,0\a\0ade3e41e61c72c7e0437ed14c352edd9331e5ca
 W
 'src/main/handlers/ListGamesHandler.java,9\9\991d77912aa840a56eb933abaa4514e1a300d9b6
-O
-src/main/database/Database.java,7\1\7180ce000e1a752fabc446d3a95d666465116cd4
 e
 5src/test/passoffTests/databaseTests/AuthDatabase.java,8\0\80f7e6c36b9a6c788dd0ec81fd2424274493ab9e
 e

@@ -17,6 +17,7 @@
     <orderEntry type="library" name="glassfish.tyrus.bundles.standalone.client" level="project" />
     <orderEntry type="library" name="slf4j.simple" level="project" />
     <orderEntry type="module" module-name="shared" />
+    <orderEntry type="library" name="sparkjava.spark.core" level="project" />
   </component>
   <component name="SonarLintModuleSettings">
     <option name="uniqueId" value="c6e4423a-7a8c-48db-97dc-b15f178e96a8" />
