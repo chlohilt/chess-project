@@ -1,17 +1,16 @@
 package client;
 
+import chess.ChessGame;
 import requests.CreateGameRequest;
 import requests.JoinGameRequest;
 import requests.LogoutRequest;
 import requests.RegisterRequest;
-import responses.CreateGameResponse;
-import responses.RegisterResponse;
-import responses.ResponseClass;
 import spark.Request;
 import database.DataAccessException;
 import server.ServerFacade;
 
 import java.util.Arrays;
+import java.util.Objects;
 
 public class ChessClient {
   private String visitorName = null;
@@ -34,9 +33,8 @@ public class ChessClient {
         case "register" -> register(params);
         case "logout" -> logOut(params);
         case "create" -> createGame(params);
-        case "join" -> joinGame(params);
+        case "join", "observe " -> joinGame(params);
         case "list" -> listGames();
-        case "observe " -> joinGame(params);
         case "quit" -> "quit";
         default -> help();
       };
@@ -45,20 +43,36 @@ public class ChessClient {
     }
   }
 
-  public ResponseClass joinGame(String... params) throws DataAccessException {
-    return server.joinGame(new JoinGameRequest(visitorName, (Integer) params[0], params[1]));
+  public String joinGame(String... params) throws DataAccessException {
+    ChessGame.TeamColor teamColor;
+    if (Objects.equals(params[1], "WHITE")) {
+      teamColor = ChessGame.TeamColor.WHITE;
+    } else if (Objects.equals(params[1], "BLACK")) {
+      teamColor = ChessGame.TeamColor.BLACK;
+    } else {
+      throw new DataAccessException("Expected: <gameID> <WHITE | BLACK>");
+    }
+    try {
+      server.joinGame(new JoinGameRequest(visitorName, Integer.valueOf(params[0]), teamColor));
+      return visitorName + " joined game " + params[0] + " as " + params[1] + ".";
+    } catch (DataAccessException e) {
+      throw new DataAccessException(e.getMessage());
+    }
   }
 
-  public CreateGameResponse createGame(String... params) throws DataAccessException {
-    return server.createGame(new CreateGameRequest(params[0]));
+  public String createGame(String... params) throws DataAccessException {
+    server.createGame(new CreateGameRequest(params[0]));
+    return visitorName + " created game " + params[0] + ".";
   }
 
-  public ResponseClass logOut(String... params) throws DataAccessException {
-    return server.logout(new LogoutRequest(params[0]));
+  public String logOut(String... params) throws DataAccessException {
+    server.logout(new LogoutRequest(params[0]));
+    return visitorName + " logged out.";
   }
 
-  public RegisterResponse register(String... params) throws DataAccessException {
-    return server.register(new RegisterRequest(params[0], params[1], params[2]));
+  public String register(String... params) throws DataAccessException {
+    server.register(new RegisterRequest(params[0], params[1], params[2]));
+    return visitorName + " registered.";
   }
 
   public String signIn(String... params) throws DataAccessException {

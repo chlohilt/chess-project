@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import database.DataAccessException;
 import models.ModelSerializer;
 import requests.CreateGameRequest;
+import requests.JoinGameRequest;
 import requests.LogoutRequest;
 import requests.RegisterRequest;
 import responses.CreateGameResponse;
@@ -53,7 +54,7 @@ public class ServerFacade {
       return this.makeRequest("POST", gamePath, request, null);
   }
 
-  public ResponseClass joinGame(Request request) throws DataAccessException {
+  public ResponseClass joinGame(JoinGameRequest request) throws DataAccessException {
       return this.makeRequest("PUT", gamePath, request, null);
   }
 
