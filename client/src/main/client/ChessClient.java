@@ -1,11 +1,7 @@
 package client;
 
 import chess.ChessGame;
-import requests.CreateGameRequest;
-import requests.JoinGameRequest;
-import requests.LogoutRequest;
-import requests.RegisterRequest;
-import spark.Request;
+import requests.*;
 import database.DataAccessException;
 import server.ServerFacade;
 
@@ -78,7 +74,7 @@ public class ChessClient {
   public String signIn(String... params) throws DataAccessException {
     if (params.length >= 1) {
       state = State.SIGNEDIN;
-      visitorName = String.join("-", params);
+      server.login(new LoginRequest(params[0], params[1]));
       return String.format("You signed in as %s.", visitorName);
     }
     throw new DataAccessException("Expected: <yourname>");
@@ -86,8 +82,7 @@ public class ChessClient {
 
   public String listGames() throws DataAccessException {
     assertSignedIn();
-    Request request = new Request();
-    return server.listGames(request);
+    return server.listGames();
   }
 
   public String help() {
