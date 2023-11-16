@@ -3,6 +3,8 @@ package client;
 import chess.ChessGame;
 import requests.*;
 import database.DataAccessException;
+import responses.LoginResponse;
+import responses.RegisterResponse;
 import server.ServerFacade;
 
 import java.util.Arrays;
@@ -10,6 +12,7 @@ import java.util.Objects;
 
 public class ChessClient {
   private String visitorName = null;
+  private String currentAuthToken = null;
   private final ServerFacade server;
   private final String serverUrl;
   private State state = State.SIGNEDOUT;
@@ -17,6 +20,14 @@ public class ChessClient {
   public ChessClient(String serverUrl) {
     server = new ServerFacade(serverUrl);
     this.serverUrl = serverUrl;
+  }
+
+  public String getCurrentAuthToken() {
+    return currentAuthToken;
+  }
+
+  public void setCurrentAuthToken(String currentAuthToken) {
+    this.currentAuthToken=currentAuthToken;
   }
 
   public String eval(String input) {
@@ -27,7 +38,7 @@ public class ChessClient {
       return switch (cmd) {
         case "login" -> signIn(params);
         case "register" -> register(params);
-        case "logout" -> logOut(params);
+        case "logout" -> logOut();
         case "create" -> createGame(params);
         case "join", "observe " -> joinGame(params);
         case "list" -> listGames();
@@ -49,7 +60,7 @@ public class ChessClient {
       throw new DataAccessException("Expected: <gameID> <WHITE | BLACK>");
     }
     try {
-      server.joinGame(new JoinGameRequest(visitorName, Integer.valueOf(params[0]), teamColor));
+      server.joinGame(new JoinGameRequest(visitorName, Integer.valueOf(params[0]), teamColor), currentAuthToken);
       return visitorName + " joined game " + params[0] + " as " + params[1] + ".";
     } catch (DataAccessException e) {
       throw new DataAccessException(e.getMessage());
@@ -57,26 +68,28 @@ public class ChessClient {
   }
 
   public String createGame(String... params) throws DataAccessException {
-    server.createGame(new CreateGameRequest(params[0]));
+    server.createGame(new CreateGameRequest(params[0]), currentAuthToken);
     return visitorName + " created game " + params[0] + ".";
   }
 
-  public String logOut(String... params) throws DataAccessException {
-    server.logout(new LogoutRequest(visitorName));
+  public String logOut() throws DataAccessException {
+    server.logout(new LogoutRequest(visitorName), currentAuthToken);
     return visitorName + " logged out.";
   }
 
   public String register(String... params) throws DataAccessException {
-    server.register(new RegisterRequest(params[0], params[1], params[2]));
+    RegisterResponse registerResponse = server.register(new RegisterRequest(params[0], params[1], params[2]));
     visitorName = params[0];
+    setCurrentAuthToken(registerResponse.getAuthToken());
     return visitorName + " registered.";
   }
 
   public String signIn(String... params) throws DataAccessException {
     if (params.length >= 1) {
       state = State.SIGNEDIN;
-      server.login(new LoginRequest(params[0], params[1]));
+      LoginResponse loginResponse = server.login(new LoginRequest(params[0], params[1]));
       visitorName = params[0];
+      setCurrentAuthToken(loginResponse.getAuthToken());
       return String.format("You signed in as %s.", visitorName);
     }
     throw new DataAccessException("Expected: <yourname>");
@@ -84,7 +97,7 @@ public class ChessClient {
 
   public String listGames() throws DataAccessException {
     assertSignedIn();
-    return server.listGames();
+    return server.listGames(currentAuthToken);
   }
 
   public String help() {

@@ -23,6 +23,7 @@ public class Repl {
       try {
         result = chessClient.eval(line);
         System.out.print(result);
+        // TODO add pretty printing here I think
       } catch (Throwable e) {
         System.out.print(e.getMessage());
       }
