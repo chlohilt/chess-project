@@ -62,12 +62,13 @@ public class ChessClient {
   }
 
   public String logOut(String... params) throws DataAccessException {
-    server.logout(new LogoutRequest(params[0]));
+    server.logout(new LogoutRequest(visitorName));
     return visitorName + " logged out.";
   }
 
   public String register(String... params) throws DataAccessException {
     server.register(new RegisterRequest(params[0], params[1], params[2]));
+    visitorName = params[0];
     return visitorName + " registered.";
   }
 
@@ -75,6 +76,7 @@ public class ChessClient {
     if (params.length >= 1) {
       state = State.SIGNEDIN;
       server.login(new LoginRequest(params[0], params[1]));
+      visitorName = params[0];
       return String.format("You signed in as %s.", visitorName);
     }
     throw new DataAccessException("Expected: <yourname>");
@@ -88,8 +90,8 @@ public class ChessClient {
   public String help() {
     if (state == State.SIGNEDOUT) {
       return """
-                    - logIn <yourname>
-                    - register <yourname> <yourpassword> <youremail>
+                    - login <yourusername> <yourpassword>
+                    - register <yourusername> <yourpassword> <youremail>
                     - help
                     - quit
                     """;
@@ -99,7 +101,7 @@ public class ChessClient {
                 - create <gamename>
                 - join <gameID> <WHITE | BLACK>
                 - observe <gameID>
-                - logOut
+                - logout
                 - help
                 - quit
                 """;

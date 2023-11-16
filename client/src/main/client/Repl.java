@@ -11,7 +11,7 @@ public class Repl {
 
   // TODO: add logger
   public void run() {
-    System.out.println("\uD83D\uDC36 Welcome to Chess Game Central. Sign in to start.");
+    System.out.println("\u2654\u265a Welcome to Chess Game Central. Sign in to start. \u265a\u2654");
     System.out.print(chessClient.help());
 
     Scanner scanner = new Scanner(System.in);
@@ -31,6 +31,6 @@ public class Repl {
   }
 
   private void printPrompt() {
-    System.out.print("\n" + ">>> " + SET_BG_COLOR_GREEN);
+    System.out.print("\n" + ">>> ");
   }
 }
