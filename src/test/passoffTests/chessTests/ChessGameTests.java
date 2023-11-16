@@ -24,7 +24,7 @@ public class ChessGameTests {
 
     @Test
     @DisplayName("Normal Make Move")
-    public void validMoves() throws InvalidMoveException {
+    public void validMoves() throws chess.InvalidMoveException {
         /*
         | | | | | | | | |
 		| | | | | | | |q|
@@ -211,7 +211,7 @@ public class ChessGameTests {
     
     @Test
     @DisplayName("Invalid Make Move")
-    public void invalidMoves() throws InvalidMoveException {
+    public void invalidMoves() throws chess.InvalidMoveException {
         board.resetBoard();
         game.setBoard(board);
         game.setTeamTurn(ChessGame.TeamColor.WHITE);
@@ -410,7 +410,7 @@ public class ChessGameTests {
     @ParameterizedTest
     @EnumSource(value = ChessPiece.PieceType.class, names = {"QUEEN", "ROOK", "KNIGHT", "BISHOP"})
     @DisplayName("Pawn Promotion")
-    public void promotionMoves(ChessPiece.PieceType promotionType) throws InvalidMoveException {
+    public void promotionMoves(ChessPiece.PieceType promotionType) throws chess.InvalidMoveException {
 
         board.addPiece(TestFactory.getNewPosition(7, 3),
                 TestFactory.getNewPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.PAWN));
@@ -683,7 +683,7 @@ public class ChessGameTests {
 
     @Test
     @DisplayName("Full Game Checkmate")
-    public void scholarsMate() throws InvalidMoveException {
+    public void scholarsMate() throws chess.InvalidMoveException {
         board.resetBoard();
         game.setBoard(board);
         game.setTeamTurn(ChessGame.TeamColor.WHITE);

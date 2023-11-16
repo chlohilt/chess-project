@@ -61,5 +61,3 @@ e
 5src/test/passoffTests/databaseTests/UserDatabase.java,e\1\e1d3f0ed017c74b0cced776e8cd52d1ba4055f80
 P
  shared/src/main/models/Game.java,2\1\2147bd2391254bda6bc7d52bdbab8a2193974825
-I
-client/src/main/Main.java,e\4\e4470d533cdde7821cbcd37f0d9dd75ce0938823
