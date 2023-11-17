@@ -4,10 +4,7 @@ import com.google.gson.Gson;
 import database.DataAccessException;
 import models.ModelSerializer;
 import requests.*;
-import responses.CreateGameResponse;
-import responses.LoginResponse;
-import responses.RegisterResponse;
-import responses.ResponseClass;
+import responses.*;
 
 import java.io.*;
 import java.net.*;
@@ -39,8 +36,8 @@ public class ServerFacade {
     return this.makeRequest("DELETE", path, request, ResponseClass.class, currentAuthToken);
   }
 
-  public String listGames(String currentAuthToken) throws DataAccessException {
-      return this.makeRequest("GET", gamePath, null, String.class, currentAuthToken);
+  public ListGamesResponse listGames(String currentAuthToken) throws DataAccessException {
+      return this.makeRequest("GET", gamePath, null, ListGamesResponse.class, currentAuthToken);
   }
 
   public CreateGameResponse createGame(CreateGameRequest request, String currentAuthToken) throws DataAccessException {
@@ -87,10 +84,12 @@ public class ServerFacade {
     }
   }
 
+
   private static <T> T readBody(HttpURLConnection http, Class<T> responseClass) throws IOException {
     T response = null;
     if (http.getContentLength() < 0) {
       try (InputStream respBody = http.getInputStream()) {
+
         InputStreamReader reader = new InputStreamReader(respBody);
         if (responseClass != null) {
           response = ModelSerializer.deserialize(reader, responseClass);

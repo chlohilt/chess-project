@@ -3,7 +3,7 @@ package services;
 import com.google.gson.Gson;
 import database.DataAccessException;
 import models.BaseClass;
-import responses.ResponseClass;
+import responses.ListGamesResponse;
 
 import java.util.Map;
 
@@ -21,12 +21,12 @@ public class ListGamesService extends BaseClass {
    * this function lists all the games
    * @return list game response
    */
-  public ResponseClass listGames() throws DataAccessException {
+  public ListGamesResponse listGames() throws DataAccessException {
     var jsonBody = Map.of (
             "games", getGameDataAccess().toList()
     );
-    ResponseClass response = new ResponseClass("");
-    response.setGameList(String.valueOf(gson.toJsonTree(jsonBody)));
+    ListGamesResponse response = new ListGamesResponse("");
+    response.setGameList(jsonBody);
     return response;
   }
 }

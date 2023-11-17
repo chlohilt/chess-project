@@ -5,6 +5,7 @@ import com.google.gson.JsonObject;
 import database.DataAccessException;
 import models.BaseClass;
 import requests.JoinGameRequest;
+import responses.ListGamesResponse;
 import responses.ResponseClass;
 import services.ListGamesService;
 import spark.Request;
@@ -28,7 +29,7 @@ public class ListGamesHandler extends BaseClass {
       return objectJson;
     } else {
       try {
-        ResponseClass listGamesResponse = listGamesService.listGames();
+        ListGamesResponse listGamesResponse = listGamesService.listGames();
 
         if (Objects.equals(listGamesResponse.getMessage(), "Error: bad request")) {
           res.status(400);
@@ -38,7 +39,7 @@ public class ListGamesHandler extends BaseClass {
           res.status(500);
         } else {
           res.status(200);
-          objectJson = listGamesResponse.getGameList();
+          objectJson = gson.toJson(listGamesResponse);
         }
       } catch (DataAccessException e) {
         res.status(500);

@@ -1,6 +1,7 @@
 package client;
 
 import chess.ChessGame;
+import com.google.gson.Gson;
 import requests.*;
 import database.DataAccessException;
 import responses.LoginResponse;
@@ -11,6 +12,7 @@ import java.util.Arrays;
 import java.util.Objects;
 
 public class ChessClient {
+  Gson gson = new Gson();
   private String visitorName = null;
   private String currentAuthToken = null;
   private final ServerFacade server;
@@ -36,7 +38,7 @@ public class ChessClient {
         case "register" -> register(params);
         case "logout" -> logOut();
         case "create" -> createGame(params);
-        case "join", "observe " -> joinGame(params);
+        case "join", "observe" -> joinGame(params);
         case "list" -> listGames();
         case "quit" -> "quit";
         default -> help();
@@ -47,20 +49,22 @@ public class ChessClient {
   }
 
   public String joinGame(String... params) throws DataAccessException {
-    ChessGame.TeamColor teamColor;
-    if (Objects.equals(params[1], "WHITE")) {
-      teamColor = ChessGame.TeamColor.WHITE;
-    } else if (Objects.equals(params[1], "BLACK")) {
-      teamColor = ChessGame.TeamColor.BLACK;
-    } else {
-      throw new DataAccessException("Expected: <gameID> <WHITE | BLACK>");
+    ChessGame.TeamColor teamColor=null;
+    if (params.length > 1) {
+      if (Objects.equals(params[1].toUpperCase(), "WHITE")) {
+        teamColor=ChessGame.TeamColor.WHITE;
+      } else if (Objects.equals(params[1].toUpperCase(), "BLACK")) {
+        teamColor=ChessGame.TeamColor.BLACK;
+      }
     }
-    try {
-      server.joinGame(new JoinGameRequest(visitorName, Integer.valueOf(params[0]), teamColor), currentAuthToken);
-      return visitorName + " joined game " + params[0] + " as " + params[1] + ".";
-    } catch (DataAccessException e) {
-      throw new DataAccessException(e.getMessage());
-    }
+      try {
+        server.joinGame(new JoinGameRequest(visitorName, Integer.valueOf(params[0]), teamColor), currentAuthToken);
+        if (params.length > 1) {return visitorName + " joined game " + params[0] + " as " + params[1] + ".";}
+        else {return visitorName + " joined game " + params[0];}
+      } catch (DataAccessException e) {
+        throw new DataAccessException(e.getMessage());
+      }
+
   }
 
   public String createGame(String... params) throws DataAccessException {
@@ -93,7 +97,7 @@ public class ChessClient {
 
   public String listGames() throws DataAccessException {
     assertSignedIn();
-    return server.listGames(currentAuthToken);
+    return String.valueOf(gson.toJsonTree(server.listGames(currentAuthToken).getGameList()));
   }
 
   public String help() {
