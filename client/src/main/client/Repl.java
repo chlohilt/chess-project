@@ -3,15 +3,15 @@ package client;
 import java.util.Scanner;
 import static ui.EscapeSequences.*;
 
+
 public class Repl {
   private final ChessClient chessClient;
   public Repl(String serverUrl) {
     chessClient = new ChessClient(serverUrl);
   }
 
-  // TODO: add logger
   public void run() {
-    System.out.println("\u2654\u265a Welcome to Chess Game Central. Sign in to start. \u265a\u2654");
+    System.out.println(SET_TEXT_COLOR_WHITE + SET_BG_COLOR_DARK_GREY + "\u2654\u265a Welcome to Chess Game Central. Sign in to start. \u265a\u2654");
     System.out.print(chessClient.help());
 
     Scanner scanner = new Scanner(System.in);
@@ -23,7 +23,6 @@ public class Repl {
       try {
         result = chessClient.eval(line);
         System.out.print(result);
-        // TODO add pretty printing here I think
       } catch (Throwable e) {
         System.out.print(e.getMessage());
       }
