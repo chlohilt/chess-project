@@ -22,10 +22,6 @@ public class ChessClient {
     this.serverUrl = serverUrl;
   }
 
-  public String getCurrentAuthToken() {
-    return currentAuthToken;
-  }
-
   public void setCurrentAuthToken(String currentAuthToken) {
     this.currentAuthToken=currentAuthToken;
   }
