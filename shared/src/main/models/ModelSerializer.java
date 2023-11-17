@@ -28,8 +28,8 @@ public class ModelSerializer {
     } else if (responseClass == ListGamesResponse.class) {
       gsonBuilder.registerTypeAdapter(ListGamesResponse.class, new ListGamesResponseAdapter());
     }
-
-    return gsonBuilder.create().fromJson(reader, responseClass);
+    String myString = readString(reader);
+    return gsonBuilder.create().fromJson(myString, responseClass);
   }
 
   protected static String readString(Reader sr) {

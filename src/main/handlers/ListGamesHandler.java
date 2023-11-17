@@ -39,7 +39,7 @@ public class ListGamesHandler extends BaseClass {
           res.status(500);
         } else {
           res.status(200);
-          objectJson = gson.toJson(listGamesResponse);
+          objectJson = gson.toJson(listGamesResponse.getGameList());
         }
       } catch (DataAccessException e) {
         res.status(500);

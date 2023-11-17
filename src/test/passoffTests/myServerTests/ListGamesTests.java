@@ -20,7 +20,7 @@ public class ListGamesTests {
   public static void init() {
     try {
       clearService.clear();
-      Game game = new Game(1234);
+      Game game = new Game("coolGame", 1234);
       listGamesService.getGameDataAccess().insertGame(game);
       game.setWhiteUsername("Tester");
     } catch (Exception ignored) {}
@@ -28,9 +28,9 @@ public class ListGamesTests {
 
   @Test
   void listGamesSuccess() throws DataAccessException {
-    String expectedGameList = "{\"games\":[{\"gameID\":1234,\"whiteUsername\":\"Tester\"}]}";
+    String expectedGameList = "{games=[{gameID=1234, whiteUsername=Tester, gameName=coolGame}]}";
 
-    Assertions.assertEquals(expectedGameList, listGamesService.listGames().getGameList());
+    Assertions.assertEquals(expectedGameList, listGamesService.listGames().getGameList().toString());
   }
 
   @Test

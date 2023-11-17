@@ -15,6 +15,7 @@
     <orderEntry type="library" name="google.code.gson" level="project" />
     <orderEntry type="library" name="sparkjava.spark.core" level="project" />
     <orderEntry type="library" name="mysql.connector.j" level="project" />
+    <orderEntry type="library" scope="TEST" name="junit.jupiter" level="project" />
   </component>
   <component name="SonarLintModuleSettings">
     <option name="uniqueId" value="49c24d0c-afa3-466e-86d7-ad2e4e787d74" />

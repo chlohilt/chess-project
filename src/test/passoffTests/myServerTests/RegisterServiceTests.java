@@ -1,6 +1,7 @@
 package passoffTests.myServerTests;
 
 import database.DataAccessException;
+import database.Database;
 import models.User;
 import org.junit.jupiter.api.*;
 import requests.RegisterRequest;
@@ -12,7 +13,7 @@ class RegisterServiceTests {
   @Test
   void registerSuccess() throws DataAccessException {
     try {
-      User u = new User("user", "pass", "email@byu.edu");
+      User u = new User("user1", "pass", "email@byu.edu");
       RegisterRequest request = new RegisterRequest(u.getUsername(), u.getPassword(), u.getEmail());
 
       registerService.register(request);
