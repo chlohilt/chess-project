@@ -17,12 +17,11 @@ public class ChessClient {
   private String visitorName = null;
   private String currentAuthToken = null;
   private final ServerFacade server;
-  private final String serverUrl;
   private State state = State.SIGNEDOUT;
+  private String headerFooter = "  h  g  f  e  d  c  b  a ";
 
   public ChessClient(String serverUrl) {
     server = new ServerFacade(serverUrl);
-    this.serverUrl = serverUrl;
   }
 
   public void setCurrentAuthToken(String currentAuthToken) {
@@ -35,7 +34,7 @@ public class ChessClient {
       var cmd = (tokens.length > 0) ? tokens[0] : "help";
       var params = Arrays.copyOfRange(tokens, 1, tokens.length);
       return switch (cmd) {
-        case "login" -> signIn(params);
+        case "login" -> logIn(params);
         case "register" -> register(params);
         case "logout" -> logOut();
         case "create" -> createGame(params);
@@ -68,7 +67,7 @@ public class ChessClient {
             System.out.print(drawStartingBlackBoard());
             System.out.print(drawStartingWhiteBoard());
           }
-          return visitorName + " joined game " + params[0] + " as " + params[1] + ".";
+          return visitorName + " joined game " + params[0] + " as: " + params[1];
         }
         else {
           System.out.print(drawStartingWhiteBoard());
@@ -76,14 +75,14 @@ public class ChessClient {
           return visitorName + " joined game " + params[0];
         }
       } catch (DataAccessException e) {
-        throw new DataAccessException(e.getMessage());
+        return "Invalid game join. Please try again.";
       }
 
   }
 
   public String drawStartingWhiteBoard() {
     StringBuilder stringBuilder = new StringBuilder();
-    stringBuilder.append(RESET_TEXT_COLOR + SET_BG_COLOR_DARK_GREY + "  h  g  f  e  d  c  b  a "+ "\n");
+    stringBuilder.append(RESET_TEXT_COLOR + SET_BG_COLOR_DARK_GREY + headerFooter + "\n");
     for (int i = 0; i < 8; i++) {
       stringBuilder.append(SET_BG_COLOR_DARK_GREY + (i + 1) + RESET_BG_COLOR);
       for (int j = 0; j < 8; j++) {
@@ -95,13 +94,13 @@ public class ChessClient {
       }
       stringBuilder.append(SET_BG_COLOR_DARK_GREY + (i + 1) + "\n");
     }
-    stringBuilder.append(SET_BG_COLOR_DARK_GREY + "  h  g  f  e  d  c  b  a " + SET_TEXT_COLOR_WHITE + "\n\n");
+    stringBuilder.append(SET_BG_COLOR_DARK_GREY + headerFooter + SET_TEXT_COLOR_WHITE + "\n\n");
     return stringBuilder.toString();
   }
 
   public String drawStartingBlackBoard() {
     StringBuilder stringBuilder = new StringBuilder();
-    stringBuilder.append(RESET_TEXT_COLOR + SET_BG_COLOR_DARK_GREY + "  h  g  f  e  d  c  b  a " + "\n");
+    stringBuilder.append(RESET_TEXT_COLOR + SET_BG_COLOR_DARK_GREY + headerFooter + "\n");
     for (int i = 0; i < 8; i++) {
       stringBuilder.append(SET_BG_COLOR_DARK_GREY + (i + 1) + RESET_BG_COLOR);
       for (int j = 0; j < 8; j++) {
@@ -113,7 +112,7 @@ public class ChessClient {
       }
       stringBuilder.append(SET_BG_COLOR_DARK_GREY + (i + 1) + "\n");
     }
-    stringBuilder.append(SET_BG_COLOR_DARK_GREY + "  h  g  f  e  d  c  b  a " + SET_TEXT_COLOR_WHITE + "\n\n");
+    stringBuilder.append(SET_BG_COLOR_DARK_GREY + headerFooter + SET_TEXT_COLOR_WHITE + "\n\n");
     return stringBuilder.toString();
   }
 
@@ -149,36 +148,59 @@ public class ChessClient {
   }
 
   public String createGame(String... params) throws DataAccessException {
-    server.createGame(new CreateGameRequest(params[0]), currentAuthToken);
-    return visitorName + " created game " + params[0] + ".";
+    try {
+      server.createGame(new CreateGameRequest(params[0]), currentAuthToken);
+      return visitorName + " created game " + params[0];
+    } catch (DataAccessException e) {
+      return "Invalid game creation. Please try again.";
+    }
   }
 
   public String logOut() throws DataAccessException {
-    server.logout(new LogoutRequest(visitorName), currentAuthToken);
-    return visitorName + " logged out.";
+    try {
+      server.logout(new LogoutRequest(visitorName), currentAuthToken);
+      return visitorName + " has logged out";
+    } catch (DataAccessException e) {
+      return "Invalid logout. Please try again.";
+    }
   }
 
   public String register(String... params) throws DataAccessException {
-    RegisterResponse registerResponse = server.register(new RegisterRequest(params[0], params[1], params[2]));
-    visitorName = params[0];
-    setCurrentAuthToken(registerResponse.getAuthToken());
-    return visitorName + " registered.";
+    try {
+      if (params.length < 3) {
+        return "Invalid registration. Please try again.";
+      }
+      RegisterResponse registerResponse = server.register(new RegisterRequest(params[0], params[1], params[2]));
+      visitorName = params[0];
+      setCurrentAuthToken(registerResponse.getAuthToken());
+      return visitorName + " has registered";
+    } catch (DataAccessException e) {
+      return "Invalid registration. Please try again.";
+    }
   }
 
-  public String signIn(String... params) throws DataAccessException {
-    if (params.length >= 1) {
-      state = State.SIGNEDIN;
-      LoginResponse loginResponse = server.login(new LoginRequest(params[0], params[1]));
-      visitorName = params[0];
-      setCurrentAuthToken(loginResponse.getAuthToken());
-      return String.format("You signed in as %s.", visitorName);
+  public String logIn(String... params) throws DataAccessException {
+    try {
+      if (params.length >= 2) {
+        LoginResponse loginResponse = server.login(new LoginRequest(params[0], params[1]));
+        state = State.SIGNEDIN;
+        visitorName = params[0];
+        setCurrentAuthToken(loginResponse.getAuthToken());
+        return visitorName + " has logged in";
+      }
+    } catch (DataAccessException e) {
+      return "Invalid login. Please try again.";
     }
-    throw new DataAccessException("Expected: <yourname>");
+    return "Invalid login. Please try again.";
   }
 
   public String listGames() throws DataAccessException {
-    assertSignedIn();
-    return String.valueOf(gson.toJsonTree(server.listGames(currentAuthToken).getGameList()));
+    try {
+      assertSignedIn();
+      return String.valueOf(gson.toJsonTree(server.listGames(currentAuthToken).getGameList()));
+    } catch (DataAccessException e) {
+      return "Error: database error";
+    }
   }
 
   public String help() {
@@ -203,7 +225,7 @@ public class ChessClient {
 
   private void assertSignedIn() throws DataAccessException {
     if (state == State.SIGNEDOUT) {
-      throw new DataAccessException("You must sign in first.");
+      throw new DataAccessException("You must sign in first!");
     }
   }
 }
