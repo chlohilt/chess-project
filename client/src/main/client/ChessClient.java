@@ -71,7 +71,6 @@ public class ChessClient {
         }
         else {
           System.out.print(drawStartingWhiteBoard());
-          System.out.print(drawStartingBlackBoard());
           return visitorName + " joined game " + params[0];
         }
       } catch (DataAccessException e) {
