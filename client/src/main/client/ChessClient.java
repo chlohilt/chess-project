@@ -196,7 +196,7 @@ public class ChessClient {
 
   public String listGames() throws DataAccessException {
     assertSignedIn();
-    return String.valueOf(gson.toJsonTree(server.listGames(currentAuthToken).getGameList()));
+    return String.valueOf(gson.toJsonTree(server.listGames(currentAuthToken).getGames()));
   }
 
   public String help() {

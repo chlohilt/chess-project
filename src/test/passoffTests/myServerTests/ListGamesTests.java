@@ -28,9 +28,9 @@ public class ListGamesTests {
 
   @Test
   void listGamesSuccess() throws DataAccessException {
-    String expectedGameList = "{games=[{gameID=1234, whiteUsername=Tester, gameName=coolGame}]}";
+    String expectedGameList = "[{gameID=1234, whiteUsername=Tester, gameName=coolGame}]";
 
-    Assertions.assertEquals(expectedGameList, listGamesService.listGames().getGameList().toString());
+    Assertions.assertEquals(expectedGameList, listGamesService.listGames().getGames().toString());
   }
 
   @Test

@@ -1,17 +1,23 @@
 package responses;
 
-import java.util.Map;
+import models.Game;
+
+import java.util.List;
 
 public class ListGamesResponse extends ResponseClass {
   public ListGamesResponse(String message) {
     super(message);
   }
-  private Map gameList;
-  public Map getGameList() {
-    return gameList;
+
+  public ListGamesResponse(List<Object> games) {
+    this.games = games;
+  }
+  private List<Object> games;
+  public List<Object> getGames() {
+    return games;
   }
 
-  public void setGameList(Map gameList) {
-    this.gameList=gameList;
+  public void setGames(List<Object> games) {
+    this.games=games;
   }
 }
