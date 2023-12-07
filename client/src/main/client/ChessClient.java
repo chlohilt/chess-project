@@ -62,10 +62,8 @@ public class ChessClient {
         if (params.length > 1) {
           if (Objects.equals(params[1].toUpperCase(), "WHITE")) {
             System.out.print(drawStartingWhiteBoard());
-            System.out.print(drawStartingBlackBoard());
           } else if (Objects.equals(params[1].toUpperCase(), "BLACK")) {
             System.out.print(drawStartingBlackBoard());
-            System.out.print(drawStartingWhiteBoard());
           }
           return visitorName + " joined game " + params[0] + " as: " + params[1];
         }

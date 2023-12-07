@@ -2,6 +2,7 @@ package server;
 
 import handlers.*;
 import spark.Spark;
+import websocket.WebSocketHandler;
 
 public class Server {
   static RegisterHandler registerHandler = new RegisterHandler();
@@ -11,6 +12,7 @@ public class Server {
   static ListGamesHandler listGamesHandler = new ListGamesHandler();
   static CreateGameHandler createGameHandler = new CreateGameHandler();
   static JoinGameHandler joinGameHandler = new JoinGameHandler();
+  private final WebSocketHandler webSocketHandler = new WebSocketHandler();
 
   public static void main(String[] args) {
     new Server().run();
@@ -21,6 +23,8 @@ public class Server {
 
     // Register a directory for hosting static files
     Spark.externalStaticFileLocation("web");
+
+    Spark.webSocket("/connect", webSocketHandler);
 
     Spark.delete("/db", (req, res) ->
             (getClearHandlerInstance()).handleRequest(
