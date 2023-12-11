@@ -1,13 +1,18 @@
 package client;
 
+import client.websocket.NotificationHandler;
+import webSocketMessages.serverMessages.NotificationMessage;
+
 import java.util.Scanner;
+
+import static java.awt.Color.RED;
 import static ui.EscapeSequences.*;
 
 
-public class Repl {
+public class Repl implements NotificationHandler {
   private final ChessClient chessClient;
   public Repl(String serverUrl) {
-    chessClient = new ChessClient(serverUrl);
+    chessClient = new ChessClient(serverUrl, this);
   }
 
   public void run() {
@@ -32,5 +37,11 @@ public class Repl {
 
   private void printPrompt() {
     System.out.print("\n" + ">>> ");
+  }
+
+  @Override
+  public void notify(NotificationMessage notification) {
+    System.out.println(RED); // notifiction get message );
+    printPrompt();
   }
 }

@@ -1,12 +1,17 @@
 package client;
 
 import chess.ChessGame;
+import client.websocket.NotificationHandler;
+import client.websocket.WebSocketFacade;
 import com.google.gson.Gson;
+import exception.ResponseException;
 import requests.*;
 import database.DataAccessException;
 import responses.LoginResponse;
 import responses.RegisterResponse;
 import server.ServerFacade;
+import webSocketMessages.serverMessages.NotificationMessage;
+
 import static ui.EscapeSequences.*;
 
 import java.util.Arrays;
@@ -18,10 +23,15 @@ public class ChessClient {
   private String currentAuthToken = null;
   private final ServerFacade server;
   private State state = State.SIGNEDOUT;
+  private WebSocketFacade ws;
   private String headerFooter = "  h  g  f  e  d  c  b  a ";
+  private String serverUrl;
+  private final NotificationHandler notificationHandler;
 
-  public ChessClient(String serverUrl) {
-    server = new ServerFacade(serverUrl);
+  public ChessClient(String serverUrl, NotificationHandler notificationHandler) {
+      server = new ServerFacade(serverUrl);
+      this.serverUrl = serverUrl;
+      this.notificationHandler = notificationHandler;
   }
 
   public void setCurrentAuthToken(String currentAuthToken) {
@@ -65,6 +75,8 @@ public class ChessClient {
           } else if (Objects.equals(params[1].toUpperCase(), "BLACK")) {
             System.out.print(drawStartingBlackBoard());
           }
+          ws = new WebSocketFacade(serverUrl, notificationHandler);
+          ws.joinGame(currentAuthToken, Integer.valueOf(params[0]), teamColor);
           return visitorName + " joined game " + params[0] + " as: " + params[1];
         }
         else {
@@ -73,6 +85,8 @@ public class ChessClient {
         }
       } catch (DataAccessException e) {
         return "Invalid game join. Please try again.";
+      } catch (ResponseException e) {
+        throw new RuntimeException(e);
       }
 
   }

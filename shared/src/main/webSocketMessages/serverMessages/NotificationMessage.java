@@ -35,13 +35,19 @@ public class NotificationMessage extends ServerMessage{
     this.message = "Player " + username + " made a move: " + move.toString();
   }
 
-  public String message;
-  public ServerMessageType type = ServerMessageType.NOTIFICATION;
+  private static String message;
+
+  private ServerMessageType type = ServerMessageType.NOTIFICATION;
+
   public enum NotificationType {
     RESIGN,
     CHECKMATE,
     LEAVE,
     CHECK,
-    OBSERVE
+    OBSERVE;
+    public Object getMessage() {
+      return message;
+    }
+
   }
 }
