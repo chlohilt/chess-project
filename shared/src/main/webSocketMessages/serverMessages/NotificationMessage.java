@@ -4,13 +4,13 @@ import chess.ChessGame;
 import chess.ChessMove;
 
 public class NotificationMessage extends ServerMessage{
-  public NotificationMessage(ServerMessageType type, ChessGame.TeamColor teamColor, String username) {
-    super(type);
+  public NotificationMessage(ChessGame.TeamColor teamColor, String username) {
+    super(ServerMessageType.NOTIFICATION);
     this.message = "Player " + username + " has joined the game as " + teamColor.toString();
   }
 
-  public NotificationMessage(ServerMessageType type, String username, NotificationType notificationType) {
-    super(type);
+  public NotificationMessage(String username, NotificationType notificationType) {
+    super(ServerMessageType.NOTIFICATION);
     switch (notificationType) {
       case RESIGN:
         this.message = "Player " + username + " has resigned";
@@ -36,8 +36,6 @@ public class NotificationMessage extends ServerMessage{
   }
 
   private static String message;
-
-  private ServerMessageType type = ServerMessageType.NOTIFICATION;
 
   public enum NotificationType {
     RESIGN,

@@ -41,7 +41,7 @@ public class Repl implements NotificationHandler {
 
   @Override
   public void notify(NotificationMessage notification) {
-    System.out.println(RED); // notifiction get message );
+    System.out.println(RED + notification.toString());
     printPrompt();
   }
 }

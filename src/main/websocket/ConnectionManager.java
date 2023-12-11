@@ -1,22 +1,21 @@
 package websocket;
 
-import org.eclipse.jetty.websocket.api.Session;
 import webSocketMessages.serverMessages.ServerMessage;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 public class ConnectionManager {
-  public final ConcurrentHashMap<String, Connection> connections = new ConcurrentHashMap<>();
+  public final ConcurrentMap<Integer, Connection> connections = new ConcurrentHashMap<>(); // game ID with sessions
 
-  public void add(String visitorName, Session session) {
-    var connection = new Connection(visitorName, session);
-    connections.put(visitorName, connection);
+  public void add(Integer gameID, Connection connection) {
+    connections.put(gameID, connection);
   }
 
-  public void remove(String visitorName) {
-    connections.remove(visitorName);
+  public void remove(Integer gameID) {
+    connections.remove(gameID);
   }
 
   public void broadcast(String excludeVisitorName, ServerMessage serverMessage) throws IOException {
@@ -33,7 +32,7 @@ public class ConnectionManager {
 
     // Clean up any connections that were left open.
     for (var c : removeList) {
-      connections.remove(c.visitorName);
+      connections.remove(c.gameID);
     }
   }
 }

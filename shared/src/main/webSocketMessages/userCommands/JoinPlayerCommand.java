@@ -7,6 +7,7 @@ public class JoinPlayerCommand extends UserGameCommand {
     super(authToken);
     this.gameID = gameID;
     this.playerColor = playerColor;
+    this.commandType = CommandType.JOIN_PLAYER;
   }
 
   private Integer gameID;
