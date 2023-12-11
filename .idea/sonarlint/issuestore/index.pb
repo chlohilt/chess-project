@@ -113,3 +113,17 @@ S
 #.idea/sonarlint/issuestore/index.pb,9\f\9fe84ebb15faf917b7def6236dba604453cc61e0
 ]
 -.idea/sonarlint/securityhotspotstore/index.pb,8\8\88a9255124c95bdc913197c120a8d560edc59c8e
+r
+Bshared/src/main/webSocketMessages/serverMessages/Notification.java,f\7\f730f0f212007619b07bb8f1ff2c921304eda767
+y
+Ishared/src/main/webSocketMessages/serverMessages/NotificationMessage.java,6\d\6d420a33e41c078559a5832b1027d0f4c96c9d42
+r
+Bshared/src/main/webSocketMessages/serverMessages/ErrorMessage.java,f\1\f18e89552ddc201633e4959e3a7836d89dc060ba
+u
+Eshared/src/main/webSocketMessages/serverMessages/LoadGameMessage.java,a\9\a96c1499aa1564e422d3a68420506ecbde363e24
+w
+Gshared/src/main/webSocketMessages/userCommands/JoinObserverMessage.java,8\8\8837783226d8a334fa61e27d5ea6c1db29bcf446
+~
+Nshared/src/main/webSocketMessages/userCommands/ObserverLeaveResignMessage.java,5\f\5f4151dafc41f2d066fdc56fd3f00a5b6d4ccdd8
+^
+.shared/src/main/database/CommonDataAccess.java,f\c\fccb164b95dfcc7ff95965369f3f6c4fb8bbc2cb
