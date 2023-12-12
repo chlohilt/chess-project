@@ -29,7 +29,7 @@ public class WebSocketHandler {
   private final ConnectionManager connections = new ConnectionManager();
 
   @OnWebSocketMessage
-  public void onMessage(Session session, String message) throws IOException, DataAccessException, InvalidMoveException {
+  public void onMessage(Session session, String message) throws IOException, DataAccessException, InvalidMoveException, chessImpl.InvalidMoveException {
     UserGameCommand userGameCommand = gson.fromJson(message, UserGameCommand.class);
     String userName = commonDataAccess.getCommonAuthDAO().returnUsername(userGameCommand.getAuthString());
     if (userName == null) {
@@ -79,7 +79,7 @@ public class WebSocketHandler {
     }
   }
 
-  private void makeMove(String userName, String clientCommand) throws IOException, DataAccessException, InvalidMoveException {
+  private void makeMove(String userName, String clientCommand) throws IOException, DataAccessException, InvalidMoveException, chessImpl.InvalidMoveException {
     MakeMoveCommand makeMoveCommand = gson.fromJson(clientCommand, MakeMoveCommand.class);
     Game game = commonDataAccess.getCommonGameDAO().findGame(makeMoveCommand.getGameID());
 

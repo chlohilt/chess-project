@@ -131,9 +131,9 @@ public class WebSocketFacade extends Endpoint {
       stringBuilder.append(SET_BG_COLOR_DARK_GREY + (i + 1) + RESET_BG_COLOR);
       for (int j = 0; j < 8; j++) {
         if ((i + j) % 2 == 0) {
-          boardHelper(stringBuilder, SET_BG_COLOR_LIGHT_GREY, SET_TEXT_COLOR_BLUE, SET_TEXT_COLOR_RED, chessBoard.getPiece(new ChessPositionImpl(i,j)));
+          boardHelper(stringBuilder, SET_BG_COLOR_LIGHT_GREY, firstColor, secondColor, chessBoard.getPiece(new ChessPositionImpl(i + 1,j +1)));
         } else {
-          boardHelper(stringBuilder, SET_BG_COLOR_DARK_GREY, SET_TEXT_COLOR_BLUE, SET_TEXT_COLOR_RED, chessBoard.getPiece(new ChessPositionImpl(i,j)));
+          boardHelper(stringBuilder, SET_BG_COLOR_DARK_GREY, firstColor, secondColor, chessBoard.getPiece(new ChessPositionImpl(i + 1,j + 1)));
         }
       }
       stringBuilder.append(SET_BG_COLOR_DARK_GREY + (i + 1) + "\n");
@@ -143,6 +143,10 @@ public class WebSocketFacade extends Endpoint {
   }
 
   private void boardHelper(StringBuilder stringBuilder, String backgroundColor, String firstColor, String secondColor, chess.ChessPiece chessPiece) {
+    if (chessPiece == null) {
+      stringBuilder.append(backgroundColor + "   " + RESET_TEXT_COLOR);
+      return;
+    }
     switch (chessPiece.getPieceType()) {
         case PAWN -> stringBuilder.append(backgroundColor + firstColor + " P " + RESET_TEXT_COLOR);
         case ROOK -> stringBuilder.append(backgroundColor + firstColor + " R " + RESET_TEXT_COLOR);

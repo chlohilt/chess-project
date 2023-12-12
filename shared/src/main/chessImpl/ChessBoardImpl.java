@@ -3,10 +3,14 @@ package chessImpl;
 import chess.*;
 
 public class ChessBoardImpl implements ChessBoard {
-  ChessPiece[][] board = new ChessPiece[8][8];
+  ChessPieceImpl[][] board;
+  public ChessBoardImpl() {
+    board = new ChessPieceImpl[8][8];
+    this.resetBoard();
+  }
   @Override
   public void addPiece(ChessPosition position, ChessPiece piece) {
-    board[position.getRow() - 1][position.getColumn() - 1] = piece;
+    board[position.getRow() - 1][position.getColumn() - 1] =(ChessPieceImpl) piece;
   }
 
   public void removePiece(ChessPosition position) {
@@ -40,11 +44,11 @@ public class ChessBoardImpl implements ChessBoard {
   }
 
   public void makeMove(ChessMove move) {
-    ChessPiece piece;
+    ChessPieceImpl piece;
     if (move.getPromotionPiece() != null) {
       piece = new ChessPieceImpl(getPiece(move.getStartPosition()).getTeamColor(), move.getPromotionPiece());
     } else {
-      piece = this.getPiece(move.getStartPosition());
+      piece =(ChessPieceImpl) this.getPiece(move.getStartPosition());
     }
     this.removePiece(move.getStartPosition());
     this.addPiece(move.getEndPosition(), piece);

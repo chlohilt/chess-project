@@ -7,7 +7,7 @@ import java.util.HashSet;
 
 public class ChessGameImpl implements ChessGame {
   TeamColor teamTurn = TeamColor.WHITE;
-  ChessBoardImpl chessBoard;
+  ChessBoardImpl chessBoard = new ChessBoardImpl();
   @Override
   public TeamColor getTeamTurn() {
     return teamTurn;
@@ -27,15 +27,15 @@ public class ChessGameImpl implements ChessGame {
       Collection<ChessMove> validMoves = new HashSet<>();
       TeamColor teamColor = chessBoard.getPiece(startPosition).getTeamColor();
       ChessPiece.PieceType pieceType = chessBoard.getPiece(startPosition).getPieceType();
-      ChessPiece originalPiece = chessBoard.getPiece(startPosition);
+      ChessPieceImpl originalPiece =(ChessPieceImpl) chessBoard.getPiece(startPosition);
       TeamColor opposingColor=opposingTeamColor(teamColor);
 
       chessBoard.removePiece(startPosition);
       for (ChessMove checkMove: movesBeforeInCheck) {
         ChessPieceImpl piece=new ChessPieceImpl(teamColor, pieceType);
-        ChessPiece enemyPiece = null;
+        ChessPieceImpl enemyPiece = null;
         if (chessBoard.getPiece(checkMove.getEndPosition()) != null && chessBoard.getPiece(checkMove.getEndPosition()).getTeamColor() == opposingColor) {
-          enemyPiece = chessBoard.getPiece(checkMove.getEndPosition());
+          enemyPiece =(ChessPieceImpl) chessBoard.getPiece(checkMove.getEndPosition());
         }
         chessBoard.addPiece(checkMove.getEndPosition(), piece);
         if (!isInCheck(teamColor)) {
