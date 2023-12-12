@@ -41,6 +41,7 @@ public class Game extends BaseClass {
   public Game(String gameName, int gameId) {
     this.gameName = gameName;
     this.gameID = gameId;
+    this.chessGame = new ChessGameImpl();
   }
 
   public Game(int gameID) {

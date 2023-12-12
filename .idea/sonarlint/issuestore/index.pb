@@ -161,3 +161,7 @@ U
 %shared/src/main/models/BaseClass.java,0\a\0accb429d9ee49394d79881e4d98e6b856d79208
 `
 0shared/src/main/chessImpl/ChessPositionImpl.java,2\d\2db00e6d36e524febe6efb77761c29d3a08b507c
+s
+Csrc/test/passoffTests/chessTests/chessPieceTests/KingMoveTests.java,3\5\350e83d4adcb5e8e3bb588475556244c46c9e929
+d
+4src/test/passoffTests/chessTests/ChessGameTests.java,8\7\87007635e15005b7fb0ab226f5d5324ffa63ad5f
