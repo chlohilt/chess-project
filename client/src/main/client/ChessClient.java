@@ -1,6 +1,9 @@
 package client;
 
 import chess.ChessGame;
+import chess.ChessMove;
+import chessImpl.ChessMoveImpl;
+import chessImpl.ChessPositionImpl;
 import client.websocket.NotificationHandler;
 import client.websocket.WebSocketFacade;
 import com.google.gson.Gson;
@@ -25,6 +28,7 @@ public class ChessClient {
   private WebSocketFacade ws;
   private String headerFooter = "  h  g  f  e  d  c  b  a ";
   private String serverUrl;
+  private Integer currentGameID;
   private final NotificationHandler notificationHandler;
 
   public ChessClient(String serverUrl, NotificationHandler notificationHandler) {
@@ -48,6 +52,11 @@ public class ChessClient {
         case "logout" -> logOut();
         case "create" -> createGame(params);
         case "join", "observe" -> joinGame(params);
+        case "move" -> move(params);
+        case "moves" -> "moves";
+        case "draw" -> "draw";
+        case "leave" -> "leave";
+        case "resign" -> "resign";
         case "list" -> listGames();
         case "quit" -> "quit";
         default -> help();
@@ -76,10 +85,12 @@ public class ChessClient {
           }
           ws = new WebSocketFacade(serverUrl, notificationHandler);
           ws.joinGame(currentAuthToken, Integer.valueOf(params[0]), teamColor);
+          state = State.GAMEPLAY;
           return visitorName + " joined game " + params[0] + " as: " + params[1];
         }
         else {
           System.out.print(drawStartingWhiteBoard());
+          state = State.GAMEPLAY;
           return visitorName + " joined game " + params[0];
         }
       } catch (DataAccessException e) {
@@ -88,6 +99,31 @@ public class ChessClient {
         throw new RuntimeException(e);
       }
 
+  }
+
+  public String drawBoard(String... params) {
+    return null;
+  }
+
+  public String move(String... params) {
+    try {
+      if (params.length < 2) {
+        return "Invalid move. Please try again.";
+      }
+      ChessPositionImpl startChessPosition = new ChessPositionImpl(params[0].charAt(0) - 'a', (int) params[0].charAt(1));
+      ChessPositionImpl endChessPosition = new ChessPositionImpl(params[1].charAt(0) - 'a', (int) params[1].charAt(1));
+      ws.makeMove(currentAuthToken,
+              currentGameID,
+              new ChessMoveImpl(startChessPosition, endChessPosition, null));
+      return "Moved from " + params[0] + " to " + params[1];
+    } catch (ResponseException e) {
+      System.out.println("Invalid move. Please try again.");
+    }
+    return "Invalid move. Please try again.";
+  }
+
+  public String showValidMoves(String... params) {
+    return null;
   }
 
   public String drawStartingWhiteBoard() {
@@ -217,6 +253,17 @@ public class ChessClient {
                     - help
                     - quit
                     """;
+    }
+    else if (state == State.GAMEPLAY) {
+        return """
+                        - move <from> <to>
+                        - moves <from> (to see all legal moves highlighted for that piece)
+                        - draw (redraws board)
+                        - resign
+                        - leave
+                        - help
+                        - quit
+                        """;
     }
     return """
                 - list

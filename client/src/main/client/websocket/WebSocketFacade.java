@@ -2,7 +2,7 @@ package client.websocket;
 
 import chess.ChessBoard;
 import chess.ChessGame;
-import chessImpl.ChessPieceImpl;
+import chess.ChessMove;
 import chessImpl.ChessPositionImpl;
 import com.google.gson.Gson;
 import exception.ResponseException;
@@ -11,6 +11,7 @@ import webSocketMessages.serverMessages.LoadGameMessage;
 import webSocketMessages.serverMessages.NotificationMessage;
 import webSocketMessages.serverMessages.ServerMessage;
 import webSocketMessages.userCommands.JoinPlayerCommand;
+import webSocketMessages.userCommands.MakeMoveCommand;
 
 import javax.websocket.*;
 import java.io.IOException;
@@ -70,6 +71,18 @@ public class WebSocketFacade extends Endpoint {
     }
   }
 
+  public void makeMove(String currentAuthToken, Integer gameID, ChessMove chessMove) throws ResponseException {
+    try {
+      var action = new MakeMoveCommand(currentAuthToken, gameID, chessMove);
+      this.session.getBasicRemote().sendText(gson.toJson(action));
+    } catch (IOException ex) {
+      throw new ResponseException(500, ex.getMessage());
+    }
+  }
+
+  public void showValidMoves(String currentAuthToken, Integer gameID) {
+  }
+
   private void handleNotification(String serverMessage) {
     NotificationMessage notification = gson.fromJson(serverMessage, NotificationMessage.class);
     notificationHandler.notify(notification);
@@ -78,13 +91,15 @@ public class WebSocketFacade extends Endpoint {
   private void loadGame(String serverMessage) {
     LoadGameMessage loadGameMessage = gson.fromJson(serverMessage, LoadGameMessage.class);
     // draw board
-    ChessBoard chessBoard = loadGameMessage.getGame().getChessGame().getBoard();
-    String whiteColor = SET_TEXT_COLOR_RED;
-    String blackColor = SET_TEXT_COLOR_BLUE;
-    if (loadGameMessage.getTeamColor() != null && loadGameMessage.getTeamColor() == ChessGame.TeamColor.BLACK) {
-      printBoard(chessBoard, blackColor, whiteColor);
-    } else {
-      printBoard(chessBoard, whiteColor, blackColor);
+    if (loadGameMessage.getGame().getChessGame() != null) {
+      ChessBoard chessBoard = loadGameMessage.getGame().getChessGame().getBoard();
+      String whiteColor = SET_TEXT_COLOR_RED;
+      String blackColor = SET_TEXT_COLOR_BLUE;
+      if (loadGameMessage.getTeamColor() != null && loadGameMessage.getTeamColor() == ChessGame.TeamColor.BLACK) {
+        printBoard(chessBoard, blackColor, whiteColor);
+      } else {
+        printBoard(chessBoard, whiteColor, blackColor);
+      }
     }
   }
 
