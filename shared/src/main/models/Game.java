@@ -53,6 +53,7 @@ public class Game extends BaseClass {
   public void setChessGame(ChessGame chessGame) {
     this.chessGame=chessGame;
   }
+
   public String getBlackUsername() {
     return blackUsername;
   }

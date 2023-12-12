@@ -145,3 +145,9 @@ W
 'shared/src/starter/chess/ChessMove.java,7\8\783a364f4676aff07fabbd696f946d3b8e9abe83
 \
 ,shared/src/main/chessImpl/ChessMoveImpl.java,e\c\ece209456b448e2f1951bc4cf3d22d3ba816e3a3
+]
+-shared/src/main/chessImpl/ChessBoardImpl.java,d\1\d13591135c3c51368112e0327ac33d5fa9b1a315
+W
+'shared/src/starter/chess/ChessGame.java,d\5\d5a0c73bc0fdc39f5c09f7afaa13d77bc1476a71
+]
+-shared/src/main/chessImpl/ChessPieceImpl.java,5\4\5411a758ebc79b4f1a6f6b7f5fb17d7f62c60301

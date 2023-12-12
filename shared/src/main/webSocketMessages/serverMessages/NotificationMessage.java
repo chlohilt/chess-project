@@ -32,7 +32,7 @@ public class NotificationMessage extends ServerMessage{
     }
   }
 
-  public NotificationMessage(ServerMessageType type, String username, ChessMove move) {
+  public NotificationMessage(String username, ChessMove move) {
     super(ServerMessageType.NOTIFICATION);
     this.serverMessageType = ServerMessageType.NOTIFICATION;
     this.message = "Player " + username + " made a move: " + move.toString();

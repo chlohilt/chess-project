@@ -1,6 +1,8 @@
 package websocket;
 
-import chess.ChessGame;
+import chess.*;
+import chessImpl.ChessPieceImpl;
+import chessImpl.ChessPositionImpl;
 import com.google.gson.Gson;
 import database.CommonDataAccess;
 import database.DataAccessException;
@@ -28,7 +30,7 @@ public class WebSocketHandler {
   private final ConnectionManager connections = new ConnectionManager();
 
   @OnWebSocketMessage
-  public void onMessage(Session session, String message) throws IOException, DataAccessException {
+  public void onMessage(Session session, String message) throws IOException, DataAccessException, InvalidMoveException {
     UserGameCommand userGameCommand = gson.fromJson(message, UserGameCommand.class);
     String userName = commonDataAccess.getCommonAuthDAO().returnUsername(userGameCommand.getAuthString());
     if (userName == null) {
@@ -57,7 +59,7 @@ public class WebSocketHandler {
       connections.add(game.getGameID(), new Connection(game.getGameID(), userName, session));
       LoadGameMessage loadGameMessage = new LoadGameMessage(ServerMessage.ServerMessageType.LOAD_GAME, game);
       session.getRemote().sendString(gson.toJson(loadGameMessage)); // send message to root client
-      connections.broadcast(userName, new NotificationMessage(joinPlayerCommand.getPlayerColor(), userName)); // notification for all other players
+      connections.broadcast(userName, game.getGameID(), new NotificationMessage(joinPlayerCommand.getPlayerColor(), userName)); // notification for all other players
     }
 
   }
@@ -74,17 +76,39 @@ public class WebSocketHandler {
       connections.add(game.getGameID(), new Connection(game.getGameID(), userName, session));
       LoadGameMessage loadGameMessage = new LoadGameMessage(ServerMessage.ServerMessageType.LOAD_GAME, game);
       session.getRemote().sendString(gson.toJson(loadGameMessage)); // send message to root client
-      connections.broadcast(userName, new NotificationMessage(userName, NotificationMessage.NotificationType.OBSERVE));
+      connections.broadcast(userName, game.getGameID(), new NotificationMessage(userName, NotificationMessage.NotificationType.OBSERVE));
     }
   }
 
-  private void makeMove(String userName, String clientCommand) throws IOException {
+  private void makeMove(String userName, String clientCommand) throws IOException, DataAccessException, InvalidMoveException {
     MakeMoveCommand makeMoveCommand = gson.fromJson(clientCommand, MakeMoveCommand.class);
+    Game game = commonDataAccess.getCommonGameDAO().findGame(makeMoveCommand.getGameID());
 
+    ChessPositionImpl startPosition = new ChessPositionImpl(makeMoveCommand.getMove().getStartPosition().getColumn(), makeMoveCommand.getMove().getStartPosition().getRow());
+    if (makeMoveCommand.getMove() != null
+            && game.getChessGame().validMoves(startPosition).contains(makeMoveCommand.getMove())) {
+      game.getChessGame().makeMove(makeMoveCommand.getMove());
+      commonDataAccess.getCommonGameDAO().updateGame(game);
+      LoadGameMessage loadGameMessage = new LoadGameMessage(ServerMessage.ServerMessageType.LOAD_GAME, game);
+      connections.broadcast(null, game.getGameID(), loadGameMessage);
+      connections.broadcast(userName, game.getGameID(), new NotificationMessage(userName, makeMoveCommand.getMove()));
+    }
   }
 
-  private void leaveGame(String userName, String clientCommand) throws IOException {
+  private void leaveGame(String userName, String clientCommand) throws IOException, DataAccessException {
     ObserverLeaveResignMessage observerLeaveResignMessage = gson.fromJson(clientCommand, ObserverLeaveResignMessage.class);
+    Game game = commonDataAccess.getCommonGameDAO().findGame(observerLeaveResignMessage.getGameID());
+
+    if (game != null) {
+      connections.remove(game.getGameID());
+      if (game.getWhiteUsername().equals(userName)) {
+        game.setWhiteUsername(null);
+      } else if (game.getBlackUsername().equals(userName)) {
+        game.setBlackUsername(null);
+      }
+      commonDataAccess.getCommonGameDAO().updateGame(game);
+      connections.broadcast(userName, game.getGameID(), new NotificationMessage(userName, NotificationMessage.NotificationType.LEAVE));
+    }
   }
 
   private void resignGame(String userName, String clientCommand) {

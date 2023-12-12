@@ -74,6 +74,17 @@ public class GameDAO {
     }
   }
 
+  public void updateGame(Game game) throws database.DataAccessException {
+    try (var preparedStatement = connection.prepareStatement("UPDATE game_data SET gameInfo = ? WHERE gameID = ?")) {
+      var gameJson = new Gson().toJson(game);
+      preparedStatement.setString(1, gameJson);
+      preparedStatement.setInt(2, game.getGameID());
+      preparedStatement.executeUpdate();
+    } catch (SQLException e) {
+      throw new database.DataAccessException(e.toString());
+    }
+  }
+
   public void setBlackUsername(Game game) throws database.DataAccessException {
     try (var preparedStatement = connection.prepareStatement("UPDATE game_data SET gameInfo = ?, blackUsername = ? WHERE gameID = ?")) {
       var gameJson = new Gson().toJson(game);

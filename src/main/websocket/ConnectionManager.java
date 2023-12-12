@@ -9,7 +9,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 public class ConnectionManager {
-  public final ConcurrentMap<Integer, List<Connection>> connections = new ConcurrentHashMap<>(); // game ID with sessions
+  public final ConcurrentMap<Integer, List<Connection>> connections = new ConcurrentHashMap<>();
 
   public void add(Integer gameID, Connection connection) {
     if (connections.containsKey(gameID)) {
@@ -25,11 +25,12 @@ public class ConnectionManager {
     connections.remove(gameID);
   }
 
-  public void broadcast(String excludeVisitorName, ServerMessage serverMessage) throws IOException {
+  // add logic to make sure it's only sending notifications to those in the game
+  public void broadcast(String excludeVisitorName, Integer gameID, ServerMessage serverMessage) throws IOException {
     var removeList = new ArrayList<Connection>();
     for (var c : connections.values()) {
       for (var v: c) {
-        if (v.session.isOpen()) {
+        if (v.session.isOpen() && v.gameID.equals(gameID)) {
           if (!v.visitorName.equals(excludeVisitorName)) {
             v.send(serverMessage.toString());
           }
