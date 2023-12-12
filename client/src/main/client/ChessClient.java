@@ -28,7 +28,7 @@ public class ChessClient {
   private final ServerFacade server;
   private State state = State.SIGNEDOUT;
   private WebSocketFacade ws;
-  private String headerFooter = "  h  g  f  e  d  c  b  a ";
+  private String headerFooter = "  a  b  c  d  e  f  g  h ";
   private String serverUrl;
   private Integer currentGameID;
   private final NotificationHandler notificationHandler;
@@ -112,11 +112,10 @@ public class ChessClient {
       String blackColor = SET_TEXT_COLOR_BLUE;
       Game game = commonDataAccess.getCommonGameDAO().findGame(currentGameID);
       if (Objects.equals(game.getWhiteUsername(), commonDataAccess.getCommonAuthDAO().returnUsername(currentAuthToken))) {
-        ws.printBoard(game.getChessGame().getBoard(), whiteColor, blackColor);
+        return ws.printBoard(game.getChessGame().getBoard(), whiteColor, blackColor);
       } else {
-        ws.printBoard(game.getChessGame().getBoard(), blackColor, whiteColor);
+        return ws.printBoard(game.getChessGame().getBoard(), blackColor, whiteColor);
       }
-      return null;
     } catch (DataAccessException e) {
       return "Error: Database error";
     }
@@ -148,8 +147,8 @@ public class ChessClient {
       if (params.length < 2) {
         return "Invalid move. Please try again.";
       }
-      ChessPositionImpl startChessPosition = new ChessPositionImpl(params[0].charAt(0) - 'a', (int) params[0].charAt(1));
-      ChessPositionImpl endChessPosition = new ChessPositionImpl(params[1].charAt(0) - 'a', (int) params[1].charAt(1));
+      ChessPositionImpl startChessPosition = new ChessPositionImpl(Integer.valueOf(params[0].substring(1).toString()), params[0].charAt(0) - 'a' + 1);
+      ChessPositionImpl endChessPosition = new ChessPositionImpl(Integer.valueOf(params[1].substring(1).toString()), params[1].charAt(0) - 'a' + 1);
       ws.makeMove(currentAuthToken,
               currentGameID,
               new ChessMoveImpl(startChessPosition, endChessPosition, null));

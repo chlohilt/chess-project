@@ -7,13 +7,13 @@ import chess.ChessPosition;
 import java.util.Objects;
 
 public class ChessMoveImpl implements ChessMove {
-  ChessPosition startPosition;
-  ChessPosition endPosition;
+  ChessPositionImpl startPosition;
+  ChessPositionImpl endPosition;
   ChessPiece.PieceType promotionPieceType;
 
   public ChessMoveImpl(ChessPosition startPosition, ChessPosition endPosition, ChessPiece.PieceType pieceType) {
-    this.startPosition = startPosition;
-    this.endPosition = endPosition;
+    this.startPosition = (ChessPositionImpl) startPosition;
+    this.endPosition = (ChessPositionImpl) endPosition;
     this.promotionPieceType = pieceType;
   }
 

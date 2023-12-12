@@ -83,7 +83,7 @@ public class WebSocketHandler {
     MakeMoveCommand makeMoveCommand = gson.fromJson(clientCommand, MakeMoveCommand.class);
     Game game = commonDataAccess.getCommonGameDAO().findGame(makeMoveCommand.getGameID());
 
-    ChessPositionImpl startPosition = new ChessPositionImpl(makeMoveCommand.getMove().getStartPosition().getColumn(), makeMoveCommand.getMove().getStartPosition().getRow());
+    ChessPositionImpl startPosition =(ChessPositionImpl) makeMoveCommand.getMove().getStartPosition();
     if (makeMoveCommand.getMove() != null
             && game.getChessGame().validMoves(startPosition).contains(makeMoveCommand.getMove())) {
       game.getChessGame().makeMove(makeMoveCommand.getMove());
