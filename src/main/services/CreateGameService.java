@@ -32,6 +32,7 @@ public class CreateGameService extends BaseClass {
       Game newGame = new Game(c.getGameName(), randomNumber);
       newGame.setChessGame(new ChessGameImpl());
       newGame.getChessGame().setBoard(new ChessBoardImpl());
+      newGame.getChessGame().getBoard().resetBoard();
       getGameDataAccess().insertGame(newGame);
       return new CreateGameResponse(randomNumber);
     } catch (Exception e) {

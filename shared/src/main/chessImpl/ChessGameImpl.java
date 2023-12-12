@@ -27,15 +27,15 @@ public class ChessGameImpl implements ChessGame {
       Collection<ChessMove> validMoves = new HashSet<>();
       TeamColor teamColor = chessBoard.getPiece(startPosition).getTeamColor();
       ChessPiece.PieceType pieceType = chessBoard.getPiece(startPosition).getPieceType();
-      ChessPieceImpl originalPiece =(ChessPieceImpl) chessBoard.getPiece(startPosition);
+      ChessPiece originalPiece = chessBoard.getPiece(startPosition);
       TeamColor opposingColor=opposingTeamColor(teamColor);
 
       chessBoard.removePiece(startPosition);
       for (ChessMove checkMove: movesBeforeInCheck) {
-        ChessPieceImpl piece=new ChessPieceImpl(teamColor, pieceType);
-        ChessPieceImpl enemyPiece = null;
+        ChessPiece piece=new ChessPieceImpl(teamColor, pieceType);
+        ChessPiece enemyPiece = null;
         if (chessBoard.getPiece(checkMove.getEndPosition()) != null && chessBoard.getPiece(checkMove.getEndPosition()).getTeamColor() == opposingColor) {
-          enemyPiece =(ChessPieceImpl) chessBoard.getPiece(checkMove.getEndPosition());
+          enemyPiece = chessBoard.getPiece(checkMove.getEndPosition());
         }
         chessBoard.addPiece(checkMove.getEndPosition(), piece);
         if (!isInCheck(teamColor)) {
