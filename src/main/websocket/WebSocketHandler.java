@@ -10,6 +10,7 @@ import models.Game;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
+import webSocketMessages.serverMessages.ErrorMessage;
 import webSocketMessages.serverMessages.LoadGameMessage;
 import webSocketMessages.serverMessages.NotificationMessage;
 import webSocketMessages.serverMessages.ServerMessage;
@@ -33,14 +34,15 @@ public class WebSocketHandler {
     UserGameCommand userGameCommand = gson.fromJson(message, UserGameCommand.class);
     String userName = commonDataAccess.getCommonAuthDAO().returnUsername(userGameCommand.getAuthString());
     if (userName == null) {
-      return;
-    }
-    switch (userGameCommand.getCommandType()) {
-      case JOIN_PLAYER -> joinPlayer(userName, session, message);
-      case JOIN_OBSERVER -> joinObserver(userName, session, message);
-      case MAKE_MOVE -> makeMove(userName, message);
-      case LEAVE -> leaveGame(userName, message);
-      case RESIGN -> resignGame(userName, message);
+      session.getRemote().sendString(gson.toJson(new ErrorMessage(ServerMessage.ServerMessageType.ERROR, "Invalid auth token")));
+    } else {
+      switch (userGameCommand.getCommandType()) {
+        case JOIN_PLAYER -> joinPlayer(userName, session, message);
+        case JOIN_OBSERVER -> joinObserver(userName, session, message);
+        case MAKE_MOVE -> makeMove(userName, session, message);
+        case LEAVE -> leaveGame(userName, session, message);
+        case RESIGN -> resignGame(userName, session, message);
+      }
     }
   }
 
@@ -59,6 +61,8 @@ public class WebSocketHandler {
       LoadGameMessage loadGameMessage = new LoadGameMessage(ServerMessage.ServerMessageType.LOAD_GAME, game);
       session.getRemote().sendString(gson.toJson(loadGameMessage)); // send message to root client
       connections.broadcast(userName, game.getGameID(), new NotificationMessage(joinPlayerCommand.getPlayerColor(), userName)); // notification for all other players
+    } else {
+      session.getRemote().sendString(gson.toJson(new ErrorMessage(ServerMessage.ServerMessageType.ERROR, "Invalid join command")));
     }
 
   }
@@ -76,10 +80,12 @@ public class WebSocketHandler {
       LoadGameMessage loadGameMessage = new LoadGameMessage(ServerMessage.ServerMessageType.LOAD_GAME, game);
       session.getRemote().sendString(gson.toJson(loadGameMessage)); // send message to root client
       connections.broadcast(userName, game.getGameID(), new NotificationMessage(userName, NotificationMessage.NotificationType.OBSERVE));
+    } else {
+      session.getRemote().sendString(gson.toJson(new ErrorMessage(ServerMessage.ServerMessageType.ERROR, "Invalid observe command")));
     }
   }
 
-  private void makeMove(String userName, String clientCommand) throws IOException, DataAccessException, InvalidMoveException, chessImpl.InvalidMoveException {
+  private void makeMove(String userName, Session session, String clientCommand) throws IOException, DataAccessException, InvalidMoveException, chessImpl.InvalidMoveException {
     MakeMoveCommand makeMoveCommand = gson.fromJson(clientCommand, MakeMoveCommand.class);
     Game game = commonDataAccess.getCommonGameDAO().findGame(makeMoveCommand.getGameID());
 
@@ -91,10 +97,12 @@ public class WebSocketHandler {
       LoadGameMessage loadGameMessage = new LoadGameMessage(ServerMessage.ServerMessageType.LOAD_GAME, game);
       connections.broadcast(null, game.getGameID(), loadGameMessage);
       connections.broadcast(userName, game.getGameID(), new NotificationMessage(userName, makeMoveCommand.getMove()));
+    } else {
+      session.getRemote().sendString(gson.toJson(new ErrorMessage(ServerMessage.ServerMessageType.ERROR, "Invalid move command")));
     }
   }
 
-  private void leaveGame(String userName, String clientCommand) throws IOException, DataAccessException {
+  private void leaveGame(String userName, Session session, String clientCommand) throws IOException, DataAccessException {
     ObserverLeaveResignMessage observerLeaveResignMessage = gson.fromJson(clientCommand, ObserverLeaveResignMessage.class);
     Game game = commonDataAccess.getCommonGameDAO().findGame(observerLeaveResignMessage.getGameID());
 
@@ -107,10 +115,12 @@ public class WebSocketHandler {
       }
       commonDataAccess.getCommonGameDAO().updateGame(game);
       connections.broadcast(userName, game.getGameID(), new NotificationMessage(userName, NotificationMessage.NotificationType.LEAVE));
+    } else {
+      session.getRemote().sendString(gson.toJson(new ErrorMessage(ServerMessage.ServerMessageType.ERROR, "Invalid leave command")));
     }
   }
 
-  private void resignGame(String userName, String clientCommand) throws DataAccessException, IOException {
+  private void resignGame(String userName, Session session, String clientCommand) throws DataAccessException, IOException {
     ObserverLeaveResignMessage observerLeaveResignMessage = gson.fromJson(clientCommand, ObserverLeaveResignMessage.class);
     Game game = commonDataAccess.getCommonGameDAO().findGame(observerLeaveResignMessage.getGameID());
 
@@ -118,6 +128,8 @@ public class WebSocketHandler {
       connections.remove(game.getGameID());
       commonDataAccess.getCommonGameDAO().updateGame(null);
       connections.broadcast(null, game.getGameID(), new NotificationMessage(userName, NotificationMessage.NotificationType.LEAVE));
+    } else {
+      session.getRemote().sendString(gson.toJson(new ErrorMessage(ServerMessage.ServerMessageType.ERROR, "Invalid resign command")));
     }
   }
 }
