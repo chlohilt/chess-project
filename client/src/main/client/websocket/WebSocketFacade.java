@@ -2,6 +2,8 @@ package client.websocket;
 
 import chess.ChessBoard;
 import chess.ChessGame;
+import chessImpl.ChessPieceImpl;
+import chessImpl.ChessPositionImpl;
 import com.google.gson.Gson;
 import exception.ResponseException;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketError;
@@ -15,11 +17,14 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+import static ui.EscapeSequences.*;
+
 
 public class WebSocketFacade extends Endpoint {
   Session session;
   NotificationHandler notificationHandler;
   Gson gson = new Gson();
+  private String headerFooter = "  h  g  f  e  d  c  b  a ";
   @Override
   public void onOpen(Session session, EndpointConfig endpointConfig) {
   }
@@ -74,7 +79,44 @@ public class WebSocketFacade extends Endpoint {
     LoadGameMessage loadGameMessage = gson.fromJson(serverMessage, LoadGameMessage.class);
     // draw board
     ChessBoard chessBoard = loadGameMessage.getGame().getChessGame().getBoard();
-    for ()
+    String whiteColor = SET_TEXT_COLOR_RED;
+    String blackColor = SET_TEXT_COLOR_BLUE;
+    if (loadGameMessage.getTeamColor() != null && loadGameMessage.getTeamColor() == ChessGame.TeamColor.BLACK) {
+      printBoard(chessBoard, blackColor, whiteColor);
+    } else {
+      printBoard(chessBoard, whiteColor, blackColor);
+    }
+  }
+
+  private String printBoard(ChessBoard chessBoard, String firstColor, String secondColor) {
+    StringBuilder stringBuilder = new StringBuilder();
+
+    stringBuilder.append(RESET_TEXT_COLOR + SET_BG_COLOR_DARK_GREY + headerFooter + "\n");
+    for (int i = 0; i < 8; i++) {
+      stringBuilder.append(SET_BG_COLOR_DARK_GREY + (i + 1) + RESET_BG_COLOR);
+      for (int j = 0; j < 8; j++) {
+        if ((i + j) % 2 == 0) {
+          boardHelper(stringBuilder, SET_BG_COLOR_LIGHT_GREY, SET_TEXT_COLOR_BLUE, SET_TEXT_COLOR_RED, chessBoard.getPiece(new ChessPositionImpl(i,j)));
+        } else {
+          boardHelper(stringBuilder, SET_BG_COLOR_DARK_GREY, SET_TEXT_COLOR_BLUE, SET_TEXT_COLOR_RED, chessBoard.getPiece(new ChessPositionImpl(i,j)));
+        }
+      }
+      stringBuilder.append(SET_BG_COLOR_DARK_GREY + (i + 1) + "\n");
+    }
+    stringBuilder.append(SET_BG_COLOR_DARK_GREY + headerFooter + SET_TEXT_COLOR_WHITE + "\n\n");
+    return stringBuilder.toString();
+  }
+
+  private void boardHelper(StringBuilder stringBuilder, String backgroundColor, String firstColor, String secondColor, chess.ChessPiece chessPiece) {
+    switch (chessPiece.getPieceType()) {
+        case PAWN -> stringBuilder.append(backgroundColor + firstColor + " P " + RESET_TEXT_COLOR);
+        case ROOK -> stringBuilder.append(backgroundColor + firstColor + " R " + RESET_TEXT_COLOR);
+        case KNIGHT -> stringBuilder.append(backgroundColor + firstColor + " N " + RESET_TEXT_COLOR);
+        case BISHOP -> stringBuilder.append(backgroundColor + firstColor + " B " + RESET_TEXT_COLOR);
+        case QUEEN -> stringBuilder.append(backgroundColor + firstColor + " Q " + RESET_TEXT_COLOR);
+        case KING -> stringBuilder.append(backgroundColor + firstColor + " K " + RESET_TEXT_COLOR);
+        default -> stringBuilder.append(backgroundColor + "   " + RESET_TEXT_COLOR);
+    }
   }
 
   private void error(String serverMessage) {

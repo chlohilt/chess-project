@@ -151,3 +151,5 @@ W
 'shared/src/starter/chess/ChessGame.java,d\5\d5a0c73bc0fdc39f5c09f7afaa13d77bc1476a71
 ]
 -shared/src/main/chessImpl/ChessPieceImpl.java,5\4\5411a758ebc79b4f1a6f6b7f5fb17d7f62c60301
+X
+(shared/src/starter/chess/ChessBoard.java,d\6\d6e28546b0234c1c2b796781b540a07127b883f0
