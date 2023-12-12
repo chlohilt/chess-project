@@ -3,6 +3,7 @@ package client.websocket;
 import chess.ChessBoard;
 import chess.ChessGame;
 import chess.ChessMove;
+import chess.ChessPiece;
 import chessImpl.ChessPositionImpl;
 import com.google.gson.Gson;
 import exception.ResponseException;
@@ -12,6 +13,8 @@ import webSocketMessages.serverMessages.NotificationMessage;
 import webSocketMessages.serverMessages.ServerMessage;
 import webSocketMessages.userCommands.JoinPlayerCommand;
 import webSocketMessages.userCommands.MakeMoveCommand;
+import webSocketMessages.userCommands.ObserverLeaveResignMessage;
+import webSocketMessages.userCommands.UserGameCommand;
 
 import javax.websocket.*;
 import java.io.IOException;
@@ -25,7 +28,7 @@ public class WebSocketFacade extends Endpoint {
   Session session;
   NotificationHandler notificationHandler;
   Gson gson = new Gson();
-  private String headerFooter = "  h  g  f  e  d  c  b  a ";
+  private String headerFooter = "  a  b  c  d  e  f  g  h ";
   @Override
   public void onOpen(Session session, EndpointConfig endpointConfig) {
   }
@@ -71,6 +74,24 @@ public class WebSocketFacade extends Endpoint {
     }
   }
 
+  public void leaveGame(String currentAuthToken, Integer gameID) throws ResponseException {
+    try {
+      var action = new ObserverLeaveResignMessage(currentAuthToken, UserGameCommand.CommandType.LEAVE, gameID);
+      this.session.getBasicRemote().sendText(gson.toJson(action));
+    } catch (IOException ex) {
+      throw new ResponseException(500, ex.getMessage());
+    }
+  }
+
+  public void resignGame(String currentAuthToken, Integer gameID) throws ResponseException {
+    try {
+      var action = new ObserverLeaveResignMessage(currentAuthToken, UserGameCommand.CommandType.RESIGN, gameID);
+      this.session.getBasicRemote().sendText(gson.toJson(action));
+    } catch (IOException ex) {
+      throw new ResponseException(500, ex.getMessage());
+    }
+  }
+
   public void makeMove(String currentAuthToken, Integer gameID, ChessMove chessMove) throws ResponseException {
     try {
       var action = new MakeMoveCommand(currentAuthToken, gameID, chessMove);
@@ -103,7 +124,7 @@ public class WebSocketFacade extends Endpoint {
     }
   }
 
-  private String printBoard(ChessBoard chessBoard, String firstColor, String secondColor) {
+  public String printBoard(ChessBoard chessBoard, String whiteColor, String blackColor) {
     StringBuilder stringBuilder = new StringBuilder();
 
     stringBuilder.append(RESET_TEXT_COLOR + SET_BG_COLOR_DARK_GREY + headerFooter + "\n");
@@ -111,9 +132,9 @@ public class WebSocketFacade extends Endpoint {
       stringBuilder.append(SET_BG_COLOR_DARK_GREY + (i + 1) + RESET_BG_COLOR);
       for (int j = 0; j < 8; j++) {
         if ((i + j) % 2 == 0) {
-          boardHelper(stringBuilder, SET_BG_COLOR_LIGHT_GREY, SET_TEXT_COLOR_BLUE, SET_TEXT_COLOR_RED, chessBoard.getPiece(new ChessPositionImpl(i,j)));
+          boardHelper(stringBuilder, SET_BG_COLOR_LIGHT_GREY, whiteColor, blackColor, chessBoard.getPiece(new ChessPositionImpl(i + 1,j +1)));
         } else {
-          boardHelper(stringBuilder, SET_BG_COLOR_DARK_GREY, SET_TEXT_COLOR_BLUE, SET_TEXT_COLOR_RED, chessBoard.getPiece(new ChessPositionImpl(i,j)));
+          boardHelper(stringBuilder, SET_BG_COLOR_DARK_GREY, whiteColor, blackColor, chessBoard.getPiece(new ChessPositionImpl(i + 1,j + 1)));
         }
       }
       stringBuilder.append(SET_BG_COLOR_DARK_GREY + (i + 1) + "\n");
@@ -122,15 +143,36 @@ public class WebSocketFacade extends Endpoint {
     return stringBuilder.toString();
   }
 
-  private void boardHelper(StringBuilder stringBuilder, String backgroundColor, String firstColor, String secondColor, chess.ChessPiece chessPiece) {
-    switch (chessPiece.getPieceType()) {
-        case PAWN -> stringBuilder.append(backgroundColor + firstColor + " P " + RESET_TEXT_COLOR);
-        case ROOK -> stringBuilder.append(backgroundColor + firstColor + " R " + RESET_TEXT_COLOR);
-        case KNIGHT -> stringBuilder.append(backgroundColor + firstColor + " N " + RESET_TEXT_COLOR);
-        case BISHOP -> stringBuilder.append(backgroundColor + firstColor + " B " + RESET_TEXT_COLOR);
-        case QUEEN -> stringBuilder.append(backgroundColor + firstColor + " Q " + RESET_TEXT_COLOR);
-        case KING -> stringBuilder.append(backgroundColor + firstColor + " K " + RESET_TEXT_COLOR);
-        default -> stringBuilder.append(backgroundColor + "   " + RESET_TEXT_COLOR);
+  private void boardHelper(StringBuilder stringBuilder, String backgroundColor, String whiteColor, String blackColor, chess.ChessPiece chessPiece) {
+    if (chessPiece == null) {
+      stringBuilder.append(backgroundColor + "   " + RESET_TEXT_COLOR);
+      return;
+    }
+    ChessPiece.PieceType pieceType = chessPiece.getPieceType();
+    if (pieceType == ChessPiece.PieceType.PAWN && chessPiece.getTeamColor() == ChessGame.TeamColor.WHITE) {
+      stringBuilder.append(backgroundColor + whiteColor + " P " + RESET_TEXT_COLOR);
+    } else if (pieceType == ChessPiece.PieceType.PAWN && chessPiece.getTeamColor() == ChessGame.TeamColor.BLACK) {
+      stringBuilder.append(backgroundColor + blackColor + " P " + RESET_TEXT_COLOR);
+    } else if (pieceType == ChessPiece.PieceType.ROOK && chessPiece.getTeamColor() == ChessGame.TeamColor.WHITE) {
+      stringBuilder.append(backgroundColor + whiteColor + " R " + RESET_TEXT_COLOR);
+    } else if (pieceType == ChessPiece.PieceType.ROOK && chessPiece.getTeamColor() == ChessGame.TeamColor.BLACK) {
+      stringBuilder.append(backgroundColor + blackColor + " R " + RESET_TEXT_COLOR);
+    } else if (pieceType == ChessPiece.PieceType.KNIGHT && chessPiece.getTeamColor() == ChessGame.TeamColor.WHITE) {
+      stringBuilder.append(backgroundColor + whiteColor + " N " + RESET_TEXT_COLOR);
+    } else if (pieceType == ChessPiece.PieceType.KNIGHT && chessPiece.getTeamColor() == ChessGame.TeamColor.BLACK) {
+      stringBuilder.append(backgroundColor + blackColor + " N " + RESET_TEXT_COLOR);
+    } else if (pieceType == ChessPiece.PieceType.BISHOP && chessPiece.getTeamColor() == ChessGame.TeamColor.WHITE) {
+      stringBuilder.append(backgroundColor + whiteColor + " B " + RESET_TEXT_COLOR);
+    } else if (pieceType == ChessPiece.PieceType.BISHOP && chessPiece.getTeamColor() == ChessGame.TeamColor.BLACK) {
+      stringBuilder.append(backgroundColor + blackColor + " B " + RESET_TEXT_COLOR);
+    } else if (pieceType == ChessPiece.PieceType.QUEEN && chessPiece.getTeamColor() == ChessGame.TeamColor.WHITE) {
+      stringBuilder.append(backgroundColor + whiteColor + " Q " + RESET_TEXT_COLOR);
+    } else if (pieceType == ChessPiece.PieceType.QUEEN && chessPiece.getTeamColor() == ChessGame.TeamColor.BLACK) {
+      stringBuilder.append(backgroundColor + blackColor + " Q " + RESET_TEXT_COLOR);
+    } else if (pieceType == ChessPiece.PieceType.KING && chessPiece.getTeamColor() == ChessGame.TeamColor.WHITE) {
+      stringBuilder.append(backgroundColor + whiteColor + " K " + RESET_TEXT_COLOR);
+    } else if (pieceType == ChessPiece.PieceType.KING && chessPiece.getTeamColor() == ChessGame.TeamColor.BLACK) {
+      stringBuilder.append(backgroundColor + blackColor + " K " + RESET_TEXT_COLOR);
     }
   }
 

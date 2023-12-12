@@ -153,3 +153,15 @@ W
 -shared/src/main/chessImpl/ChessPieceImpl.java,5\4\5411a758ebc79b4f1a6f6b7f5fb17d7f62c60301
 X
 (shared/src/starter/chess/ChessBoard.java,d\6\d6e28546b0234c1c2b796781b540a07127b883f0
+V
+&src/test/passoffTests/TestFactory.java,1\9\193e42c23ef6388eba382c6818280e7a60825b22
+]
+-shared/src/main/requests/JoinGameRequest.java,0\e\0e1e8ccc23dea73d1bda794f0bbc2e8beae1f8eb
+U
+%shared/src/main/models/BaseClass.java,0\a\0accb429d9ee49394d79881e4d98e6b856d79208
+`
+0shared/src/main/chessImpl/ChessPositionImpl.java,2\d\2db00e6d36e524febe6efb77761c29d3a08b507c
+s
+Csrc/test/passoffTests/chessTests/chessPieceTests/KingMoveTests.java,3\5\350e83d4adcb5e8e3bb588475556244c46c9e929
+d
+4src/test/passoffTests/chessTests/ChessGameTests.java,8\7\87007635e15005b7fb0ab226f5d5324ffa63ad5f

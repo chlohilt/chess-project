@@ -1,16 +1,17 @@
 package client;
 
 import client.websocket.NotificationHandler;
+import com.google.gson.Gson;
 import webSocketMessages.serverMessages.NotificationMessage;
 
 import java.util.Scanner;
 
-import static java.awt.Color.RED;
 import static ui.EscapeSequences.*;
 
 
 public class Repl implements NotificationHandler {
   private final ChessClient chessClient;
+  Gson gson = new Gson();
   public Repl(String serverUrl) {
     chessClient = new ChessClient(serverUrl, this);
   }
@@ -41,7 +42,7 @@ public class Repl implements NotificationHandler {
 
   @Override
   public void notify(NotificationMessage notification) {
-    System.out.println(RED + notification.toString());
+    System.out.println(notification.getMessage());
     printPrompt();
   }
 }

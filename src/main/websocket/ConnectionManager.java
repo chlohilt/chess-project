@@ -1,5 +1,6 @@
 package websocket;
 
+import com.google.gson.Gson;
 import webSocketMessages.serverMessages.ServerMessage;
 
 import java.io.IOException;
@@ -10,6 +11,7 @@ import java.util.concurrent.ConcurrentMap;
 
 public class ConnectionManager {
   public final ConcurrentMap<Integer, List<Connection>> connections = new ConcurrentHashMap<>();
+  Gson gson = new Gson();
 
   public void add(Integer gameID, Connection connection) {
     if (connections.containsKey(gameID)) {
@@ -32,7 +34,7 @@ public class ConnectionManager {
       for (var v: c) {
         if (v.session.isOpen() && v.gameID.equals(gameID)) {
           if (!v.visitorName.equals(excludeVisitorName)) {
-            v.send(serverMessage.toString());
+            v.send(gson.toJson(serverMessage));
           }
         } else {
           removeList.add(v);

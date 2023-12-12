@@ -7,7 +7,9 @@ import chessImpl.ChessPositionImpl;
 import client.websocket.NotificationHandler;
 import client.websocket.WebSocketFacade;
 import com.google.gson.Gson;
+import database.CommonDataAccess;
 import exception.ResponseException;
+import models.Game;
 import requests.*;
 import database.DataAccessException;
 import responses.LoginResponse;
@@ -26,10 +28,11 @@ public class ChessClient {
   private final ServerFacade server;
   private State state = State.SIGNEDOUT;
   private WebSocketFacade ws;
-  private String headerFooter = "  h  g  f  e  d  c  b  a ";
+  private String headerFooter = "  a  b  c  d  e  f  g  h ";
   private String serverUrl;
   private Integer currentGameID;
   private final NotificationHandler notificationHandler;
+  private CommonDataAccess commonDataAccess = new CommonDataAccess();
 
   public ChessClient(String serverUrl, NotificationHandler notificationHandler) {
       server = new ServerFacade(serverUrl);
@@ -54,9 +57,9 @@ public class ChessClient {
         case "join", "observe" -> joinGame(params);
         case "move" -> move(params);
         case "moves" -> "moves";
-        case "draw" -> "draw";
-        case "leave" -> "leave";
-        case "resign" -> "resign";
+        case "draw" -> drawBoard();
+        case "leave" -> leaveGame();
+        case "resign" -> resignGame();
         case "list" -> listGames();
         case "quit" -> "quit";
         default -> help();
@@ -86,11 +89,13 @@ public class ChessClient {
           ws = new WebSocketFacade(serverUrl, notificationHandler);
           ws.joinGame(currentAuthToken, Integer.valueOf(params[0]), teamColor);
           state = State.GAMEPLAY;
+          currentGameID = Integer.valueOf(params[0]);
           return visitorName + " joined game " + params[0] + " as: " + params[1];
         }
         else {
           System.out.print(drawStartingWhiteBoard());
           state = State.GAMEPLAY;
+          currentGameID = Integer.valueOf(params[0]);
           return visitorName + " joined game " + params[0];
         }
       } catch (DataAccessException e) {
@@ -101,8 +106,40 @@ public class ChessClient {
 
   }
 
-  public String drawBoard(String... params) {
-    return null;
+  public String drawBoard() {
+    try {
+      String whiteColor = SET_TEXT_COLOR_RED;
+      String blackColor = SET_TEXT_COLOR_BLUE;
+      Game game = commonDataAccess.getCommonGameDAO().findGame(currentGameID);
+      if (Objects.equals(game.getWhiteUsername(), commonDataAccess.getCommonAuthDAO().returnUsername(currentAuthToken))) {
+        return ws.printBoard(game.getChessGame().getBoard(), whiteColor, blackColor);
+      } else {
+        return ws.printBoard(game.getChessGame().getBoard(), blackColor, whiteColor);
+      }
+    } catch (DataAccessException e) {
+      return "Error: Database error";
+    }
+
+  }
+
+  public String resignGame() {
+    try {
+      ws.resignGame(currentAuthToken, currentGameID);
+      currentGameID = null;
+      return "You have resigned the game.";
+    } catch (ResponseException e) {
+      return "Error";
+    }
+  }
+
+  public String leaveGame() {
+    try {
+      ws.leaveGame(currentAuthToken, currentGameID);
+      currentGameID = null;
+      return "You have left the game.";
+    } catch (ResponseException e) {
+      return "Error";
+    }
   }
 
   public String move(String... params) {
@@ -110,8 +147,8 @@ public class ChessClient {
       if (params.length < 2) {
         return "Invalid move. Please try again.";
       }
-      ChessPositionImpl startChessPosition = new ChessPositionImpl(params[0].charAt(0) - 'a', (int) params[0].charAt(1));
-      ChessPositionImpl endChessPosition = new ChessPositionImpl(params[1].charAt(0) - 'a', (int) params[1].charAt(1));
+      ChessPositionImpl startChessPosition = new ChessPositionImpl(Integer.valueOf(params[0].substring(1).toString()), params[0].charAt(0) - 'a' + 1);
+      ChessPositionImpl endChessPosition = new ChessPositionImpl(Integer.valueOf(params[1].substring(1).toString()), params[1].charAt(0) - 'a' + 1);
       ws.makeMove(currentAuthToken,
               currentGameID,
               new ChessMoveImpl(startChessPosition, endChessPosition, null));

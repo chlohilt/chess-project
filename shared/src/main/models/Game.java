@@ -1,6 +1,7 @@
 package models;
 
 import chess.ChessGame;
+import chessImpl.ChessGameImpl;
 import database.DataAccessException;
 
 /**
@@ -30,7 +31,7 @@ public class Game extends BaseClass {
   /**
    * this field holds the actual game object used for game play
    */
-  private ChessGame chessGame;
+  private ChessGameImpl chessGame;
 
   /**
    * this is the constructor for a game
@@ -50,7 +51,7 @@ public class Game extends BaseClass {
     return chessGame;
   }
 
-  public void setChessGame(ChessGame chessGame) {
+  public void setChessGame(ChessGameImpl chessGame) {
     this.chessGame=chessGame;
   }
 
