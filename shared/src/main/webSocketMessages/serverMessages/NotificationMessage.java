@@ -38,7 +38,7 @@ public class NotificationMessage extends ServerMessage{
     this.message = "Player " + username + " made a move: " + move.toString();
   }
 
-  private static String message;
+  private String message;
 
   public enum NotificationType {
     RESIGN,
@@ -46,9 +46,14 @@ public class NotificationMessage extends ServerMessage{
     LEAVE,
     CHECK,
     OBSERVE;
+  }
+
     public Object getMessage() {
       return message;
     }
 
-  }
+    public void setMessage(String message) {
+      this.message=message;
+    }
+
 }

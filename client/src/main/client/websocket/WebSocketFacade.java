@@ -12,6 +12,8 @@ import webSocketMessages.serverMessages.NotificationMessage;
 import webSocketMessages.serverMessages.ServerMessage;
 import webSocketMessages.userCommands.JoinPlayerCommand;
 import webSocketMessages.userCommands.MakeMoveCommand;
+import webSocketMessages.userCommands.ObserverLeaveResignMessage;
+import webSocketMessages.userCommands.UserGameCommand;
 
 import javax.websocket.*;
 import java.io.IOException;
@@ -71,6 +73,24 @@ public class WebSocketFacade extends Endpoint {
     }
   }
 
+  public void leaveGame(String currentAuthToken, Integer gameID) throws ResponseException {
+    try {
+      var action = new ObserverLeaveResignMessage(currentAuthToken, UserGameCommand.CommandType.LEAVE, gameID);
+      this.session.getBasicRemote().sendText(gson.toJson(action));
+    } catch (IOException ex) {
+      throw new ResponseException(500, ex.getMessage());
+    }
+  }
+
+  public void resignGame(String currentAuthToken, Integer gameID) throws ResponseException {
+    try {
+      var action = new ObserverLeaveResignMessage(currentAuthToken, UserGameCommand.CommandType.RESIGN, gameID);
+      this.session.getBasicRemote().sendText(gson.toJson(action));
+    } catch (IOException ex) {
+      throw new ResponseException(500, ex.getMessage());
+    }
+  }
+
   public void makeMove(String currentAuthToken, Integer gameID, ChessMove chessMove) throws ResponseException {
     try {
       var action = new MakeMoveCommand(currentAuthToken, gameID, chessMove);
@@ -103,7 +123,7 @@ public class WebSocketFacade extends Endpoint {
     }
   }
 
-  private String printBoard(ChessBoard chessBoard, String firstColor, String secondColor) {
+  public String printBoard(ChessBoard chessBoard, String firstColor, String secondColor) {
     StringBuilder stringBuilder = new StringBuilder();
 
     stringBuilder.append(RESET_TEXT_COLOR + SET_BG_COLOR_DARK_GREY + headerFooter + "\n");

@@ -116,12 +116,7 @@ public class WebSocketHandler {
 
     if (game != null) {
       connections.remove(game.getGameID());
-      if (game.getWhiteUsername().equals(userName)) {
-        game.setWhiteUsername(null);
-      } else if (game.getBlackUsername().equals(userName)) {
-        game.setBlackUsername(null);
-      }
-      commonDataAccess.getCommonGameDAO().updateGame(game); // TODO: what do I set the game to be here? (difference between leave and resign)
+      commonDataAccess.getCommonGameDAO().updateGame(null);
       connections.broadcast(null, game.getGameID(), new NotificationMessage(userName, NotificationMessage.NotificationType.LEAVE));
     }
   }

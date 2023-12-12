@@ -7,7 +7,9 @@ import chessImpl.ChessPositionImpl;
 import client.websocket.NotificationHandler;
 import client.websocket.WebSocketFacade;
 import com.google.gson.Gson;
+import database.CommonDataAccess;
 import exception.ResponseException;
+import models.Game;
 import requests.*;
 import database.DataAccessException;
 import responses.LoginResponse;
@@ -30,6 +32,7 @@ public class ChessClient {
   private String serverUrl;
   private Integer currentGameID;
   private final NotificationHandler notificationHandler;
+  private CommonDataAccess commonDataAccess = new CommonDataAccess();
 
   public ChessClient(String serverUrl, NotificationHandler notificationHandler) {
       server = new ServerFacade(serverUrl);
@@ -54,9 +57,9 @@ public class ChessClient {
         case "join", "observe" -> joinGame(params);
         case "move" -> move(params);
         case "moves" -> "moves";
-        case "draw" -> "draw";
-        case "leave" -> "leave";
-        case "resign" -> "resign";
+        case "draw" -> drawBoard();
+        case "leave" -> leaveGame();
+        case "resign" -> resignGame();
         case "list" -> listGames();
         case "quit" -> "quit";
         default -> help();
@@ -86,11 +89,13 @@ public class ChessClient {
           ws = new WebSocketFacade(serverUrl, notificationHandler);
           ws.joinGame(currentAuthToken, Integer.valueOf(params[0]), teamColor);
           state = State.GAMEPLAY;
+          currentGameID = Integer.valueOf(params[0]);
           return visitorName + " joined game " + params[0] + " as: " + params[1];
         }
         else {
           System.out.print(drawStartingWhiteBoard());
           state = State.GAMEPLAY;
+          currentGameID = Integer.valueOf(params[0]);
           return visitorName + " joined game " + params[0];
         }
       } catch (DataAccessException e) {
@@ -101,8 +106,41 @@ public class ChessClient {
 
   }
 
-  public String drawBoard(String... params) {
-    return null;
+  public String drawBoard() {
+    try {
+      String whiteColor = SET_TEXT_COLOR_RED;
+      String blackColor = SET_TEXT_COLOR_BLUE;
+      Game game = commonDataAccess.getCommonGameDAO().findGame(currentGameID);
+      if (Objects.equals(game.getWhiteUsername(), commonDataAccess.getCommonAuthDAO().returnUsername(currentAuthToken))) {
+        ws.printBoard(game.getChessGame().getBoard(), whiteColor, blackColor);
+      } else {
+        ws.printBoard(game.getChessGame().getBoard(), blackColor, whiteColor);
+      }
+      return null;
+    } catch (DataAccessException e) {
+      return "Error: Database error";
+    }
+
+  }
+
+  public String resignGame() {
+    try {
+      ws.resignGame(currentAuthToken, currentGameID);
+      currentGameID = null;
+      return "You have resigned the game.";
+    } catch (ResponseException e) {
+      return "Error";
+    }
+  }
+
+  public String leaveGame() {
+    try {
+      ws.leaveGame(currentAuthToken, currentGameID);
+      currentGameID = null;
+      return "You have left the game.";
+    } catch (ResponseException e) {
+      return "Error";
+    }
   }
 
   public String move(String... params) {
