@@ -36,7 +36,7 @@ public class WebSocketHandler {
     }
     switch (userGameCommand.getCommandType()) {
       case JOIN_PLAYER -> joinPlayer(userName, session, message);
-      case JOIN_OBSERVER -> joinObserver(userName, message);
+      case JOIN_OBSERVER -> joinObserver(userName, session, message);
       case MAKE_MOVE -> makeMove(userName, message);
       case LEAVE -> leaveGame(userName, message);
       case RESIGN -> resignGame(userName, message);
@@ -56,19 +56,31 @@ public class WebSocketHandler {
     if (valid) {
       connections.add(game.getGameID(), new Connection(game.getGameID(), userName, session));
       LoadGameMessage loadGameMessage = new LoadGameMessage(ServerMessage.ServerMessageType.LOAD_GAME, game);
-      session.getRemote().sendString(gson.fromJson(loadGameMessage.toString(), String.class)); // send message to root client
+      session.getRemote().sendString(gson.toJson(loadGameMessage)); // send message to root client
       connections.broadcast(userName, new NotificationMessage(joinPlayerCommand.getPlayerColor(), userName)); // notification for all other players
     }
 
   }
 
-  private void joinObserver(String userName, String clientCommand) throws IOException {
+  private void joinObserver(String userName, Session session, String clientCommand) throws IOException, DataAccessException {
     ObserverLeaveResignMessage observerLeaveResignMessage = gson.fromJson(clientCommand, ObserverLeaveResignMessage.class);
-    // connections.broadcast(userName, new NotificationMessage(ServerMessage.ServerMessageType.NOTIFICATION, observerLeaveResignMessage.getPlayerColor(), userName));
+    boolean valid = false;
+    Game game = commonDataAccess.getCommonGameDAO().findGame(observerLeaveResignMessage.getGameID());
+    if (game != null) {
+      valid = true;
+    }
+
+    if (valid) {
+      connections.add(game.getGameID(), new Connection(game.getGameID(), userName, session));
+      LoadGameMessage loadGameMessage = new LoadGameMessage(ServerMessage.ServerMessageType.LOAD_GAME, game);
+      session.getRemote().sendString(gson.toJson(loadGameMessage)); // send message to root client
+      connections.broadcast(userName, new NotificationMessage(userName, NotificationMessage.NotificationType.OBSERVE));
+    }
   }
 
   private void makeMove(String userName, String clientCommand) throws IOException {
     MakeMoveCommand makeMoveCommand = gson.fromJson(clientCommand, MakeMoveCommand.class);
+
   }
 
   private void leaveGame(String userName, String clientCommand) throws IOException {

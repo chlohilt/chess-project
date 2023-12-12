@@ -4,14 +4,21 @@ import webSocketMessages.serverMessages.ServerMessage;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 public class ConnectionManager {
-  public final ConcurrentMap<Integer, Connection> connections = new ConcurrentHashMap<>(); // game ID with sessions
+  public final ConcurrentMap<Integer, List<Connection>> connections = new ConcurrentHashMap<>(); // game ID with sessions
 
   public void add(Integer gameID, Connection connection) {
-    connections.put(gameID, connection);
+    if (connections.containsKey(gameID)) {
+      connections.get(gameID).add(connection);
+    } else {
+      var list = new ArrayList<Connection>();
+      list.add(connection);
+      connections.put(gameID, list);
+    }
   }
 
   public void remove(Integer gameID) {
@@ -21,12 +28,14 @@ public class ConnectionManager {
   public void broadcast(String excludeVisitorName, ServerMessage serverMessage) throws IOException {
     var removeList = new ArrayList<Connection>();
     for (var c : connections.values()) {
-      if (c.session.isOpen()) {
-        if (!c.visitorName.equals(excludeVisitorName)) {
-          c.send(serverMessage.toString());
+      for (var v: c) {
+        if (v.session.isOpen()) {
+          if (!v.visitorName.equals(excludeVisitorName)) {
+            v.send(serverMessage.toString());
+          }
+        } else {
+          removeList.add(v);
         }
-      } else {
-        removeList.add(c);
       }
     }
 

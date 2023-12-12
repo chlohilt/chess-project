@@ -137,3 +137,11 @@ Q
 !client/src/main/client/State.java,8\f\8f55549d68b408dfc60e4487a72ee80f52dc1ec4
 V
 &shared/src/main/database/Database.java,d\7\d7d7ab3ce658ac40dd049781a2e712a50a7c937c
+~
+Nshared/src/main/webSocketMessages/userCommands/ObserverLeaveResignCommand.java,0\a\0a775fe05f0cfa463027d8459abb4339b69fca2b
+\
+,shared/src/main/chessImpl/ChessGameImpl.java,a\5\a5b3bf209fbc2fd5a339fd99066ea31e4e304cdf
+W
+'shared/src/starter/chess/ChessMove.java,7\8\783a364f4676aff07fabbd696f946d3b8e9abe83
+\
+,shared/src/main/chessImpl/ChessMoveImpl.java,e\c\ece209456b448e2f1951bc4cf3d22d3ba816e3a3

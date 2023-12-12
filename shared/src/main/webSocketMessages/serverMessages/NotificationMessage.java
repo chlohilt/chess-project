@@ -6,11 +6,13 @@ import chess.ChessMove;
 public class NotificationMessage extends ServerMessage{
   public NotificationMessage(ChessGame.TeamColor teamColor, String username) {
     super(ServerMessageType.NOTIFICATION);
+    this.serverMessageType = ServerMessageType.NOTIFICATION;
     this.message = "Player " + username + " has joined the game as " + teamColor.toString();
   }
 
   public NotificationMessage(String username, NotificationType notificationType) {
     super(ServerMessageType.NOTIFICATION);
+    this.serverMessageType = ServerMessageType.NOTIFICATION;
     switch (notificationType) {
       case RESIGN:
         this.message = "Player " + username + " has resigned";
@@ -31,7 +33,8 @@ public class NotificationMessage extends ServerMessage{
   }
 
   public NotificationMessage(ServerMessageType type, String username, ChessMove move) {
-    super(type);
+    super(ServerMessageType.NOTIFICATION);
+    this.serverMessageType = ServerMessageType.NOTIFICATION;
     this.message = "Player " + username + " made a move: " + move.toString();
   }
 

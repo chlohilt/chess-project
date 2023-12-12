@@ -10,7 +10,6 @@ import database.DataAccessException;
 import responses.LoginResponse;
 import responses.RegisterResponse;
 import server.ServerFacade;
-import webSocketMessages.serverMessages.NotificationMessage;
 
 import static ui.EscapeSequences.*;
 

@@ -3,18 +3,17 @@ package client.websocket;
 import chess.ChessGame;
 import com.google.gson.Gson;
 import exception.ResponseException;
+import org.eclipse.jetty.websocket.api.annotations.OnWebSocketError;
 import webSocketMessages.serverMessages.LoadGameMessage;
 import webSocketMessages.serverMessages.NotificationMessage;
 import webSocketMessages.serverMessages.ServerMessage;
 import webSocketMessages.userCommands.JoinPlayerCommand;
-import webSocketMessages.userCommands.UserGameCommand;
 
 import javax.websocket.*;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-import static webSocketMessages.serverMessages.ServerMessage.ServerMessageType.NOTIFICATION;
 
 public class WebSocketFacade extends Endpoint {
   Session session;
@@ -41,7 +40,7 @@ public class WebSocketFacade extends Endpoint {
           switch (serverMessage.getServerMessageType()) {
             case NOTIFICATION -> handleNotification(message);
             case LOAD_GAME -> loadGame(message);
-            case ERROR -> System.out.println(message);
+            case ERROR -> error(message);
           }
 
         }
@@ -50,6 +49,11 @@ public class WebSocketFacade extends Endpoint {
       throw new ResponseException(500, ex.getMessage());
     }
   }
+
+  @OnWebSocketError
+    public void onError(Session session, Throwable throwable) {
+        System.out.println("Error: " + throwable.getMessage());
+    }
 
   public void joinGame(String currentAuthToken, Integer gameID, ChessGame.TeamColor teamColor) throws ResponseException {
     try {
@@ -67,6 +71,10 @@ public class WebSocketFacade extends Endpoint {
 
   private void loadGame(String serverMessage) {
     LoadGameMessage loadGameMessage = gson.fromJson(serverMessage, LoadGameMessage.class);
+    // draw board
+  }
 
+  private void error(String serverMessage) {
+    System.out.println(serverMessage);
   }
 }
