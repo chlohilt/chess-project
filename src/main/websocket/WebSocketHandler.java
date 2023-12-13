@@ -117,10 +117,13 @@ public class WebSocketHandler {
     Game game = commonDataAccess.getCommonGameDAO().findGame(observerLeaveResignMessage.getGameID());
 
     if (game != null) {
-      if (game.getWhiteUsername().equals(userName)) {
-        game.setWhiteUsername(null);
-      } else if (game.getBlackUsername().equals(userName)) {
-        game.setBlackUsername(null);
+      if (game.getWhiteUsername() != null && (game.getWhiteUsername().equals(userName))) {
+          game.setWhiteUsername(null);
+
+      }
+      if (game.getBlackUsername() != null && (game.getBlackUsername().equals(userName))) {
+          game.setBlackUsername(null);
+
       }
       commonDataAccess.getCommonGameDAO().updateGame(game);
       connections.broadcast(userName, game.getGameID(), new NotificationMessage(userName, NotificationMessage.NotificationType.LEAVE));
