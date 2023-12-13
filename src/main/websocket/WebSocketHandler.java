@@ -1,7 +1,6 @@
 package websocket;
 
 import chess.*;
-import chessImpl.ChessPieceImpl;
 import chessImpl.ChessPositionImpl;
 import com.google.gson.Gson;
 import database.CommonDataAccess;
@@ -85,7 +84,7 @@ public class WebSocketHandler {
     }
   }
 
-  private void makeMove(String userName, Session session, String clientCommand) throws IOException, DataAccessException, InvalidMoveException, chessImpl.InvalidMoveException {
+  private void makeMove(String userName, Session session, String clientCommand) throws IOException, DataAccessException, InvalidMoveException {
     MakeMoveCommand makeMoveCommand = gson.fromJson(clientCommand, MakeMoveCommand.class);
     Game game = commonDataAccess.getCommonGameDAO().findGame(makeMoveCommand.getGameID());
     String whiteUsername=null;
@@ -105,6 +104,16 @@ public class WebSocketHandler {
         LoadGameMessage loadGameMessage = new LoadGameMessage(ServerMessage.ServerMessageType.LOAD_GAME, game);
         connections.broadcast(null, game.getGameID(), loadGameMessage);
         connections.broadcast(userName, game.getGameID(), new NotificationMessage(userName, makeMoveCommand.getMove()));
+
+        if (game.getChessGame().isInCheckmate(ChessGame.TeamColor.WHITE)) {
+          connections.broadcast(null, game.getGameID(), new NotificationMessage(whiteUsername, NotificationMessage.NotificationType.CHECKMATE));
+        } else if (game.getChessGame().isInCheckmate(ChessGame.TeamColor.BLACK)) {
+          connections.broadcast(null, game.getGameID(), new NotificationMessage(blackUsername, NotificationMessage.NotificationType.CHECKMATE));
+        } else if (game.getChessGame().isInCheck(ChessGame.TeamColor.WHITE)) {
+          connections.broadcast(null, game.getGameID(), new NotificationMessage(whiteUsername, NotificationMessage.NotificationType.CHECK));
+        } else if (game.getChessGame().isInCheck(ChessGame.TeamColor.BLACK)) {
+          connections.broadcast(null, game.getGameID(), new NotificationMessage(blackUsername, NotificationMessage.NotificationType.CHECK));
+        }
       } else {
         session.getRemote().sendString(gson.toJson(new ErrorMessage(ServerMessage.ServerMessageType.ERROR, "Invalid move command")));
       }

@@ -99,10 +99,8 @@ public class ChessClient {
           currentGameID = Integer.valueOf(params[0]);
           return visitorName + " joined game " + params[0];
         }
-      } catch (DataAccessException e) {
+      } catch (DataAccessException | ResponseException e) {
         return "Invalid game join. Please try again.";
-      } catch (ResponseException e) {
-        throw new RuntimeException(e);
       }
 
   }
@@ -144,29 +142,36 @@ public class ChessClient {
   }
 
   public String move(String... params) {
+    String invalidMove = "Invalid move. Please try again.";
     try {
       if (params.length < 2) {
-        return "Invalid move. Please try again.";
+        return invalidMove;
       }
-      ChessPositionImpl startChessPosition = new ChessPositionImpl(Integer.valueOf(params[0].substring(1).toString()), params[0].charAt(0) - 'a' + 1);
-      ChessPositionImpl endChessPosition = new ChessPositionImpl(Integer.valueOf(params[1].substring(1).toString()), params[1].charAt(0) - 'a' + 1);
+      ChessPositionImpl startChessPosition = new ChessPositionImpl(Integer.valueOf(params[0].substring(1)), params[0].charAt(0) - 'a' + 1);
+      ChessPositionImpl endChessPosition = new ChessPositionImpl(Integer.valueOf(params[1].substring(1)), params[1].charAt(0) - 'a' + 1);
       ws.makeMove(currentAuthToken,
               currentGameID,
               new ChessMoveImpl(startChessPosition, endChessPosition, null));
       return "Moved from " + params[0] + " to " + params[1];
     } catch (ResponseException e) {
-      System.out.println("Invalid move. Please try again.");
+      System.out.println(invalidMove);
     }
-    return "Invalid move. Please try again.";
+    return invalidMove;
   }
 
   public String showValidMoves(String... params) throws DataAccessException {
-    ChessPositionImpl startChessPosition = new ChessPositionImpl(Integer.valueOf(params[0].substring(1).toString()), params[0].charAt(0) - 'a' + 1);
+    ChessPositionImpl startChessPosition = new ChessPositionImpl(Integer.valueOf(params[0].substring(1)), params[0].charAt(0) - 'a' + 1);
     Game currentGame = commonDataAccess.getCommonGameDAO().findGame(currentGameID);
     Collection<ChessMove> validMoves = ws.showValidMoves(currentGameID, startChessPosition);
     String whiteColor = SET_TEXT_COLOR_RED;
     String blackColor = SET_TEXT_COLOR_BLUE;
-    return ws.printBoard(currentGame.getChessGame().getBoard(), whiteColor, blackColor, validMoves);
+    String userName = commonDataAccess.getCommonAuthDAO().returnUsername(currentAuthToken);
+
+    if (Objects.equals(currentGame.getWhiteUsername(), userName)) {
+      return ws.printBoard(currentGame.getChessGame().getBoard(), whiteColor, blackColor, validMoves);
+    } else {
+      return ws.printBoard(currentGame.getChessGame().getBoard(), blackColor, whiteColor, validMoves);
+    }
   }
 
   public String drawStartingWhiteBoard() {
