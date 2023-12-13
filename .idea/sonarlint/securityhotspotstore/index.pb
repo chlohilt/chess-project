@@ -165,3 +165,5 @@ s
 Csrc/test/passoffTests/chessTests/chessPieceTests/KingMoveTests.java,3\5\350e83d4adcb5e8e3bb588475556244c46c9e929
 d
 4src/test/passoffTests/chessTests/ChessGameTests.java,8\7\87007635e15005b7fb0ab226f5d5324ffa63ad5f
+Z
+*client/src/starter/ui/EscapeSequences.java,b\c\bc82e20b60c52f9c752d43b11e41f4b69a2ba7aa

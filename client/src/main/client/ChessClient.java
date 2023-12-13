@@ -19,6 +19,7 @@ import server.ServerFacade;
 import static ui.EscapeSequences.*;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Objects;
 
 public class ChessClient {
@@ -56,7 +57,7 @@ public class ChessClient {
         case "create" -> createGame(params);
         case "join", "observe" -> joinGame(params);
         case "move" -> move(params);
-        case "moves" -> "moves";
+        case "moves" -> showValidMoves(params);
         case "draw" -> drawBoard();
         case "leave" -> leaveGame();
         case "resign" -> resignGame();
@@ -112,9 +113,9 @@ public class ChessClient {
       String blackColor = SET_TEXT_COLOR_BLUE;
       Game game = commonDataAccess.getCommonGameDAO().findGame(currentGameID);
       if (Objects.equals(game.getWhiteUsername(), commonDataAccess.getCommonAuthDAO().returnUsername(currentAuthToken))) {
-        return ws.printBoard(game.getChessGame().getBoard(), whiteColor, blackColor);
+        return ws.printBoard(game.getChessGame().getBoard(), whiteColor, blackColor, null);
       } else {
-        return ws.printBoard(game.getChessGame().getBoard(), blackColor, whiteColor);
+        return ws.printBoard(game.getChessGame().getBoard(), blackColor, whiteColor, null);
       }
     } catch (DataAccessException e) {
       return "Error: Database error";
@@ -159,8 +160,13 @@ public class ChessClient {
     return "Invalid move. Please try again.";
   }
 
-  public String showValidMoves(String... params) {
-    return null;
+  public String showValidMoves(String... params) throws DataAccessException {
+    ChessPositionImpl startChessPosition = new ChessPositionImpl(Integer.valueOf(params[0].substring(1).toString()), params[0].charAt(0) - 'a' + 1);
+    Game currentGame = commonDataAccess.getCommonGameDAO().findGame(currentGameID);
+    Collection<ChessMove> validMoves = ws.showValidMoves(currentGameID, startChessPosition);
+    String whiteColor = SET_TEXT_COLOR_RED;
+    String blackColor = SET_TEXT_COLOR_BLUE;
+    return ws.printBoard(currentGame.getChessGame().getBoard(), whiteColor, blackColor, validMoves);
   }
 
   public String drawStartingWhiteBoard() {

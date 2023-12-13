@@ -26,18 +26,13 @@ public class ConnectionManager {
 
   public void removeUser(Integer gameID, String userName) {
     List<Connection> connectionList=connections.get(gameID);
-    for (var c : connectionList) {
-      if (Objects.equals(c.visitorName, userName)) {
-        connectionList.remove(c);
-      }
-    }
+    connectionList.removeIf(c -> Objects.equals(c.visitorName, userName));
   }
 
   public void removeGame(Integer gameID) {
     connections.remove(gameID);
   }
 
-  // add logic to make sure it's only sending notifications to those in the game
   public void broadcast(String excludeVisitorName, Integer gameID, ServerMessage serverMessage) throws IOException {
     for (var c : connections.values()) {
       for (var v : c) {

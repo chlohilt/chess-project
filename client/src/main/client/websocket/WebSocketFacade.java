@@ -1,12 +1,11 @@
 package client.websocket;
 
-import chess.ChessBoard;
-import chess.ChessGame;
-import chess.ChessMove;
-import chess.ChessPiece;
+import chess.*;
 import chessImpl.ChessMoveImpl;
 import chessImpl.ChessPositionImpl;
 import com.google.gson.Gson;
+import database.CommonDataAccess;
+import database.DataAccessException;
 import exception.ResponseException;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketError;
 import webSocketMessages.serverMessages.LoadGameMessage;
@@ -21,6 +20,7 @@ import javax.websocket.*;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Collection;
 
 import static ui.EscapeSequences.*;
 
@@ -29,6 +29,7 @@ public class WebSocketFacade extends Endpoint {
   Session session;
   NotificationHandler notificationHandler;
   Gson gson = new Gson();
+  CommonDataAccess commonDataAccess = new CommonDataAccess();
   private String headerFooter = "  a  b  c  d  e  f  g  h ";
   @Override
   public void onOpen(Session session, EndpointConfig endpointConfig) {
@@ -102,7 +103,12 @@ public class WebSocketFacade extends Endpoint {
     }
   }
 
-  public void showValidMoves(String currentAuthToken, Integer gameID) {
+  public Collection<ChessMove> showValidMoves(Integer gameID, ChessPosition chessPosition) {
+    try {
+      return commonDataAccess.getCommonGameDAO().findGame(gameID).getChessGame().validMoves(chessPosition);
+    } catch (DataAccessException e) {
+      throw new RuntimeException(e);
+    }
   }
 
   private void handleNotification(String serverMessage) {
@@ -118,14 +124,14 @@ public class WebSocketFacade extends Endpoint {
       String whiteColor = SET_TEXT_COLOR_RED;
       String blackColor = SET_TEXT_COLOR_BLUE;
       if (loadGameMessage.getTeamColor() != null && loadGameMessage.getTeamColor() == ChessGame.TeamColor.BLACK) {
-        printBoard(chessBoard, blackColor, whiteColor);
+        printBoard(chessBoard, blackColor, whiteColor, null);
       } else {
-        printBoard(chessBoard, whiteColor, blackColor);
+        printBoard(chessBoard, whiteColor, blackColor, null);
       }
     }
   }
 
-  public String printBoard(ChessBoard chessBoard, String whiteColor, String blackColor) {
+  public String printBoard(ChessBoard chessBoard, String firstColor, String secondColor, Collection<ChessMove> validMoves) {
     StringBuilder stringBuilder = new StringBuilder();
 
     stringBuilder.append(RESET_TEXT_COLOR + SET_BG_COLOR_DARK_GREY + headerFooter + "\n");
@@ -133,9 +139,31 @@ public class WebSocketFacade extends Endpoint {
       stringBuilder.append(SET_BG_COLOR_DARK_GREY + (i + 1) + RESET_BG_COLOR);
       for (int j = 0; j < 8; j++) {
         if ((i + j) % 2 == 0) {
-          boardHelper(stringBuilder, SET_BG_COLOR_LIGHT_GREY, whiteColor, blackColor, chessBoard.getPiece(new ChessPositionImpl(i + 1,j +1)));
+          boolean printedSquare = false;
+          if (validMoves != null) {
+            for (var validMove: validMoves) {
+              if (validMove.getEndPosition().equals(new ChessPositionImpl(i + 1,j + 1))) {
+                boardHelper(stringBuilder, SET_BG_COLOR_GREEN, firstColor, secondColor, chessBoard.getPiece(new ChessPositionImpl(i + 1,j +1)));
+                printedSquare = true;
+              }
+            }
+          }
+          if (!printedSquare) {
+            boardHelper(stringBuilder, SET_BG_COLOR_LIGHT_GREY, firstColor, secondColor, chessBoard.getPiece(new ChessPositionImpl(i + 1,j +1)));
+          }
         } else {
-          boardHelper(stringBuilder, SET_BG_COLOR_DARK_GREY, whiteColor, blackColor, chessBoard.getPiece(new ChessPositionImpl(i + 1,j + 1)));
+          boolean printedSquare = false;
+          if (validMoves != null) {
+            for (var validMove: validMoves) {
+              if (validMove.getEndPosition().equals(new ChessPositionImpl(i + 1,j + 1))) {
+                boardHelper(stringBuilder, SET_BG_COLOR_DARK_GREEN, firstColor, secondColor, chessBoard.getPiece(new ChessPositionImpl(i + 1,j +1)));
+                printedSquare = true;
+              }
+            }
+          }
+          if (!printedSquare) {
+            boardHelper(stringBuilder, SET_BG_COLOR_DARK_GREY, firstColor, secondColor, chessBoard.getPiece(new ChessPositionImpl(i + 1,j + 1)));
+          }
         }
       }
       stringBuilder.append(SET_BG_COLOR_DARK_GREY + (i + 1) + "\n");
