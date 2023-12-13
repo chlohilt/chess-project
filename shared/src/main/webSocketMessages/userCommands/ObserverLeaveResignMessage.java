@@ -4,6 +4,7 @@ public class ObserverLeaveResignMessage extends UserGameCommand{
   public ObserverLeaveResignMessage(String authToken, CommandType commandType, Integer gameID) {
     super(authToken);
     this.commandType = commandType;
+    this.gameID = gameID;
   }
 
   private Integer gameID;
