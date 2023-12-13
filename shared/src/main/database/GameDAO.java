@@ -85,6 +85,15 @@ public class GameDAO {
     }
   }
 
+  public void deleteGame(Integer gameID) throws database.DataAccessException {
+    try (var preparedStatement = connection.prepareStatement("DELETE FROM game_data WHERE gameID = ?")) {
+      preparedStatement.setInt(1, gameID);
+      preparedStatement.executeUpdate();
+    } catch (SQLException e) {
+      throw new database.DataAccessException(e.toString());
+    }
+  }
+
   public void setBlackUsername(Game game) throws database.DataAccessException {
     try (var preparedStatement = connection.prepareStatement("UPDATE game_data SET gameInfo = ?, blackUsername = ? WHERE gameID = ?")) {
       var gameJson = new Gson().toJson(game);

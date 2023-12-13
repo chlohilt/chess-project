@@ -88,18 +88,28 @@ public class WebSocketHandler {
   private void makeMove(String userName, Session session, String clientCommand) throws IOException, DataAccessException, InvalidMoveException, chessImpl.InvalidMoveException {
     MakeMoveCommand makeMoveCommand = gson.fromJson(clientCommand, MakeMoveCommand.class);
     Game game = commonDataAccess.getCommonGameDAO().findGame(makeMoveCommand.getGameID());
-
-    ChessPositionImpl startPosition =(ChessPositionImpl) makeMoveCommand.getMove().getStartPosition();
-    if (makeMoveCommand.getMove() != null
-            && game.getChessGame().validMoves(startPosition).contains(makeMoveCommand.getMove())) {
-      game.getChessGame().makeMove(makeMoveCommand.getMove());
-      commonDataAccess.getCommonGameDAO().updateGame(game);
-      LoadGameMessage loadGameMessage = new LoadGameMessage(ServerMessage.ServerMessageType.LOAD_GAME, game);
-      connections.broadcast(null, game.getGameID(), loadGameMessage);
-      connections.broadcast(userName, game.getGameID(), new NotificationMessage(userName, makeMoveCommand.getMove()));
+    String whiteUsername=null;
+    String blackUsername=null;
+    if (game == null) {
+      session.getRemote().sendString(gson.toJson(new ErrorMessage(ServerMessage.ServerMessageType.ERROR, "Game no longer exists")));
     } else {
-      session.getRemote().sendString(gson.toJson(new ErrorMessage(ServerMessage.ServerMessageType.ERROR, "Invalid move command")));
+      whiteUsername = game.getWhiteUsername();
+      blackUsername = game.getBlackUsername();
+      ChessPositionImpl startPosition =(ChessPositionImpl) makeMoveCommand.getMove().getStartPosition();
+      if (makeMoveCommand.getGameID() != null && makeMoveCommand.getMove() != null
+              && game.getChessGame().validMoves(startPosition).contains(makeMoveCommand.getMove())
+              && (game.getChessGame().getTeamTurn() == ChessGame.TeamColor.BLACK && blackUsername.equals(userName)
+              || game.getChessGame().getTeamTurn() == ChessGame.TeamColor.WHITE && whiteUsername.equals(userName))) {
+        game.getChessGame().makeMove(makeMoveCommand.getMove());
+        commonDataAccess.getCommonGameDAO().updateGame(game);
+        LoadGameMessage loadGameMessage = new LoadGameMessage(ServerMessage.ServerMessageType.LOAD_GAME, game);
+        connections.broadcast(null, game.getGameID(), loadGameMessage);
+        connections.broadcast(userName, game.getGameID(), new NotificationMessage(userName, makeMoveCommand.getMove()));
+      } else {
+        session.getRemote().sendString(gson.toJson(new ErrorMessage(ServerMessage.ServerMessageType.ERROR, "Invalid move command")));
+      }
     }
+
   }
 
   private void leaveGame(String userName, Session session, String clientCommand) throws IOException, DataAccessException {
@@ -124,10 +134,11 @@ public class WebSocketHandler {
     ObserverLeaveResignMessage observerLeaveResignMessage = gson.fromJson(clientCommand, ObserverLeaveResignMessage.class);
     Game game = commonDataAccess.getCommonGameDAO().findGame(observerLeaveResignMessage.getGameID());
 
-    if (game != null) {
+    if (game != null && (Objects.equals(game.getWhiteUsername(), userName) || Objects.equals(game.getBlackUsername(), userName))) {
+      Integer gameID = game.getGameID();
+      commonDataAccess.getCommonGameDAO().deleteGame(gameID);
+      connections.broadcast(null, gameID, new NotificationMessage(userName, NotificationMessage.NotificationType.RESIGN));
       connections.remove(game.getGameID());
-      commonDataAccess.getCommonGameDAO().updateGame(null);
-      connections.broadcast(null, game.getGameID(), new NotificationMessage(userName, NotificationMessage.NotificationType.LEAVE));
     } else {
       session.getRemote().sendString(gson.toJson(new ErrorMessage(ServerMessage.ServerMessageType.ERROR, "Invalid resign command")));
     }
