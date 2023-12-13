@@ -29,7 +29,7 @@ public class WebSocketHandler {
   private final ConnectionManager connections = new ConnectionManager();
 
   @OnWebSocketMessage
-  public void onMessage(Session session, String message) throws IOException, DataAccessException, InvalidMoveException, chessImpl.InvalidMoveException {
+  public void onMessage(Session session, String message) throws IOException, DataAccessException, InvalidMoveException {
     UserGameCommand userGameCommand = gson.fromJson(message, UserGameCommand.class);
     String userName = commonDataAccess.getCommonAuthDAO().returnUsername(userGameCommand.getAuthString());
     if (userName == null) {
@@ -87,8 +87,8 @@ public class WebSocketHandler {
   private void makeMove(String userName, Session session, String clientCommand) throws IOException, DataAccessException, InvalidMoveException {
     MakeMoveCommand makeMoveCommand = gson.fromJson(clientCommand, MakeMoveCommand.class);
     Game game = commonDataAccess.getCommonGameDAO().findGame(makeMoveCommand.getGameID());
-    String whiteUsername=null;
-    String blackUsername=null;
+    String whiteUsername;
+    String blackUsername;
     if (game == null) {
       session.getRemote().sendString(gson.toJson(new ErrorMessage(ServerMessage.ServerMessageType.ERROR, "Game no longer exists")));
     } else {

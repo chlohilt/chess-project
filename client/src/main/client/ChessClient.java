@@ -29,7 +29,7 @@ public class ChessClient {
   private final ServerFacade server;
   private State state = State.SIGNEDOUT;
   private WebSocketFacade ws;
-  private String headerFooter = "  a  b  c  d  e  f  g  h ";
+  private final String headerFooter = "  a  b  c  d  e  f  g  h ";
   private String serverUrl;
   private Integer currentGameID;
   private final NotificationHandler notificationHandler;
