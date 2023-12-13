@@ -6,6 +6,7 @@ import webSocketMessages.serverMessages.ServerMessage;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -23,7 +24,16 @@ public class ConnectionManager {
     }
   }
 
-  public void remove(Integer gameID) {
+  public void removeUser(Integer gameID, String userName) {
+    List<Connection> connectionList = connections.get(gameID);
+    for (var c: connectionList) {
+      if (Objects.equals(c.visitorName, userName)) {
+        connectionList.remove(c);
+      }
+    }
+  }
+
+  public void removeGame(Integer gameID) {
     connections.remove(gameID);
   }
 

@@ -117,7 +117,6 @@ public class WebSocketHandler {
     Game game = commonDataAccess.getCommonGameDAO().findGame(observerLeaveResignMessage.getGameID());
 
     if (game != null) {
-      connections.remove(game.getGameID());
       if (game.getWhiteUsername().equals(userName)) {
         game.setWhiteUsername(null);
       } else if (game.getBlackUsername().equals(userName)) {
@@ -125,6 +124,7 @@ public class WebSocketHandler {
       }
       commonDataAccess.getCommonGameDAO().updateGame(game);
       connections.broadcast(userName, game.getGameID(), new NotificationMessage(userName, NotificationMessage.NotificationType.LEAVE));
+      connections.removeUser(game.getGameID(), userName);
     } else {
       session.getRemote().sendString(gson.toJson(new ErrorMessage(ServerMessage.ServerMessageType.ERROR, "Invalid leave command")));
     }
@@ -138,7 +138,7 @@ public class WebSocketHandler {
       Integer gameID = game.getGameID();
       commonDataAccess.getCommonGameDAO().deleteGame(gameID);
       connections.broadcast(null, gameID, new NotificationMessage(userName, NotificationMessage.NotificationType.RESIGN));
-      connections.remove(game.getGameID());
+      connections.removeGame(game.getGameID());
     } else {
       session.getRemote().sendString(gson.toJson(new ErrorMessage(ServerMessage.ServerMessageType.ERROR, "Invalid resign command")));
     }
